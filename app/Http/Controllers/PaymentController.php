@@ -15,7 +15,7 @@ class PaymentController extends Controller
         $query = CustomerReceipt::with(['customer', 'invoice']);
 
         if ($request->filled('method')) {
-            $query->where('payment_method', $request->method);
+            $query->where('payment_method', $request->input('method'));
         }
 
         if ($request->filled('search')) {
@@ -109,7 +109,7 @@ class PaymentController extends Controller
             $customer?->recalculateBalance();
 
             return redirect()->route('payments.show', $receipt)
-                ->with('success', "Payment receipt {$receipt->receipt_number} of QAR " . number_format($receipt->amount_received, 2) . " recorded successfully.");
+                ->with('success', "Payment receipt {$receipt->receipt_number} of QAR " . number_format((float)$receipt->amount_received, 2) . " recorded successfully.");
         });
     }
 
