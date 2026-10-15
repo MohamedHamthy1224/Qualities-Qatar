@@ -90,19 +90,26 @@
             @foreach($invoice->items as $item)
                 <tr>
                     <td>
-                        <strong>{{ $item->product_name }}</strong>
+                        <span style="font-size: 7.5px; font-weight: bold; padding: 1px 4px; background: #e2e8f0; border-radius: 2px; color: #0a192f; text-transform: uppercase;">{{ $item->category }}</span><br>
+                        <strong style="color: #0a192f; font-size: 10.5px;">{{ $item->product_name }}</strong>
                         @if($item->custom_size_notes)
                             <br><span style="font-size: 8px; color: #64748b;">Note: {{ $item->custom_size_notes }}</span>
                         @endif
                     </td>
-                    <td class="text-center">{{ $item->size_xs ?: '—' }}</td>
-                    <td class="text-center">{{ $item->size_s ?: '—' }}</td>
-                    <td class="text-center">{{ $item->size_m ?: '—' }}</td>
-                    <td class="text-center">{{ $item->size_l ?: '—' }}</td>
-                    <td class="text-center">{{ $item->size_xl ?: '—' }}</td>
-                    <td class="text-center">{{ $item->size_2xl ?: '—' }}</td>
-                    <td class="text-center">{{ $item->size_3xl ?: '—' }}</td>
-                    <td class="text-center">{{ $item->size_custom ?: '—' }}</td>
+                    @if($item->input_mode === 'garment_matrix')
+                        <td class="text-center">{{ $item->size_xs ?: '—' }}</td>
+                        <td class="text-center">{{ $item->size_s ?: '—' }}</td>
+                        <td class="text-center">{{ $item->size_m ?: '—' }}</td>
+                        <td class="text-center">{{ $item->size_l ?: '—' }}</td>
+                        <td class="text-center">{{ $item->size_xl ?: '—' }}</td>
+                        <td class="text-center">{{ $item->size_2xl ?: '—' }}</td>
+                        <td class="text-center">{{ $item->size_3xl ?: '—' }}</td>
+                        <td class="text-center">{{ $item->size_custom ?: '—' }}</td>
+                    @else
+                        <td colspan="8" class="text-center" style="font-style: italic; color: #64748b; background: #f8fafc;">
+                            Flat Quantity ({{ $item->total_qty }} {{ $item->pricing_unit ?? 'units' }})
+                        </td>
+                    @endif
                     <td class="text-center" style="font-weight: bold;">{{ $item->total_qty }}</td>
                     <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
                     <td class="text-right" style="font-weight: bold;">{{ number_format($item->line_total, 2) }}</td>

@@ -19,6 +19,7 @@ Route::get('api/customers/{customer}/unpaid-invoices', [CustomerController::clas
 
 // Quotations & Dynamic Size Matrix (Module 3)
 Route::resource('quotations', QuotationController::class);
+Route::get('api/products', [QuotationController::class, 'getProducts'])->name('api.products.index');
 Route::post('quotations/{quotation}/convert', [QuotationController::class, 'convertToInvoice'])->name('quotations.convert');
 Route::patch('quotations/{quotation}/status', [QuotationController::class, 'updateStatus'])->name('quotations.update-status');
 

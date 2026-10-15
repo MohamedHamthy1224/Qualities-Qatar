@@ -37,7 +37,13 @@ class DashboardController extends Controller
 
         // Recent Active Orders list
         $recentOrders = ProductionOrder::with('customer', 'invoice', 'quotation')
-            ->orderByRaw("FIELD(stage, 'Confirmed', 'Cutting & Stitching', 'Embroidery / DTF Printing', 'Quality Check', 'Ready for Delivery', 'Completed')")
+            ->orderByRaw("CASE stage 
+                WHEN 'Confirmed' THEN 1 
+                WHEN 'Cutting & Stitching' THEN 2 
+                WHEN 'Embroidery / DTF Printing' THEN 3 
+                WHEN 'Quality Check' THEN 4 
+                WHEN 'Ready for Delivery' THEN 5 
+                ELSE 6 END")
             ->orderBy('id', 'desc')
             ->take(8)
             ->get();

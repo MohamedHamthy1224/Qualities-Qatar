@@ -121,7 +121,7 @@
                 <table class="w-full text-left text-xs">
                     <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                         <tr>
-                            <th class="px-3 py-2.5">Item Description</th>
+                            <th class="px-3 py-2.5 min-w-[200px]">Item Description & Category</th>
                             <th class="px-1.5 py-2.5 text-center">XS</th>
                             <th class="px-1.5 py-2.5 text-center">S</th>
                             <th class="px-1.5 py-2.5 text-center">M</th>
@@ -137,21 +137,48 @@
                     </thead>
                     <tbody class="divide-y divide-slate-200 font-mono-num">
                         @foreach($quotation->items as $item)
+                            @php
+                                $itemCatClass = match($item->category) {
+                                    'School Uniforms' => 'bg-sky-100 text-sky-800 border-sky-300',
+                                    'Corporate Uniforms' => 'bg-indigo-100 text-indigo-800 border-indigo-300',
+                                    'Sportswear' => 'bg-amber-100 text-amber-800 border-amber-300',
+                                    'Computerized Embroidery' => 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                                    'DTF Printing' => 'bg-cyan-100 text-cyan-800 border-cyan-300',
+                                    'Promotional Gifts' => 'bg-purple-100 text-purple-800 border-purple-300',
+                                    default => 'bg-slate-100 text-slate-700 border-slate-300',
+                                };
+                            @endphp
                             <tr class="hover:bg-slate-50">
                                 <td class="px-3 py-2.5 font-sans">
-                                    <div class="font-bold text-slate-900">{{ $item->product_name }}</div>
+                                    <div class="flex items-center gap-1.5 mb-1">
+                                        <span class="inline-block text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider border {{ $itemCatClass }}">
+                                            {{ $item->category }}
+                                        </span>
+                                        @if($item->input_mode !== 'garment_matrix')
+                                            <span class="text-[10px] text-slate-400 font-medium capitalize">({{ str_replace('_', ' ', $item->input_mode) }})</span>
+                                        @endif
+                                    </div>
+                                    <div class="font-bold text-slate-900 text-xs">{{ $item->product_name }}</div>
                                     @if($item->custom_size_notes)
-                                        <div class="text-[11px] text-slate-500 font-normal">Custom spec: {{ $item->custom_size_notes }}</div>
+                                        <div class="text-[11px] text-slate-500 font-normal mt-0.5">Spec: {{ $item->custom_size_notes }}</div>
                                     @endif
                                 </td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_xs > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_xs }}</td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_s > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_s }}</td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_m > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_m }}</td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_l > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_l }}</td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_xl }}</td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_2xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_2xl }}</td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_3xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_3xl }}</td>
-                                <td class="px-1.5 py-2.5 text-center {{ $item->size_custom > 0 ? 'font-bold text-purple-700 bg-purple-50' : 'text-slate-300' }}">{{ $item->size_custom }}</td>
+
+                                @if($item->input_mode === 'garment_matrix')
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_xs > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_xs }}</td>
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_s > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_s }}</td>
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_m > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_m }}</td>
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_l > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_l }}</td>
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_xl }}</td>
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_2xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_2xl }}</td>
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_3xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_3xl }}</td>
+                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_custom > 0 ? 'font-bold text-purple-700 bg-purple-50' : 'text-slate-300' }}">{{ $item->size_custom }}</td>
+                                @else
+                                    <td colspan="8" class="px-2 py-2.5 text-center text-slate-500 italic font-sans bg-slate-50/50">
+                                        Flat Quantity: <strong>{{ $item->total_qty }} {{ $item->pricing_unit ?? 'units' }}</strong>
+                                    </td>
+                                @endif
+
                                 <td class="px-2 py-2.5 text-center bg-slate-50 font-bold text-slate-900">{{ $item->total_qty }}</td>
                                 <td class="px-2 py-2.5 text-right">{{ number_format($item->unit_price, 2) }}</td>
                                 <td class="px-3 py-2.5 text-right font-extrabold text-slate-900 bg-slate-50">{{ number_format($item->line_total, 2) }}</td>

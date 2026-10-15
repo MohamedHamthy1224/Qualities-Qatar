@@ -64,10 +64,11 @@
 
             <select name="category" onchange="this.form.submit()" class="text-xs border border-slate-300 rounded-lg px-2.5 py-1.5 focus:outline-none">
                 <option value="">All Categories</option>
+                <option value="Multi-Category" {{ request('category') === 'Multi-Category' ? 'selected' : '' }}>Multi-Category</option>
                 <option value="School Uniforms" {{ request('category') === 'School Uniforms' ? 'selected' : '' }}>School Uniforms</option>
                 <option value="Corporate Uniforms" {{ request('category') === 'Corporate Uniforms' ? 'selected' : '' }}>Corporate Uniforms</option>
                 <option value="Sportswear" {{ request('category') === 'Sportswear' ? 'selected' : '' }}>Sportswear</option>
-                <option value="Embroidery" {{ request('category') === 'Embroidery' ? 'selected' : '' }}>Embroidery</option>
+                <option value="Computerized Embroidery" {{ request('category') === 'Computerized Embroidery' ? 'selected' : '' }}>Computerized Embroidery</option>
                 <option value="DTF Printing" {{ request('category') === 'DTF Printing' ? 'selected' : '' }}>DTF Printing</option>
                 <option value="Promotional Gifts" {{ request('category') === 'Promotional Gifts' ? 'selected' : '' }}>Promotional Gifts</option>
             </select>
@@ -122,7 +123,19 @@
                                 <div class="text-[11px] text-slate-500">{{ $quote->customer->company_name ?? '' }}</div>
                             </td>
                             <td class="px-4 py-3">
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">
+                                @php
+                                    $badgeClass = match($quote->category) {
+                                        'Multi-Category' => 'bg-purple-100 text-purple-900 border-purple-300 font-extrabold',
+                                        'School Uniforms' => 'bg-sky-100 text-sky-800 border-sky-300',
+                                        'Corporate Uniforms' => 'bg-indigo-100 text-indigo-800 border-indigo-300',
+                                        'Sportswear' => 'bg-amber-100 text-amber-800 border-amber-300',
+                                        'Computerized Embroidery' => 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                                        'DTF Printing' => 'bg-cyan-100 text-cyan-800 border-cyan-300',
+                                        'Promotional Gifts' => 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300',
+                                        default => 'bg-slate-100 text-slate-700 border-slate-200'
+                                    };
+                                @endphp
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border {{ $badgeClass }}">
                                     {{ $quote->category }}
                                 </span>
                             </td>

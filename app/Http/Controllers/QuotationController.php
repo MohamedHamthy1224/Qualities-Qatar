@@ -9,12 +9,17 @@ use App\Models\QuotationItem;
 use App\Models\SalesInvoice;
 use App\Models\InvoiceItem;
 use App\Models\ProductionOrder;
+use App\Services\PricingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class QuotationController extends Controller
 {
+    public function __construct(
+        protected PricingService $pricingService
+    ) {}
+
     public function index(Request $request)
     {
         $query = Quotation::with(['customer', 'items']);
@@ -24,7 +29,13 @@ class QuotationController extends Controller
         }
 
         if ($request->filled('category')) {
-            $query->where('category', $request->category);
+            $cat = $request->category;
+            $query->where(function ($q) use ($cat) {
+                $q->where('category', $cat)
+                  ->orWhereHas('items', function ($iq) use ($cat) {
+                      $iq->where('category', $cat);
+                  });
+            });
         }
 
         if ($request->filled('search')) {
@@ -45,17 +56,39 @@ class QuotationController extends Controller
         return view('quotations.index', compact('quotations', 'totalQuotesCount', 'approvedQuotesCount'));
     }
 
+    /**
+     * API: Get active products filtered by category.
+     */
+    public function getProducts(Request $request)
+    {
+        $category = $request->input('category');
+        $query = Product::active();
+
+        if ($category && $category !== 'all' && $category !== 'All Categories') {
+            $query->where('category', $category);
+        }
+
+        $products = $query->orderBy('name')->get();
+
+        return response()->json([
+            'category' => $category ?? 'all',
+            'count' => $products->count(),
+            'products' => $products,
+        ]);
+    }
+
     public function create()
     {
         $customers = Customer::orderBy('name')->get();
-        $products = Product::orderBy('name')->get();
+        $categories = Product::CATEGORIES;
+        $products = Product::active()->orderBy('name')->get();
 
         // Generate next quotation number
         $year = date('Y');
         $nextNum = Quotation::whereYear('created_at', $year)->count() + 1;
         $suggestedNumber = 'QT-' . $year . '-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
 
-        return view('quotations.create', compact('customers', 'products', 'suggestedNumber'));
+        return view('quotations.create', compact('customers', 'categories', 'products', 'suggestedNumber'));
     }
 
     public function store(Request $request)
@@ -63,11 +96,15 @@ class QuotationController extends Controller
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'quotation_number' => 'required|string|unique:quotations,quotation_number',
-            'category' => 'required|string',
+            'category' => 'nullable|string',
             'quotation_date' => 'required|date',
             'delivery_date' => 'nullable|date',
             'items' => 'required|array|min:1',
             'items.*.product_name' => 'required|string',
+            'items.*.category' => 'nullable|string',
+            'items.*.input_mode' => 'nullable|string',
+            'items.*.pricing_unit' => 'nullable|string',
+            'items.*.product_id' => 'nullable|exists:products,id',
             'artwork_file' => 'nullable|file|mimes:jpeg,png,jpg,pdf,svg,webp|max:10240',
         ]);
 
@@ -77,90 +114,51 @@ class QuotationController extends Controller
                 $artworkPath = $request->file('artwork_file')->store('artworks', 'public');
             }
 
-            $totalQty = 0;
-            $subtotal = 0;
-            $setupChargesTotal = (float)($request->setup_charges ?? 0);
-            $printChargesTotal = (float)($request->print_charges ?? 0);
-            $discountTotal = (float)($request->discount ?? 0);
+            // Authoritative server-side calculation via PricingService
+            $pricing = $this->pricingService->calculateQuotationTotals(
+                rawItems: $request->items,
+                overallDiscount: (float)($request->discount ?? 0),
+                overallSetup: (float)($request->setup_charges ?? 0),
+                overallPrint: (float)($request->print_charges ?? 0),
+                tax: (float)($request->tax ?? 0)
+            );
 
-            // Pre-calculate items
-            $preparedItems = [];
-            foreach ($request->items as $item) {
-                $sizeXs = (int)($item['size_xs'] ?? 0);
-                $sizeS = (int)($item['size_s'] ?? 0);
-                $sizeM = (int)($item['size_m'] ?? 0);
-                $sizeL = (int)($item['size_l'] ?? 0);
-                $sizeXl = (int)($item['size_xl'] ?? 0);
-                $size2xl = (int)($item['size_2xl'] ?? 0);
-                $size3xl = (int)($item['size_3xl'] ?? 0);
-                $sizeCustom = (int)($item['size_custom'] ?? 0);
-
-                $itemQty = $sizeXs + $sizeS + $sizeM + $sizeL + $sizeXl + $size2xl + $size3xl + $sizeCustom;
-                if ($itemQty <= 0 && isset($item['total_qty']) && (int)$item['total_qty'] > 0) {
-                    $itemQty = (int)$item['total_qty'];
-                }
-
-                $unitPrice = (float)($item['unit_price'] ?? 0);
-                $lineDiscount = (float)($item['line_discount'] ?? 0);
-                $itemSetup = (float)($item['setup_charges'] ?? 0);
-                $itemPrint = (float)($item['print_charges'] ?? 0);
-
-                $lineTotal = max(0, ($itemQty * $unitPrice) - $lineDiscount + $itemSetup + $itemPrint);
-
-                $totalQty += $itemQty;
-                $subtotal += $lineTotal;
-
-                $preparedItems[] = [
-                    'product_name' => $item['product_name'],
-                    'size_xs' => $sizeXs,
-                    'size_s' => $sizeS,
-                    'size_m' => $sizeM,
-                    'size_l' => $sizeL,
-                    'size_xl' => $sizeXl,
-                    'size_2xl' => $size2xl,
-                    'size_3xl' => $size3xl,
-                    'size_custom' => $sizeCustom,
-                    'custom_size_notes' => $item['custom_size_notes'] ?? null,
-                    'total_qty' => $itemQty,
-                    'unit_price' => $unitPrice,
-                    'line_discount' => $lineDiscount,
-                    'setup_charges' => $itemSetup,
-                    'print_charges' => $itemPrint,
-                    'line_total' => $lineTotal,
-                ];
+            // Backward-compatible header category: use explicit request if provided and items match, otherwise computed primary_category
+            $headerCategory = $pricing['primary_category'];
+            if ($request->filled('category') && $request->category !== 'Multi-Category' && count($pricing['categories']) <= 1) {
+                $headerCategory = $request->category;
             }
-
-            $grandTotal = max(0, $subtotal + $setupChargesTotal + $printChargesTotal - $discountTotal);
 
             $quotation = Quotation::create([
                 'quotation_number' => $request->quotation_number,
                 'customer_id' => $request->customer_id,
-                'category' => $request->category,
+                'category' => $headerCategory,
                 'quotation_date' => $request->quotation_date,
                 'delivery_date' => $request->delivery_date,
-                'total_qty' => $totalQty,
-                'subtotal' => $subtotal,
-                'discount' => $discountTotal,
-                'setup_charges' => $setupChargesTotal,
-                'print_charges' => $printChargesTotal,
-                'grand_total' => $grandTotal,
+                'total_qty' => $pricing['total_qty'],
+                'subtotal' => $pricing['subtotal'],
+                'discount' => $pricing['discount'],
+                'setup_charges' => $pricing['setup_charges'],
+                'print_charges' => $pricing['print_charges'],
+                'grand_total' => $pricing['grand_total'],
                 'status' => $request->action === 'send' ? 'Sent' : 'Draft',
                 'artwork_file' => $artworkPath,
                 'notes' => $request->notes,
             ]);
 
-            foreach ($preparedItems as $pi) {
-                $quotation->items()->create($pi);
+            foreach ($pricing['items'] as $itemData) {
+                unset($itemData['base_amount']);
+                $quotation->items()->create($itemData);
             }
 
             return redirect()->route('quotations.show', $quotation)
-                ->with('success', "Quotation {$quotation->quotation_number} created successfully.");
+                ->with('success', "Quotation {$quotation->quotation_number} with " . count($pricing['items']) . " line items created successfully.");
         });
     }
 
     public function show(Quotation $quotation)
     {
-        $quotation->load(['customer', 'items', 'invoice', 'productionOrder']);
+        $quotation->load(['customer', 'items.product', 'invoice', 'productionOrder']);
 
         return view('quotations.show', compact('quotation'));
     }
@@ -171,6 +169,7 @@ class QuotationController extends Controller
      */
     public function convertToInvoice(Quotation $quotation)
     {
+        // Prevent duplicate conversions
         if ($quotation->invoice) {
             return redirect()->route('invoices.show', $quotation->invoice)
                 ->with('info', "Quotation already converted to Invoice {$quotation->invoice->invoice_number}.");
@@ -181,7 +180,7 @@ class QuotationController extends Controller
             $count = SalesInvoice::whereYear('created_at', $year)->count() + 1;
             $invoiceNumber = 'INV-' . $year . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
 
-            // Create Sales Invoice
+            // Create Sales Invoice snapshot
             $invoice = SalesInvoice::create([
                 'invoice_number' => $invoiceNumber,
                 'quotation_id' => $quotation->id,
@@ -200,11 +199,15 @@ class QuotationController extends Controller
                 'notes' => "Converted from Quotation {$quotation->quotation_number}. " . $quotation->notes,
             ]);
 
-            // Copy items with full size breakdown
+            // Copy items with full category, size matrix, and service details
             foreach ($quotation->items as $item) {
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
+                    'product_id' => $item->product_id,
                     'product_name' => $item->product_name,
+                    'category' => $item->category,
+                    'input_mode' => $item->input_mode,
+                    'pricing_unit' => $item->pricing_unit,
                     'size_xs' => $item->size_xs,
                     'size_s' => $item->size_s,
                     'size_m' => $item->size_m,
