@@ -9,6 +9,56 @@
     </a>
 @endsection
 
+@push('styles')
+<style>
+    /* Smart Catalog Dropdown & Option Visibility Fix */
+    .catalog-select {
+        color-scheme: dark !important;
+        background-color: #0b1c36 !important;
+        color: #ffffff !important;
+        border: 1.5px solid #64748b !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23d4af37' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+        background-position: right 0.75rem center !important;
+        background-repeat: no-repeat !important;
+        background-size: 1.25rem 1.25rem !important;
+        padding-right: 2.5rem !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+    }
+    .catalog-select:hover {
+        border-color: #94a3b8 !important;
+        background-color: #0e223d !important;
+    }
+    .catalog-select:focus {
+        border-color: #d4af37 !important;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25) !important;
+        outline: none !important;
+    }
+    /* Ensure native <option> elements in opened popup are dark navy with crisp white/gold text */
+    .catalog-select option {
+        background-color: #0b1c36 !important;
+        color: #ffffff !important;
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+    }
+    .catalog-select option:checked {
+        background-color: #173559 !important;
+        color: #ffd700 !important;
+        font-weight: 700 !important;
+    }
+    .catalog-select option:hover {
+        background-color: #132a4a !important;
+        color: #ffffff !important;
+    }
+    .catalog-select option[value=""] {
+        color: #cbd5e1 !important;
+        font-style: italic !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="space-y-6 pt-2">
 
@@ -83,18 +133,18 @@
         </div>
 
         <!-- Smart Product Catalog & Category Filter Selection Desk -->
-        <div class="bg-gradient-to-r from-slate-900 via-[#0a192f] to-[#132a4a] text-white rounded-xl shadow-md p-5 border border-slate-800">
-            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-700/80">
+        <div class="bg-gradient-to-r from-slate-900 via-[#0a192f] to-[#132a4a] text-white rounded-xl shadow-md p-5 border border-slate-700">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-700">
                 <div>
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-[#d4af37] animate-pulse"></span>
                         <h3 class="font-extrabold text-sm text-white tracking-wide uppercase">Smart Catalog & Item Selection Desk</h3>
                     </div>
-                    <p class="text-xs text-slate-300 mt-0.5">Filter by category, select catalog presets, or add custom items across garments, embroidery, printing, and gifts.</p>
+                    <p class="text-xs text-slate-200 mt-1 font-medium">Filter by category, select catalog presets, or add custom items across garments, embroidery, printing, and gifts.</p>
                 </div>
 
                 <!-- Multi-Category Demo Quick Loader -->
-                <button type="button" onclick="loadMultiCategoryDemo()" class="bg-[#d4af37]/20 hover:bg-[#d4af37]/30 text-[#d4af37] border border-[#d4af37]/50 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 self-start lg:self-auto">
+                <button type="button" onclick="loadMultiCategoryDemo()" class="bg-[#d4af37]/15 hover:bg-[#d4af37]/25 text-[#ffd700] hover:text-white border border-[#d4af37]/60 hover:border-[#d4af37] px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 self-start lg:self-auto cursor-pointer">
                     <svg class="w-4 h-4 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     <span>⚡ Load Multi-Category Demo (QT-2026-009)</span>
                 </button>
@@ -103,27 +153,31 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4 text-xs">
                 <!-- 1. Category Filter Selector -->
                 <div class="md:col-span-4">
-                    <label class="block font-bold text-slate-200 mb-1.5">
-                        <span class="text-[#d4af37]">1.</span> Select a category to filter products:
+                    <label for="categoryFilter" class="block font-bold text-slate-100 mb-1.5 flex items-center">
+                        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#d4af37] text-slate-950 text-[10px] font-extrabold mr-1.5 shadow-2xs">1</span>
+                        <span>Select a category to filter products:</span>
                     </label>
-                    <select id="categoryFilter" onchange="handleCategoryFilterChange(this.value)" class="w-full px-3 py-2.5 bg-slate-800/90 border border-slate-600 rounded-lg text-white font-semibold focus:ring-2 focus:ring-[#d4af37] focus:outline-none">
-                        <option value="all">★ All Categories (Show All Active Products)</option>
+                    <select id="categoryFilter" onchange="handleCategoryFilterChange(this.value)" class="w-full px-3 py-2.5 bg-[#0b1c36] border border-slate-500 rounded-lg text-white font-semibold text-xs focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none cursor-pointer shadow-inner catalog-select">
+                        <option value="all" class="bg-[#0b1c36] text-white">★ All Categories (Show All Active Products)</option>
                         @foreach($categories as $cat)
-                            <option value="{{ $cat }}">{{ $cat }}</option>
+                            <option value="{{ $cat }}" class="bg-[#0b1c36] text-white">{{ $cat }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <!-- 2. Product Catalog Preset Selector -->
                 <div class="md:col-span-5">
-                    <label class="block font-bold text-slate-200 mb-1.5 flex items-center justify-between">
-                        <span><span class="text-[#d4af37]">2.</span> Add a product or service from catalog:</span>
-                        <span id="filteredCountBadge" class="text-[10px] text-slate-400 font-normal">({{ count($products) }} items available)</span>
+                    <label for="catalogPresetSelect" class="block font-bold text-slate-100 mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center">
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#d4af37] text-slate-950 text-[10px] font-extrabold mr-1.5 shadow-2xs">2</span>
+                            <span>Add a product or service from catalog:</span>
+                        </span>
+                        <span id="filteredCountBadge" class="text-[11px] font-semibold text-slate-200 bg-slate-800/90 px-2 py-0.5 rounded-md border border-slate-600 shadow-2xs">({{ count($products) }} items available)</span>
                     </label>
-                    <select id="catalogPresetSelect" onchange="handlePresetSelect(this)" class="w-full px-3 py-2.5 bg-slate-800/90 border border-slate-600 rounded-lg text-white font-semibold focus:ring-2 focus:ring-[#d4af37] focus:outline-none">
-                        <option value="">Select a product or service...</option>
+                    <select id="catalogPresetSelect" onchange="handlePresetSelect(this)" class="w-full px-3 py-2.5 bg-[#0b1c36] border border-slate-500 rounded-lg text-white font-semibold text-xs focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] focus:outline-none cursor-pointer shadow-inner catalog-select">
+                        <option value="" class="bg-[#0b1c36] text-slate-300 italic">Select a product or service...</option>
                         @foreach($products as $prod)
-                            <option value="{{ $prod->id }}" data-category="{{ $prod->category }}">
+                            <option value="{{ $prod->id }}" data-category="{{ $prod->category }}" class="bg-[#0b1c36] text-white">
                                 {{ $prod->name }} — QAR {{ number_format($prod->unit_price, 2) }} / {{ $prod->pricing_unit }}
                             </option>
                         @endforeach
@@ -132,7 +186,7 @@
 
                 <!-- 3. Add Custom Item Button -->
                 <div class="md:col-span-3 flex flex-col justify-end">
-                    <button type="button" onclick="openAddCustomModal()" class="w-full bg-[#d4af37] hover:bg-[#c59b27] text-slate-950 px-4 py-2.5 rounded-lg text-xs font-extrabold shadow-md flex items-center justify-center gap-1.5 transition-all">
+                    <button type="button" onclick="openAddCustomModal()" class="w-full bg-[#d4af37] hover:bg-[#c59b27] text-slate-950 border border-[#e5c358] px-4 py-2.5 rounded-lg text-xs font-extrabold shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer">
                         <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         <span>+ Add Custom Item</span>
                     </button>
@@ -140,9 +194,9 @@
             </div>
 
             <!-- Empty category state message -->
-            <div id="emptyCategoryNotice" class="hidden mt-3 p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-amber-200 text-xs flex items-center justify-between">
+            <div id="emptyCategoryNotice" class="hidden mt-3 p-3 bg-amber-950/60 border border-amber-700/80 rounded-lg text-amber-200 text-xs flex items-center justify-between">
                 <span>No catalog products currently found in this category. You can add a custom item or add products to the catalog.</span>
-                <button type="button" onclick="openAddCustomModal()" class="underline font-bold text-white ml-2">+ Add Custom Item</button>
+                <button type="button" onclick="openAddCustomModal()" class="underline font-bold text-white ml-2 hover:text-amber-100">+ Add Custom Item</button>
             </div>
         </div>
 
@@ -486,8 +540,15 @@
         const emptyNotice = document.getElementById('emptyCategoryNotice');
         const countBadge = document.getElementById('filteredCountBadge');
 
-        // Reset dropdown
-        select.innerHTML = '<option value="">Select a product or service...</option>';
+        // Reset dropdown — apply explicit inline styles for cross-browser option visibility
+        const placeholderOpt = document.createElement('option');
+        placeholderOpt.value = '';
+        placeholderOpt.textContent = 'Select a product or service...';
+        placeholderOpt.style.backgroundColor = '#0b1c36';
+        placeholderOpt.style.color = '#cbd5e1';
+        placeholderOpt.style.fontStyle = 'italic';
+        select.innerHTML = '';
+        select.appendChild(placeholderOpt);
 
         let matchingProducts = [];
         if (selectedCategory === 'all' || selectedCategory === 'All Categories') {
@@ -507,6 +568,8 @@
                 opt.value = prod.id;
                 opt.dataset.category = prod.category;
                 opt.textContent = `${prod.name} — QAR ${parseFloat(prod.unit_price).toFixed(2)} / ${prod.pricing_unit || 'piece'}`;
+                opt.style.backgroundColor = '#0b1c36';
+                opt.style.color = '#ffffff';
                 select.appendChild(opt);
             });
         }
