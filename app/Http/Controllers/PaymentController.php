@@ -19,7 +19,7 @@ class PaymentController extends Controller
         }
 
         if ($request->filled('search')) {
-            $s = $request->search;
+            $s = $request->input('search');
             $query->where(function ($q) use ($s) {
                 $q->where('receipt_number', 'like', "%{$s}%")
                   ->orWhere('reference_number', 'like', "%{$s}%")
@@ -44,11 +44,11 @@ class PaymentController extends Controller
         $selectedInvoice = null;
 
         if ($request->filled('customer_id')) {
-            $selectedCustomer = Customer::with('invoices')->find($request->customer_id);
+            $selectedCustomer = Customer::with('invoices')->find($request->input('customer_id'));
         }
 
         if ($request->filled('invoice_id')) {
-            $selectedInvoice = SalesInvoice::with('customer')->find($request->invoice_id);
+            $selectedInvoice = SalesInvoice::with('customer')->find($request->input('invoice_id'));
             if ($selectedInvoice) {
                 $selectedCustomer = $selectedInvoice->customer;
             }
@@ -109,7 +109,7 @@ class PaymentController extends Controller
             $customer?->recalculateBalance();
 
             return redirect()->route('payments.show', $receipt)
-                ->with('success', "Payment receipt {$receipt->receipt_number} of QAR " . number_format((float)$receipt->amount_received, 2) . " recorded successfully.");
+                ->with('success', "Payment receipt {$receipt->receipt_number} of QAR " . number_format((float) $receipt->amount_received, 2) . " recorded successfully.");
         });
     }
 
