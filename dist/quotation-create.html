@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" class="app-root bg-slate-50" data-appearance="clean">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quotation — QUALITIES Uniforms & Gifts Solutions</title>
+    <link rel="icon" href="./favicon.ico">
+    <script>
+        try {
+            if (localStorage.getItem('qualities:appearance') === 'previous') {
+                document.documentElement.dataset.appearance = 'previous';
+            }
+        } catch {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/app.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+        .size-input { width: 3.2rem; text-align: center; }
+    </style>
+</head>
+<body class="app-shell text-slate-800 antialiased bg-slate-100 flex flex-col md:flex-row min-h-screen">
+
+    <!-- Fixed / Sticky Navy Sidebar -->
+    <aside id="sidebar" class="app-sidebar w-full md:w-64 bg-[#0a192f] text-slate-200 flex flex-col flex-shrink-0 z-30 transition-all duration-300 border-r border-slate-800">
+        <div class="shrink-0 px-4 py-2 md:px-5 md:py-3 border-b border-slate-800/80 flex items-center justify-between gap-3">
+            <a href="./index.html" class="min-w-0 inline-flex items-center gap-3 md:flex-col md:items-start md:gap-1">
+                <img src="./branding/qualities-logo.png" alt="QUALITIES Uniforms & Gifts" width="160" height="94" class="ui-brand-logo h-auto object-contain shrink-0">
+                <div class="flex flex-wrap items-center gap-1.5 text-[9px] text-slate-400">
+                    <span class="px-1.5 py-0.5 rounded bg-[#d4af37]/15 text-[#d4af37] font-bold border border-[#d4af37]/30">ERP</span>
+                    <span>Operations &amp; Billing</span>
+                </div>
+            </a>
+            <button id="sidebarToggle" type="button" aria-label="Toggle navigation" class="md:hidden shrink-0 text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+        </div>
+
+        <nav id="sidebarNavigation" aria-label="Main navigation" class="hidden md:block flex-1 min-h-0 px-3 py-4 space-y-1 overflow-y-auto">
+            <div class="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Operations &amp; Billing</div>
+
+            <a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="./quotations.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-[#132a4a] text-white border-l-4 border-[#d4af37]">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>Quotations</span>
+                </div>
+            </a>
+
+            <a href="./invoices.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span>Sales Invoices</span>
+                </div>
+            </a>
+
+            <a href="./production.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                    <span>Production Pipeline</span>
+                </div>
+            </a>
+
+            <a href="./delivery.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                <span>Delivery Notes</span>
+            </a>
+
+            <a href="./payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Payment Receipts</span>
+            </a>
+
+            <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Master Records</div>
+
+            <a href="./customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Customers</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div id="appWorkspace" class="app-workspace flex flex-col flex-1 min-w-0">
+        <header class="app-header shrink-0 sticky top-0 z-20" data-app-header>
+            <div class="flex items-center gap-3">
+                <a href="./quotations.html" class="text-xs text-slate-500 hover:text-slate-800 font-semibold">&larr; Back to Quotations</a>
+                <h1 class="ui-page-title app-header-title">Create Quotation</h1>
+            </div>
+            <div class="app-header-controls">
+                <div class="app-header-clock" title="Doha, Qatar">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><span class="app-header-clock-label">Doha</span><time data-header-clock>05:30 PM</time></div>
+                </div>
+            </div>
+        </header>
+
+        <div id="appFlashMessages" class="shrink-0 px-4 sm:px-6 pt-3"></div>
+
+        <main class="app-main px-4 sm:px-6 pb-12 flex-1">
+            <form id="createQuoteForm" class="ui-page pt-2 space-y-6">
+                <!-- Top Details Card -->
+                <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#d4af37]"></span>
+                            <h2 class="text-sm font-bold text-slate-900">Quotation details</h2>
+                        </div>
+                        <div class="text-xs text-slate-500">Currency: <strong class="text-slate-900 font-bold">QAR</strong></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="md:col-span-2">
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="quoteCustomerSelect" class="font-bold text-slate-700">Customer *</label>
+                                <button type="button" onclick="openQuickCustomerModal()" class="text-xs font-bold text-[#0a192f] hover:text-[#d4af37] underline">+ Quick Add Customer</button>
+                            </div>
+                            <select id="quoteCustomerSelect" name="customer_id" required class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-[#0a192f]">
+                                <option value="">-- Choose Customer --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="quoteCategory" class="block font-bold text-slate-700 mb-1">Product Category</label>
+                            <select id="quoteCategory" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                                <option value="School Uniforms">School Uniforms</option>
+                                <option value="Corporate Uniforms">Corporate Uniforms</option>
+                                <option value="Sportswear">Sportswear</option>
+                                <option value="Computerized Embroidery">Computerized Embroidery</option>
+                                <option value="DTF Printing">DTF Printing</option>
+                                <option value="Promotional Gifts">Promotional Gifts</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="quoteDate" class="block font-bold text-slate-700 mb-1">Quotation Date *</label>
+                            <input type="date" id="quoteDate" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                        </div>
+
+                        <div>
+                            <label for="deliveryDate" class="block font-bold text-slate-700 mb-1">Expected Delivery Date</label>
+                            <input type="date" id="deliveryDate" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                        </div>
+
+                        <div>
+                            <label for="quoteStatus" class="block font-bold text-slate-700 mb-1">Initial Status</label>
+                            <select id="quoteStatus" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                                <option value="Draft">Draft</option>
+                                <option value="Sent" selected>Sent to customer</option>
+                                <option value="Approved">Approved</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Garment Matrix & Items Builder Card -->
+                <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Line Items &amp; Garment Size Matrix</h2>
+                            <p class="text-xs text-slate-500">Break down quantities across sizes. Setup and printing charges add to line totals.</p>
+                        </div>
+                        <button type="button" id="btnAddRow" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200">
+                            + Add Item Row
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="ui-table w-full min-w-[960px] text-left text-xs border border-slate-200">
+                            <thead class="bg-slate-100 text-slate-700 border-b border-slate-200 font-bold">
+                                <tr>
+                                    <th class="px-3 py-2.5 min-w-48">Item Description</th>
+                                    <th class="px-1 py-2.5 text-center">XS</th>
+                                    <th class="px-1 py-2.5 text-center">S</th>
+                                    <th class="px-1 py-2.5 text-center">M</th>
+                                    <th class="px-1 py-2.5 text-center">L</th>
+                                    <th class="px-1 py-2.5 text-center">XL</th>
+                                    <th class="px-1 py-2.5 text-center">2XL</th>
+                                    <th class="px-1 py-2.5 text-center">3XL</th>
+                                    <th class="px-1 py-2.5 text-center">Cst</th>
+                                    <th class="px-2 py-2.5 text-center">Qty</th>
+                                    <th class="px-2 py-2.5 text-right min-w-20">Unit QAR</th>
+                                    <th class="px-2 py-2.5 text-right min-w-20">Setup QAR</th>
+                                    <th class="px-2 py-2.5 text-right min-w-20">Print QAR</th>
+                                    <th class="px-2 py-2.5 text-right min-w-24">Line Total</th>
+                                    <th class="px-2 py-2.5 text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="quoteItemsTbody" class="divide-y divide-slate-200">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Totals & Notes Card -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 space-y-3">
+                        <label for="quoteNotes" class="block font-bold text-xs text-slate-700">Proposal Notes &amp; Scope of Work</label>
+                        <textarea id="quoteNotes" rows="4" placeholder="Terms, embroidery stitch specifics, fabric specifications, delivery notes..." class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg"></textarea>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 space-y-3 text-xs">
+                        <h3 class="font-bold text-sm text-slate-900 border-b border-slate-100 pb-2">Financial Summary</h3>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Total Units:</span>
+                            <strong id="sumTotalUnits" class="font-mono-num text-slate-900">0</strong>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Subtotal:</span>
+                            <span class="font-mono-num font-bold">QAR <span id="sumSubtotal">0.00</span></span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Setup Charges:</span>
+                            <span class="font-mono-num">QAR <span id="sumSetup">0.00</span></span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Print Charges:</span>
+                            <span class="font-mono-num">QAR <span id="sumPrint">0.00</span></span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-600">
+                            <span>Overall Discount:</span>
+                            <input type="number" id="overallDiscount" step="0.01" min="0" value="0.00" class="w-24 text-right px-2 py-1 border border-slate-300 rounded font-mono-num">
+                        </div>
+                        <div class="pt-3 border-t border-slate-200 flex justify-between items-center text-slate-900 text-sm font-extrabold">
+                            <span>Grand Total:</span>
+                            <span class="font-mono-num text-base text-[#0a192f]">QAR <span id="sumGrandTotal">0.00</span></span>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="w-full py-2.5 rounded-lg bg-[#0a192f] hover:bg-[#132a4a] text-white font-bold text-xs shadow-xs transition-colors">
+                                Save Quotation Proposal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- Quick Customer Modal -->
+    <dialog id="quickCustomerModal" class="app-dialog">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-900">New customer</h2>
+            <button type="button" onclick="closeQuickCustomerModal()" class="text-slate-400 hover:text-slate-700">&times;</button>
+        </div>
+        <form id="quickCustomerForm" class="p-4 space-y-3 text-xs">
+            <div>
+                <label for="qc_name" class="block font-semibold text-slate-700 mb-1">Customer / Organization Name *</label>
+                <input type="text" id="qc_name" required maxlength="255" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+                <label for="qc_company_name" class="block font-semibold text-slate-700 mb-1">Company / Group</label>
+                <input type="text" id="qc_company_name" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label for="qc_phone" class="block font-semibold text-slate-700 mb-1">Phone</label>
+                    <input type="tel" id="qc_phone" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="qc_email" class="block font-semibold text-slate-700 mb-1">Email</label>
+                    <input type="email" id="qc_email" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                <button type="button" onclick="closeQuickCustomerModal()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-slate-600">Cancel</button>
+                <button type="submit" class="px-4 py-1.5 bg-[#0a192f] text-white font-bold rounded-lg hover:bg-[#132a4a]">Save customer</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="./assets/demo-store.js"></script>
+    <script src="./assets/demo-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const preselectedCust = params.get('customer_id');
+
+            // Populate customers
+            const custSelect = document.getElementById('quoteCustomerSelect');
+            function populateCustomers() {
+                custSelect.innerHTML = '<option value="">-- Choose Customer --</option>';
+                window.demoStore.getCustomers().forEach(c => {
+                    const opt = new Option(`${c.name}${c.company_name ? ` (${c.company_name})` : ''} [${c.customer_code}]`, c.customer_code);
+                    if (preselectedCust && (c.id === preselectedCust || c.customer_code === preselectedCust)) {
+                        opt.selected = true;
+                    }
+                    custSelect.add(opt);
+                });
+            }
+            populateCustomers();
+
+            document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('deliveryDate').value = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0];
+
+            const tbody = document.getElementById('quoteItemsTbody');
+            const products = window.demoStore.getProducts();
+
+            function addRow(data = {}) {
+                const tr = document.createElement('tr');
+                tr.className = 'item-row hover:bg-slate-50 transition-colors';
+                tr.innerHTML = `
+                    <td class="px-3 py-2">
+                        <input type="text" class="item-name w-full px-2 py-1 border border-slate-300 rounded text-xs" list="productSuggestions" value="${data.name || ''}" placeholder="Choose or type item..." required>
+                    </td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-xs size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.xs || 0}"></td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-s size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.s || 0}"></td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-m size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.m || 0}"></td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-l size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.l || 0}"></td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-xl size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.xl || 0}"></td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-2xl size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data['2xl'] || 0}"></td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-3xl size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data['3xl'] || 0}"></td>
+                    <td class="px-1 py-2 text-center"><input type="number" min="0" class="size-custom size-input px-1 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.custom || 0}"></td>
+                    <td class="px-2 py-2 text-center font-mono-num font-bold row-qty">0</td>
+                    <td class="px-2 py-2 text-right"><input type="number" step="0.01" min="0" class="row-price w-20 text-right px-2 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.price || 0}"></td>
+                    <td class="px-2 py-2 text-right"><input type="number" step="0.01" min="0" class="row-setup w-16 text-right px-2 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.setup || 0}"></td>
+                    <td class="px-2 py-2 text-right"><input type="number" step="0.01" min="0" class="row-print w-16 text-right px-2 py-1 border border-slate-300 rounded text-xs font-mono-num" value="${data.print || 0}"></td>
+                    <td class="px-2 py-2 text-right font-mono-num font-bold text-slate-900 row-total">QAR 0.00</td>
+                    <td class="px-2 py-2 text-center">
+                        <button type="button" class="btn-del text-rose-500 hover:text-rose-700 font-bold text-base">&times;</button>
+                    </td>
+                `;
+
+                // Handle item input selection from datalist
+                const nameInput = tr.querySelector('.item-name');
+                nameInput.addEventListener('change', () => {
+                    const match = products.find(p => p.name.toLowerCase() === nameInput.value.toLowerCase());
+                    if (match) {
+                        tr.querySelector('.row-price').value = match.unit_price;
+                        recalculate();
+                    }
+                });
+
+                tr.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('input', recalculate);
+                });
+
+                tr.querySelector('.btn-del').addEventListener('click', () => {
+                    if (tbody.children.length > 1) {
+                        tr.remove();
+                        recalculate();
+                    }
+                });
+
+                tbody.appendChild(tr);
+                recalculate();
+            }
+
+            // Datalist for suggestions
+            const datalist = document.createElement('datalist');
+            datalist.id = 'productSuggestions';
+            products.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.name;
+                datalist.appendChild(opt);
+            });
+            document.body.appendChild(datalist);
+
+            function recalculate() {
+                let grandUnits = 0;
+                let grandSubtotal = 0;
+                let grandSetup = 0;
+                let grandPrint = 0;
+
+                tbody.querySelectorAll('.item-row').forEach(tr => {
+                    const xs = Number(tr.querySelector('.size-xs').value) || 0;
+                    const s = Number(tr.querySelector('.size-s').value) || 0;
+                    const m = Number(tr.querySelector('.size-m').value) || 0;
+                    const l = Number(tr.querySelector('.size-l').value) || 0;
+                    const xl = Number(tr.querySelector('.size-xl').value) || 0;
+                    const xxl = Number(tr.querySelector('.size-2xl').value) || 0;
+                    const xxxl = Number(tr.querySelector('.size-3xl').value) || 0;
+                    const custom = Number(tr.querySelector('.size-custom').value) || 0;
+                    const totalQty = xs + s + m + l + xl + xxl + xxxl + custom;
+
+                    const price = Number(tr.querySelector('.row-price').value) || 0;
+                    const setup = Number(tr.querySelector('.row-setup').value) || 0;
+                    const print = Number(tr.querySelector('.row-print').value) || 0;
+
+                    const baseAmount = totalQty * price;
+                    const rowTotal = baseAmount + setup + print;
+
+                    tr.querySelector('.row-qty').textContent = totalQty;
+                    tr.querySelector('.row-total').textContent = 'QAR ' + rowTotal.toFixed(2);
+
+                    grandUnits += totalQty;
+                    grandSubtotal += baseAmount;
+                    grandSetup += setup;
+                    grandPrint += print;
+                });
+
+                const discount = Number(document.getElementById('overallDiscount').value) || 0;
+                const grandTotal = Math.max(0, grandSubtotal + grandSetup + grandPrint - discount);
+
+                document.getElementById('sumTotalUnits').textContent = grandUnits;
+                document.getElementById('sumSubtotal').textContent = grandSubtotal.toFixed(2);
+                document.getElementById('sumSetup').textContent = grandSetup.toFixed(2);
+                document.getElementById('sumPrint').textContent = grandPrint.toFixed(2);
+                document.getElementById('sumGrandTotal').textContent = grandTotal.toFixed(2);
+            }
+
+            document.getElementById('overallDiscount').addEventListener('input', recalculate);
+            document.getElementById('btnAddRow').addEventListener('click', () => addRow());
+
+            // Initial rows
+            addRow({ name: 'Student School Blazer with Crest', price: 175, xs: 10, s: 20, m: 25, l: 15, xl: 5 });
+            addRow({ name: 'Custom Pique Polo Shirt', price: 65, xs: 5, s: 10, m: 15, l: 10 });
+
+            // Form Submit
+            document.getElementById('createQuoteForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const custCode = custSelect.value;
+                if (!custCode) {
+                    alert('Please select a customer.');
+                    return;
+                }
+
+                const items = [];
+                tbody.querySelectorAll('.item-row').forEach(tr => {
+                    const xs = Number(tr.querySelector('.size-xs').value) || 0;
+                    const s = Number(tr.querySelector('.size-s').value) || 0;
+                    const m = Number(tr.querySelector('.size-m').value) || 0;
+                    const l = Number(tr.querySelector('.size-l').value) || 0;
+                    const xl = Number(tr.querySelector('.size-xl').value) || 0;
+                    const xxl = Number(tr.querySelector('.size-2xl').value) || 0;
+                    const xxxl = Number(tr.querySelector('.size-3xl').value) || 0;
+                    const custom = Number(tr.querySelector('.size-custom').value) || 0;
+                    const totalQty = xs + s + m + l + xl + xxl + xxxl + custom;
+                    const price = Number(tr.querySelector('.row-price').value) || 0;
+                    const setup = Number(tr.querySelector('.row-setup').value) || 0;
+                    const print = Number(tr.querySelector('.row-print').value) || 0;
+
+                    items.push({
+                        product_name: tr.querySelector('.item-name').value.trim() || 'Custom Uniform Item',
+                        unit_price: price,
+                        sizes: { xs, s, m, l, xl, '2xl': xxl, '3xl': xxxl, custom },
+                        total_qty: totalQty,
+                        line_discount: 0,
+                        setup_charges: setup,
+                        print_charges: print,
+                        line_total: (totalQty * price) + setup + print
+                    });
+                });
+
+                const subtotal = Number(document.getElementById('sumSubtotal').textContent);
+                const setup = Number(document.getElementById('sumSetup').textContent);
+                const print = Number(document.getElementById('sumPrint').textContent);
+                const discount = Number(document.getElementById('overallDiscount').value) || 0;
+                const grandTotal = Number(document.getElementById('sumGrandTotal').textContent);
+                const totalUnits = Number(document.getElementById('sumTotalUnits').textContent);
+
+                const newQuote = window.demoStore.addQuotation({
+                    customer_id: custCode,
+                    category: document.getElementById('quoteCategory').value,
+                    quotation_date: document.getElementById('quoteDate').value,
+                    delivery_date: document.getElementById('deliveryDate').value,
+                    total_qty: totalUnits,
+                    subtotal: subtotal,
+                    setup_charges: setup,
+                    print_charges: print,
+                    discount: discount,
+                    grand_total: grandTotal,
+                    status: document.getElementById('quoteStatus').value,
+                    notes: document.getElementById('quoteNotes').value.trim(),
+                    items: items
+                });
+
+                window.location.href = `./quotation-detail.html?id=${encodeURIComponent(newQuote.quotation_number)}`;
+            });
+        });
+    </script>
+</body>
+</html>

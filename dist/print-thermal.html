@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title id="thermalTitle">80mm Invoice Receipt — QUALITIES Uniforms</title>
+    <link rel="icon" href="./favicon.ico">
+    <style>
+        @page { size: 80mm auto; margin: 3mm; }
+        * { box-sizing: border-box; }
+        body { font: 11px/1.4 'Courier New', monospace; color: #111; width: 74mm; max-width: 100%; margin: 0 auto; padding: 3mm 0; overflow-wrap: anywhere; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        td, th { padding: 4px 0; vertical-align: top; }
+        .center { text-align: center; }
+        .right { text-align: right; }
+        .strong, .item-name { font-weight: bold; }
+        .logo { display: block; max-width: 130px; height: auto; margin: 0 auto 6px; }
+        .divider { border-top: 1px dashed #333; margin: 8px 0; }
+        .item-detail { font-size: 10px; margin-top: 2px; }
+        .item { border-bottom: 1px dotted #777; padding: 6px 0; break-inside: avoid; }
+        .totals td:last-child { width: 46%; }
+        .totals .grand, .totals .balance { font-weight: bold; border-top: 1px solid #333; }
+        .notes { white-space: pre-line; margin-top: 8px; font-size: 10px; }
+        .no-print { padding: 8px; background: #0a192f; text-align: center; margin-bottom: 12px; border-radius: 4px; }
+        button { cursor: pointer; padding: 6px 12px; border: 0; background: #d4af37; color: #0a192f; font-weight: bold; border-radius: 3px; font-size: 11px; margin: 0 3px; }
+        button.secondary { background: #334155; color: #f1f5f9; }
+        @media print {
+            .no-print { display: none; }
+            body { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print">
+        <button type="button" onclick="window.print()">Print 80mm invoice</button>
+        <button type="button" class="secondary" onclick="window.close()">Close</button>
+    </div>
+
+    <div id="thermalContent">
+        <!-- Injected dynamically by JS -->
+    </div>
+
+    <script src="./assets/demo-store.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const invoiceId = urlParams.get('id');
+            const container = document.getElementById('thermalContent');
+
+            if (!invoiceId) {
+                container.innerHTML = '<div class="center">No invoice specified.</div>';
+                return;
+            }
+
+            const inv = window.demoStore.getInvoice(invoiceId);
+            if (!inv) {
+                container.innerHTML = '<div class="center">Invoice not found.</div>';
+                return;
+            }
+
+            const cust = window.demoStore.getCustomer(inv.customer_id);
+            document.title = `Thermal Receipt - ${inv.invoice_number}`;
+
+            let itemsHtml = '';
+            (inv.items || []).forEach(item => {
+                let sizeStr = '';
+                if (item.sizes) {
+                    const sList = [];
+                    for (const [k, v] of Object.entries(item.sizes)) {
+                        if (Number(v) > 0) sList.push(`${k.toUpperCase()}:${v}`);
+                    }
+                    if (sList.length) sizeStr = `<div class="item-detail">${sList.join(' ')}</div>`;
+                }
+
+                itemsHtml += `
+                    <div class="item">
+                        <div class="item-name">${item.product_name}</div>
+                        ${sizeStr}
+                        <table>
+                            <tr>
+                                <td style="width: 55%;">${item.total_qty} units x ${Number(item.unit_price).toFixed(2)}</td>
+                                <td class="right strong">${Number(item.line_total).toFixed(2)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="center">
+                    <img class="logo" src="./branding/qualities-logo.png" alt="QUALITIES">
+                    <strong>QUALITIES UNIFORMS &amp; GIFTS</strong>
+                    <div>Industrial Area, St 24, Doha</div>
+                    <div>Tel: +974 5522 1178</div>
+                    <div>C.R. 148920/1</div>
+                    <div class="divider"></div>
+                    <strong>SALES INVOICE</strong>
+                    <div class="strong">${inv.invoice_number}</div>
+                    <div>Date: ${inv.invoice_date}</div>
+                    <div>Status: [${inv.status.toUpperCase()}]</div>
+                </div>
+
+                <div class="divider"></div>
+                <div><strong>Customer:</strong> ${cust ? cust.name : 'Walk-in'}</div>
+                ${cust?.phone ? `<div>Tel: ${cust.phone}</div>` : ''}
+                ${inv.due_date ? `<div>Due: ${inv.due_date}</div>` : ''}
+
+                <div class="divider"></div>
+                ${itemsHtml}
+
+                <div class="divider"></div>
+                <table class="totals">
+                    <tr><td>Subtotal</td><td class="right">QAR ${Number(inv.subtotal).toFixed(2)}</td></tr>
+                    ${inv.setup_charges > 0 ? `<tr><td>Setup</td><td class="right">QAR ${Number(inv.setup_charges).toFixed(2)}</td></tr>` : ''}
+                    ${inv.print_charges > 0 ? `<tr><td>Printing</td><td class="right">QAR ${Number(inv.print_charges).toFixed(2)}</td></tr>` : ''}
+                    ${inv.discount > 0 ? `<tr><td>Discount</td><td class="right">-QAR ${Number(inv.discount).toFixed(2)}</td></tr>` : ''}
+                    <tr class="grand"><td>TOTAL</td><td class="right">QAR ${Number(inv.grand_total).toFixed(2)}</td></tr>
+                    <tr><td>Paid</td><td class="right">QAR ${Number(inv.paid_amount || 0).toFixed(2)}</td></tr>
+                    <tr class="balance"><td>Balance Due</td><td class="right">QAR ${Number(inv.balance_due || 0).toFixed(2)}</td></tr>
+                </table>
+
+                ${inv.notes ? `<div class="divider"></div><div class="notes"><strong>Notes:</strong><br>${inv.notes}</div>` : ''}
+
+                <div class="divider"></div>
+                <div class="center">
+                    Thank you for your business!<br>
+                    qualitiesqatar.com<br>
+                    All amounts in Qatari Riyals (QAR)
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

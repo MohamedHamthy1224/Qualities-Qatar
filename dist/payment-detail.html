@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" class="app-root bg-slate-50" data-appearance="clean">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt Details — QUALITIES Uniforms &amp; Gifts Solutions</title>
+    <link rel="icon" href="./favicon.ico">
+    <script>
+        try {
+            if (localStorage.getItem('qualities:appearance') === 'previous') {
+                document.documentElement.dataset.appearance = 'previous';
+            }
+        } catch {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/app.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body class="app-shell text-slate-800 antialiased bg-slate-100 flex flex-col md:flex-row min-h-screen">
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="app-sidebar w-full md:w-64 bg-[#0a192f] text-slate-200 flex flex-col flex-shrink-0 z-30 transition-all duration-300 border-r border-slate-800">
+        <div class="shrink-0 px-4 py-2 md:px-5 md:py-3 border-b border-slate-800/80 flex items-center justify-between gap-3">
+            <a href="./index.html" class="min-w-0 inline-flex items-center gap-3 md:flex-col md:items-start md:gap-1">
+                <img src="./branding/qualities-logo.png" alt="QUALITIES Uniforms & Gifts" width="160" height="94" class="ui-brand-logo h-auto object-contain shrink-0">
+                <div class="flex flex-wrap items-center gap-1.5 text-[9px] text-slate-400">
+                    <span class="px-1.5 py-0.5 rounded bg-[#d4af37]/15 text-[#d4af37] font-bold border border-[#d4af37]/30">ERP</span>
+                    <span>Operations &amp; Billing</span>
+                </div>
+            </a>
+            <button id="sidebarToggle" type="button" aria-label="Toggle navigation" class="md:hidden shrink-0 text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+        </div>
+
+        <nav id="sidebarNavigation" aria-label="Main navigation" class="hidden md:block flex-1 min-h-0 px-3 py-4 space-y-1 overflow-y-auto">
+            <div class="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Operations &amp; Billing</div>
+
+            <a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="./quotations.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>Quotations</span>
+                </div>
+            </a>
+
+            <a href="./invoices.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span>Sales Invoices</span>
+                </div>
+            </a>
+
+            <a href="./production.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                    <span>Production Pipeline</span>
+                </div>
+            </a>
+
+            <a href="./delivery.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                <span>Delivery Notes</span>
+            </a>
+
+            <a href="./payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-[#132a4a] text-white border-l-4 border-[#d4af37]">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Payment Receipts</span>
+            </a>
+
+            <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Master Records</div>
+
+            <a href="./customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Customers</span>
+            </a>
+        </nav>
+
+        <div class="hidden md:block shrink-0 p-4 border-t border-slate-800 bg-[#07111e]/80">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-[#1e293b] border border-slate-700 flex items-center justify-center font-bold text-white text-xs">QA</div>
+                <div class="overflow-hidden">
+                    <div class="text-xs font-bold text-white truncate">QUALITIES Uniforms</div>
+                    <div class="text-[11px] text-emerald-400 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Counter Online (QAR)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div id="appWorkspace" class="app-workspace flex flex-col flex-1 min-w-0">
+        <header class="app-header shrink-0 sticky top-0 z-20" data-app-header>
+            <div class="flex items-center gap-3">
+                <a href="./payments.html" class="text-xs text-slate-500 hover:text-slate-800 font-semibold">&larr; All Receipts</a>
+                <h1 id="pageTitle" class="ui-page-title app-header-title">Payment Receipt</h1>
+            </div>
+            <div class="app-header-controls">
+                <a id="printReceiptLink" href="#" target="_blank" class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-300">
+                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <span>Print Receipt</span>
+                </a>
+
+                <div class="app-header-clock" title="Doha, Qatar">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><span class="app-header-clock-label">Doha</span><time data-header-clock>05:30 PM</time></div>
+                </div>
+
+                <details class="app-header-dropdown" data-header-notifications>
+                    <summary class="app-header-icon-button" aria-label="Notifications">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 21h4" stroke-linecap="round"/></svg>
+                        <span class="app-header-notification-dot" data-header-notification-dot hidden></span>
+                    </summary>
+                    <div id="headerNotificationPanel" class="app-header-menu">
+                        <div class="app-header-menu-heading"><h2>Notifications</h2><button type="button" data-header-notification-clear hidden>Clear all</button></div>
+                        <p class="app-header-empty" data-header-notification-empty>No notifications yet.</p>
+                        <ul class="app-header-notices" data-header-notification-list hidden></ul>
+                    </div>
+                </details>
+            </div>
+        </header>
+
+        <div id="appFlashMessages" class="shrink-0 px-4 sm:px-6 pt-3"></div>
+
+        <main class="app-main px-4 sm:px-6 pb-12 flex-1">
+            <div class="ui-page pt-2 max-w-3xl mx-auto space-y-4">
+
+                <!-- Official Receipt Document Card -->
+                <div class="bg-white rounded-xl border border-slate-200/90 shadow-sm p-6 sm:p-8 space-y-6">
+
+                    <!-- Branded Header -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+                        <div class="flex items-center gap-3">
+                            <img src="./branding/qualities-logo.png" alt="QUALITIES Logo" class="h-12 w-auto object-contain">
+                            <div>
+                                <h2 class="font-extrabold text-[#0a192f] text-sm">QUALITIES Uniforms &amp; Gifts Solutions</h2>
+                                <p class="text-[11px] text-slate-500">Industrial Area, Street 24, Doha, Qatar &bull; C.R. 148920/1</p>
+                                <p class="text-[11px] text-slate-500 font-mono-num">Tel: +974 5522 1178 &bull; info@qualitiesqatar.com</p>
+                            </div>
+                        </div>
+
+                        <div class="text-left sm:text-right">
+                            <div class="ui-field-label text-emerald-700 text-xs font-bold uppercase tracking-wider">Payment Receipt</div>
+                            <div id="docReceiptNumber" class="text-2xl font-extrabold text-[#0a192f] font-mono-num">RCPT-2026-000</div>
+                            <div id="docPaymentDate" class="text-xs text-slate-500 font-mono-num mt-0.5">Date: --</div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Highlight Box -->
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div class="min-w-0 sm:flex-1">
+                            <span class="ui-field-label text-emerald-800 block text-xs font-bold uppercase tracking-wider">Payment Received</span>
+                            <div class="text-xs text-slate-600 mt-1">Method: <strong id="docPaymentMethod" class="text-slate-900 font-semibold">Cash</strong> <span id="docRefWrap" class="hidden font-mono-num text-slate-600">(Ref: <strong id="docReferenceNumber"></strong>)</span></div>
+                        </div>
+                        <div class="min-w-0 max-w-full text-left sm:text-right">
+                            <span class="text-xs font-bold text-emerald-700">QAR</span>
+                            <span id="docAmountReceived" class="text-3xl sm:text-4xl font-extrabold font-mono-num text-emerald-800 ml-1">
+                                0.00
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Receipt Details Grid -->
+                    <div class="bg-slate-50/80 rounded-xl border border-slate-200/80 p-5 space-y-4 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <span class="ui-field-label text-slate-500 block font-semibold uppercase text-[10px] tracking-wider mb-1">Received from</span>
+                                <div id="docCustomerName" class="font-bold text-sm text-slate-900">--</div>
+                                <div id="docCustomerCompany" class="text-slate-700"></div>
+                                <div id="docCustomerPhoneAddress" class="text-slate-500 text-[11px] mt-1 font-mono-num">--</div>
+                            </div>
+
+                            <div class="sm:text-right space-y-1">
+                                <span class="ui-field-label text-slate-500 block font-semibold uppercase text-[10px] tracking-wider mb-1">Invoice Allocation</span>
+                                <div id="docAllocationWrap">
+                                    <div class="py-1">
+                                        <a id="docInvoiceLink" href="#" class="font-mono-num font-bold text-[#0a192f] hover:underline text-sm">--</a>
+                                        <div id="docInvoiceDueText" class="text-[11px] text-slate-500 font-mono-num mt-0.5">--</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="docNotesWrap" class="pt-3 border-t border-slate-200 hidden">
+                            <span class="ui-field-label text-slate-500 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Payment notes</span>
+                            <p id="docNotes" class="text-slate-700"></p>
+                        </div>
+                    </div>
+
+                    <!-- Cashier Sign & Stamp -->
+                    <div class="pt-6 border-t border-slate-200 grid grid-cols-2 gap-4 text-xs text-slate-500 items-center">
+                        <div>
+                            <div>Issued By: <strong class="text-slate-800">QUALITIES Uniforms &amp; Gifts Solutions</strong></div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">Counter Terminal Doha &bull; Official Digital Record</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="inline-block border-2 border-emerald-600/70 rounded-lg px-4 py-2 text-emerald-800 font-extrabold text-[11px] tracking-wider uppercase rotate-[-2deg] bg-emerald-50/50">
+                                PAYMENT RECEIVED &bull; VERIFIED
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="./assets/demo-store.js"></script>
+    <script src="./assets/demo-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const receiptId = urlParams.get('id');
+
+            if (!receiptId) {
+                alert('No receipt specified');
+                window.location.href = './payments.html';
+                return;
+            }
+
+            const receipt = window.demoStore.getReceipt(receiptId);
+            if (!receipt) {
+                alert('Receipt not found');
+                window.location.href = './payments.html';
+                return;
+            }
+
+            const cust = window.demoStore.getCustomer(receipt.customer_id);
+
+            // Print link
+            document.getElementById('printReceiptLink').href = `./print-document.html?type=receipt&id=${encodeURIComponent(receipt.receipt_number)}`;
+
+            document.getElementById('pageTitle').textContent = `Payment Receipt ${receipt.receipt_number}`;
+            document.getElementById('docReceiptNumber').textContent = receipt.receipt_number;
+            document.getElementById('docPaymentDate').textContent = `Date: ${receipt.payment_date}`;
+
+            // Highlight box
+            document.getElementById('docPaymentMethod').textContent = receipt.payment_method;
+            if (receipt.reference_number) {
+                document.getElementById('docRefWrap').classList.remove('hidden');
+                document.getElementById('docReferenceNumber').textContent = receipt.reference_number;
+            }
+            document.getElementById('docAmountReceived').textContent = Number(receipt.amount_received).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // Customer details
+            if (cust) {
+                document.getElementById('docCustomerName').textContent = cust.name;
+                document.getElementById('docCustomerCompany').textContent = cust.company_name || '';
+                document.getElementById('docCustomerPhoneAddress').textContent = `${cust.phone || ''} • ${cust.address || ''}`;
+            } else {
+                document.getElementById('docCustomerName').textContent = 'Walk-in Customer';
+            }
+
+            // Allocation
+            const invLink = document.getElementById('docInvoiceLink');
+            const invDueText = document.getElementById('docInvoiceDueText');
+            if (receipt.invoice_id) {
+                const inv = window.demoStore.getInvoice(receipt.invoice_id);
+                invLink.textContent = receipt.invoice_id;
+                invLink.href = `./invoice-detail.html?id=${encodeURIComponent(receipt.invoice_id)}`;
+                if (inv) {
+                    invDueText.textContent = `Invoice Balance remaining: QAR ${inv.balance_due.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+                } else {
+                    invDueText.textContent = `Allocated: QAR ${Number(receipt.amount_received).toFixed(2)}`;
+                }
+            } else {
+                invLink.textContent = 'Account Payment';
+                invLink.removeAttribute('href');
+                invDueText.textContent = `Auto-allocated against open account balance`;
+            }
+
+            // Notes
+            if (receipt.notes) {
+                document.getElementById('docNotesWrap').classList.remove('hidden');
+                document.getElementById('docNotes').textContent = receipt.notes;
+            }
+        });
+    </script>
+</body>
+</html>

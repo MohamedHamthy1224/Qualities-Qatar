@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Print Document — QUALITIES Uniforms &amp; Gifts Solutions</title>
+    <link rel="icon" href="./favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @page { margin: 12mm 10mm; size: A4; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 11px; line-height: 1.45; color: #1e293b; margin: 0; background: #edf1f6; padding: 20px 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        td, th { vertical-align: top; overflow-wrap: anywhere; word-wrap: break-word; }
+        .font-mono-num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+        .sheet { background: white; max-width: 210mm; min-height: 270mm; margin: 0 auto; padding: 14mm 12mm; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 4px; }
+        .print-controls { max-width: 210mm; margin: 0 auto 15px; padding: 10px 16px; background: #0a192f; color: white; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; border-radius: 6px; }
+        .print-controls button { cursor: pointer; background: #d4af37; color: #0a192f; border: 0; border-radius: 4px; padding: 7px 14px; font-weight: bold; font-size: 12px; }
+        .print-controls button.secondary { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+        .header { border-bottom: 2px solid #0a192f; margin-bottom: 18px; padding-bottom: 14px; }
+        .company-name { font-size: 15px; font-weight: 800; color: #0a192f; }
+        .company-details { color: #526176; font-size: 9.5px; margin-top: 3px; line-height: 1.4; }
+        .logo { display: block; max-height: 52px; width: auto; margin-bottom: 7px; object-contain: fit; }
+        .document-type { text-transform: uppercase; letter-spacing: 1px; font-weight: 800; font-size: 13px; color: #0a192f; }
+        .document-number { font-size: 14px; font-weight: 800; margin: 4px 0; color: #0a192f; }
+        .right { text-align: right; }
+        .center { text-align: center; }
+        .muted { color: #64748b; }
+        .strong { font-weight: bold; }
+        .meta { margin-bottom: 16px; }
+        .meta td { padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; }
+        .meta td.spacer { padding: 0; width: 3%; border: 0; background: transparent; }
+        .label { font-size: 8.5px; text-transform: uppercase; letter-spacing: .6px; color: #64748b; font-weight: bold; margin-bottom: 4px; }
+        .customer-name { font-size: 13px; font-weight: bold; color: #0a192f; }
+        .items { margin-bottom: 14px; table-layout: fixed; }
+        .items thead { display: table-header-group; }
+        .items th { background: #0a192f; color: white; padding: 8px 7px; font-size: 9.5px; font-weight: 700; }
+        .items td { padding: 9px 7px; border-bottom: 1px solid #e2e8f0; font-size: 9.5px; }
+        .items tr { page-break-inside: avoid; }
+        .item-name { font-weight: bold; font-size: 10.5px; color: #0a192f; }
+        .item-detail { font-size: 8.5px; color: #526176; margin-top: 3px; }
+        .money { white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+        .totals-wrap { margin-top: 8px; page-break-inside: avoid; }
+        .totals { width: 50%; margin-left: auto; }
+        .totals td { padding: 5px 8px; font-size: 10px; }
+        .totals .grand td { background: #0a192f; color: white; font-weight: bold; font-size: 12px; padding: 8px; }
+        .totals .balance td { background: #fef2f2; font-weight: bold; border-top: 1px solid #fecaca; color: #991b1b; }
+        .notes { margin-top: 16px; padding: 10px 12px; background: #f8fafc; border-left: 3px solid #d4af37; white-space: pre-line; font-size: 9.5px; }
+        .footer { border-top: 1px solid #e2e8f0; margin-top: 24px; padding-top: 9px; color: #64748b; font-size: 8.5px; }
+        .signatures { margin-top: 26px; page-break-inside: avoid; }
+        .signatures td { width: 48%; padding: 12px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 4px; }
+        .signatures .spacer { width: 4%; border: 0; background: transparent; }
+        .signature-line { margin-top: 36px; border-top: 1px solid #94a3b8; padding-top: 5px; color: #64748b; font-size: 9px; }
+        .amount-box { text-align: center; background: #effaf4; border: 1px solid #b9dec8; padding: 14px; margin-bottom: 18px; border-radius: 6px; }
+        .amount-box strong { font-size: 26px; color: #166534; font-family: 'JetBrains Mono', monospace; }
+        .details td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
+        .details .detail-label { width: 30%; color: #64748b; font-weight: 600; }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .no-print { display: none !important; }
+            .sheet { max-width: none; min-height: 0; padding: 0; box-shadow: none; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-controls no-print">
+        <span id="printBannerTitle" class="font-bold">Document Preview</span>
+        <div style="display:flex; gap:8px;">
+            <button type="button" onclick="window.print()">Print Document</button>
+            <button type="button" class="secondary" onclick="window.close()">Close</button>
+        </div>
+    </div>
+
+    <main class="sheet">
+        <!-- Branded Header -->
+        <table class="header">
+            <tr>
+                <td style="width: 58%;">
+                    <img class="logo" src="./branding/qualities-logo.png" alt="QUALITIES Uniforms &amp; Gifts Solutions">
+                    <div class="company-name">QUALITIES Uniforms &amp; Gifts Solutions</div>
+                    <div class="company-details">
+                        Industrial Area, Street 24, Building 18, Doha, Qatar<br>
+                        Commercial Registration: <strong>148920/1</strong> &bull; Tel: +974 5522 1178<br>
+                        Email: info@qualitiesqatar.com &bull; Web: qualitiesqatar.com
+                    </div>
+                </td>
+                <td class="right" style="width: 42%;">
+                    <div id="docHeaderType" class="document-type">Document</div>
+                    <div id="docHeaderNumber" class="document-number font-mono-num">#</div>
+                    <div id="docHeaderDate" class="muted" style="font-size: 9.5px; margin-top: 3px;">Date: --</div>
+                    <div id="docHeaderStatusWrap" style="margin-top: 6px;"></div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Dynamic Content Body Container -->
+        <div id="docContentArea">
+            <!-- Injected by JS depending on document type -->
+        </div>
+
+        <footer class="footer">
+            QUALITIES Uniforms &amp; Gifts Solutions &bull; C.R. 148920/1 &bull; Doha, State of Qatar &bull; qualitiesqatar.com &bull; All amounts in QAR (Qatari Riyal).
+        </footer>
+    </main>
+
+    <script src="./assets/demo-store.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const docType = urlParams.get('type') || 'invoice';
+            const docId = urlParams.get('id');
+
+            const contentArea = document.getElementById('docContentArea');
+
+            if (!docId) {
+                contentArea.innerHTML = '<p class="center muted" style="padding: 40px;">No document ID specified.</p>';
+                return;
+            }
+
+            if (docType === 'quotation') {
+                renderQuotation(docId);
+            } else if (docType === 'invoice') {
+                renderInvoice(docId);
+            } else if (docType === 'delivery') {
+                renderDelivery(docId);
+            } else if (docType === 'receipt') {
+                renderReceipt(docId);
+            } else {
+                contentArea.innerHTML = '<p class="center muted">Unknown document type.</p>';
+            }
+
+            function renderQuotation(id) {
+                const q = window.demoStore.getQuotation(id);
+                if (!q) { contentArea.innerHTML = '<p class="center muted">Quotation not found.</p>'; return; }
+                const cust = window.demoStore.getCustomer(q.customer_id);
+
+                document.title = `Quotation ${q.quotation_number} - QUALITIES Uniforms`;
+                document.getElementById('printBannerTitle').textContent = `Quotation ${q.quotation_number}`;
+                document.getElementById('docHeaderType').textContent = 'Official Quotation';
+                document.getElementById('docHeaderNumber').textContent = q.quotation_number;
+                document.getElementById('docHeaderDate').textContent = `Date: ${q.quotation_date}`;
+                document.getElementById('docHeaderStatusWrap').innerHTML = `<span class="badge" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">${q.status}</span>`;
+
+                contentArea.innerHTML = `
+                    <table class="meta">
+                        <tr>
+                            <td style="width: 48%;">
+                                <div class="label">Prepared for</div>
+                                <div class="customer-name">${cust ? cust.name : 'Valued Customer'}</div>
+                                ${cust?.company_name ? `<div style="font-weight:600; color:#334155;">${cust.company_name}</div>` : ''}
+                                ${cust?.phone ? `<div class="muted">Tel: ${cust.phone}</div>` : ''}
+                                ${cust?.email ? `<div class="muted">Email: ${cust.email}</div>` : ''}
+                                ${cust?.address ? `<div class="muted">${cust.address}</div>` : ''}
+                            </td>
+                            <td class="spacer"></td>
+                            <td style="width: 49%;">
+                                <div class="label">Quotation details</div>
+                                <div>Category: <strong>${q.category || 'Uniforms & Gifts'}</strong></div>
+                                <div>Target Delivery: <strong>${q.delivery_date || 'Standard turnaround'}</strong></div>
+                                <div>Total Units: <strong>${q.total_qty}</strong></div>
+                                <div class="muted" style="margin-top:4px;">Prices valid for 30 days from quotation date.</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="items">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%; text-align: left;">Item Description / Specifications</th>
+                                <th class="center" style="width: 14%;">Quantity</th>
+                                <th class="right" style="width: 18%;">Unit Price (QAR)</th>
+                                <th class="right" style="width: 18%;">Line Total (QAR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${(q.items || []).map(item => `
+                                <tr>
+                                    <td>
+                                        <div class="item-name">${item.product_name}</div>
+                                        ${formatSizeBreakdown(item.sizes)}
+                                    </td>
+                                    <td class="center font-mono-num"><strong>${item.total_qty}</strong></td>
+                                    <td class="right money">${Number(item.unit_price).toFixed(2)}</td>
+                                    <td class="right money strong">${Number(item.line_total).toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="totals-wrap">
+                        <table class="totals">
+                            <tr><td>Items Subtotal</td><td class="right money">QAR ${Number(q.subtotal).toFixed(2)}</td></tr>
+                            ${q.setup_charges > 0 ? `<tr><td>Setup Charges</td><td class="right money">QAR ${Number(q.setup_charges).toFixed(2)}</td></tr>` : ''}
+                            ${q.print_charges > 0 ? `<tr><td>Print / Embroidery Charges</td><td class="right money">QAR ${Number(q.print_charges).toFixed(2)}</td></tr>` : ''}
+                            ${q.discount > 0 ? `<tr><td>Discount</td><td class="right money">- QAR ${Number(q.discount).toFixed(2)}</td></tr>` : ''}
+                            <tr class="grand"><td>Grand Total</td><td class="right money">QAR ${Number(q.grand_total).toFixed(2)}</td></tr>
+                        </table>
+                    </div>
+
+                    ${q.notes ? `<div class="notes"><strong>Notes &amp; Specifications:</strong><br>${q.notes}</div>` : ''}
+                    <div class="notes"><strong>Terms:</strong><br>50% advance on order confirmation, balance on delivery. Goods produced per approved size matrix.</div>
+                `;
+            }
+
+            function renderInvoice(id) {
+                const inv = window.demoStore.getInvoice(id);
+                if (!inv) { contentArea.innerHTML = '<p class="center muted">Invoice not found.</p>'; return; }
+                const cust = window.demoStore.getCustomer(inv.customer_id);
+
+                document.title = `Invoice ${inv.invoice_number} - QUALITIES Uniforms`;
+                document.getElementById('printBannerTitle').textContent = `Sales Invoice ${inv.invoice_number}`;
+                document.getElementById('docHeaderType').textContent = 'Tax / Sales Invoice';
+                document.getElementById('docHeaderNumber').textContent = inv.invoice_number;
+                document.getElementById('docHeaderDate').textContent = `Invoice Date: ${inv.invoice_date}`;
+
+                const statusColor = {
+                    'Paid': 'background:#dcfce7; color:#166534; border:1px solid #bbf7d0;',
+                    'Partially Paid': 'background:#fef3c7; color:#92400e; border:1px solid #fde68a;',
+                    'Unpaid': 'background:#ffe4e6; color:#9f1239; border:1px solid #fecdd3;'
+                }[inv.status] || '';
+                document.getElementById('docHeaderStatusWrap').innerHTML = `<span class="badge" style="${statusColor}">${inv.status}</span>`;
+
+                contentArea.innerHTML = `
+                    <table class="meta">
+                        <tr>
+                            <td style="width: 48%;">
+                                <div class="label">Billed to</div>
+                                <div class="customer-name">${cust ? cust.name : 'Valued Customer'}</div>
+                                ${cust?.company_name ? `<div style="font-weight:600; color:#334155;">${cust.company_name}</div>` : ''}
+                                ${cust?.phone ? `<div class="muted">Tel: ${cust.phone}</div>` : ''}
+                                ${cust?.email ? `<div class="muted">Email: ${cust.email}</div>` : ''}
+                                ${cust?.address ? `<div class="muted">${cust.address}</div>` : ''}
+                            </td>
+                            <td class="spacer"></td>
+                            <td style="width: 49%;">
+                                <div class="label">Invoice details</div>
+                                ${inv.quotation_id ? `<div>Quotation Ref: <strong>${inv.quotation_id}</strong></div>` : ''}
+                                <div>Payment Due Date: <strong>${inv.due_date || 'Upon receipt'}</strong></div>
+                                <div>Total Units: <strong>${inv.total_qty}</strong></div>
+                                <div class="muted" style="margin-top:4px;">Official Commercial Invoice issued in Doha, Qatar.</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="items">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%; text-align: left;">Item Description / Specifications</th>
+                                <th class="center" style="width: 14%;">Quantity</th>
+                                <th class="right" style="width: 18%;">Rate (QAR)</th>
+                                <th class="right" style="width: 18%;">Line Total (QAR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${(inv.items || []).map(item => `
+                                <tr>
+                                    <td>
+                                        <div class="item-name">${item.product_name}</div>
+                                        ${formatSizeBreakdown(item.sizes)}
+                                    </td>
+                                    <td class="center font-mono-num"><strong>${item.total_qty}</strong></td>
+                                    <td class="right money">${Number(item.unit_price).toFixed(2)}</td>
+                                    <td class="right money strong">${Number(item.line_total).toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="totals-wrap">
+                        <table class="totals">
+                            <tr><td>Items Subtotal</td><td class="right money">QAR ${Number(inv.subtotal).toFixed(2)}</td></tr>
+                            ${inv.setup_charges > 0 ? `<tr><td>Document Setup</td><td class="right money">QAR ${Number(inv.setup_charges).toFixed(2)}</td></tr>` : ''}
+                            ${inv.print_charges > 0 ? `<tr><td>Printing &amp; Customization</td><td class="right money">QAR ${Number(inv.print_charges).toFixed(2)}</td></tr>` : ''}
+                            ${inv.discount > 0 ? `<tr><td>Document Discount</td><td class="right money">- QAR ${Number(inv.discount).toFixed(2)}</td></tr>` : ''}
+                            <tr class="grand"><td>Grand Total</td><td class="right money">QAR ${Number(inv.grand_total).toFixed(2)}</td></tr>
+                            <tr><td>Amount Paid</td><td class="right money">QAR ${Number(inv.paid_amount || 0).toFixed(2)}</td></tr>
+                            <tr class="balance"><td>Balance Due</td><td class="right money">QAR ${Number(inv.balance_due || 0).toFixed(2)}</td></tr>
+                        </table>
+                    </div>
+
+                    ${inv.notes ? `<div class="notes"><strong>Invoice Notes:</strong><br>${inv.notes}</div>` : ''}
+                    <div class="notes"><strong>Payment Terms:</strong><br>Direct bank transfer payable to QUALITIES Uniforms & Gifts Solutions. All payments verified in QAR.</div>
+                `;
+            }
+
+            function renderDelivery(id) {
+                const dn = window.demoStore.getDeliveryNote(id);
+                if (!dn) { contentArea.innerHTML = '<p class="center muted">Delivery note not found.</p>'; return; }
+                const cust = window.demoStore.getCustomer(dn.customer_id);
+
+                document.title = `Delivery Note ${dn.delivery_number} - QUALITIES Uniforms`;
+                document.getElementById('printBannerTitle').textContent = `Delivery Note ${dn.delivery_number}`;
+                document.getElementById('docHeaderType').textContent = 'Delivery Note & Handover';
+                document.getElementById('docHeaderNumber').textContent = dn.delivery_number;
+                document.getElementById('docHeaderDate').textContent = `Dispatch: ${dn.dispatch_date}`;
+                document.getElementById('docHeaderStatusWrap').innerHTML = `<span class="badge" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1;">${dn.status}</span>`;
+
+                contentArea.innerHTML = `
+                    <table class="meta">
+                        <tr>
+                            <td style="width: 48%;">
+                                <div class="label">Deliver to</div>
+                                <div class="customer-name">${dn.recipient_name || (cust ? cust.name : 'Recipient')}</div>
+                                ${cust?.company_name ? `<div style="font-weight:600; color:#334155;">${cust.company_name}</div>` : ''}
+                                <div class="muted">Tel: ${dn.recipient_phone || (cust ? cust.phone : '—')}</div>
+                                <div class="muted">Address: ${cust ? (cust.address || '—') : '—'}</div>
+                            </td>
+                            <td class="spacer"></td>
+                            <td style="width: 49%;">
+                                <div class="label">Dispatch details</div>
+                                <div>Invoice Ref: <strong>${dn.invoice_id}</strong></div>
+                                <div>Driver / Logistics: <strong>${dn.driver_name || 'Counter Delivery'}</strong></div>
+                                <div>Total Handover Units: <strong>${dn.total_qty} units</strong></div>
+                                ${dn.delivered_at ? `<div>Handover Timestamp: <strong>${dn.delivered_at}</strong></div>` : ''}
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="items">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%; text-align: left;">Item Description</th>
+                                <th style="width: 32%; text-align: left;">Sizes Breakdown</th>
+                                <th class="center" style="width: 18%;">Dispatched Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${(dn.items || []).map(item => `
+                                <tr>
+                                    <td><div class="item-name">${item.product_name}</div></td>
+                                    <td>${formatSizeBreakdown(item.sizes)}</td>
+                                    <td class="center font-mono-num strong" style="font-size:11px;">${item.total_qty} units</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    ${dn.driver_notes ? `<div class="notes"><strong>Handover &amp; Logistics Instructions:</strong><br>${dn.driver_notes}</div>` : ''}
+
+                    <table class="signatures">
+                        <tr>
+                            <td>
+                                <div class="label">Dispatched by (Driver / Logistics)</div>
+                                <div class="signature-line">Driver Signature &bull; Date / Time</div>
+                            </td>
+                            <td class="spacer"></td>
+                            <td>
+                                <div class="label">Received &amp; Accepted in Good Order</div>
+                                <div class="signature-line">Customer Signature &bull; Official Stamp</div>
+                            </td>
+                        </tr>
+                    </table>
+                `;
+            }
+
+            function renderReceipt(id) {
+                const r = window.demoStore.getReceipt(id);
+                if (!r) { contentArea.innerHTML = '<p class="center muted">Receipt not found.</p>'; return; }
+                const cust = window.demoStore.getCustomer(r.customer_id);
+
+                document.title = `Receipt ${r.receipt_number} - QUALITIES Uniforms`;
+                document.getElementById('printBannerTitle').textContent = `Payment Receipt ${r.receipt_number}`;
+                document.getElementById('docHeaderType').textContent = 'Official Payment Receipt';
+                document.getElementById('docHeaderNumber').textContent = r.receipt_number;
+                document.getElementById('docHeaderDate').textContent = `Receipt Date: ${r.payment_date}`;
+
+                contentArea.innerHTML = `
+                    <div class="amount-box">
+                        <div class="label" style="color:#15803d;">Total Amount Received</div>
+                        <strong>QAR ${Number(r.amount_received).toFixed(2)}</strong>
+                    </div>
+
+                    <table class="meta">
+                        <tr>
+                            <td style="width: 48%;">
+                                <div class="label">Received from</div>
+                                <div class="customer-name">${cust ? cust.name : 'Valued Customer'}</div>
+                                ${cust?.company_name ? `<div style="font-weight:600; color:#334155;">${cust.company_name}</div>` : ''}
+                                <div class="muted">Tel: ${cust?.phone || '—'} &bull; ${cust?.address || ''}</div>
+                            </td>
+                            <td class="spacer"></td>
+                            <td style="width: 49%;">
+                                <div class="label">Payment details</div>
+                                <div>Payment Method: <strong>${r.payment_method}</strong></div>
+                                ${r.reference_number ? `<div>Reference / Trans #: <strong class="font-mono-num">${r.reference_number}</strong></div>` : ''}
+                                <div>Status: <strong style="color:#15803d;">Verified &amp; Credited</strong></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="label" style="margin-top: 18px;">Payment Allocation</div>
+                    <table class="items">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%; text-align: left;">Invoice / Account Description</th>
+                                <th class="right" style="width: 25%;">Allocated (QAR)</th>
+                                <th class="right" style="width: 25%;">Invoice Balance (QAR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${r.invoice_id ? `
+                                <tr>
+                                    <td><strong>${r.invoice_id}</strong></td>
+                                    <td class="right money strong">QAR ${Number(r.amount_received).toFixed(2)}</td>
+                                    <td class="right money">${getInvoiceBalanceText(r.invoice_id)}</td>
+                                </tr>
+                            ` : `
+                                <tr>
+                                    <td><strong>General Account Payment</strong></td>
+                                    <td class="right money strong">QAR ${Number(r.amount_received).toFixed(2)}</td>
+                                    <td class="right money">Credited</td>
+                                </tr>
+                            `}
+                        </tbody>
+                    </table>
+
+                    ${r.notes ? `<div class="notes"><strong>Payment Notes:</strong><br>${r.notes}</div>` : ''}
+
+                    <table class="signatures" style="margin-top:28px;">
+                        <tr>
+                            <td>
+                                <div class="label">Issued &amp; Verified by</div>
+                                <div class="signature-line">QUALITIES Uniforms &bull; Cashier / Counter Stamp</div>
+                            </td>
+                            <td class="spacer"></td>
+                            <td>
+                                <div class="label">Received by Payer</div>
+                                <div class="signature-line">Customer Signature / Acknowledgement</div>
+                            </td>
+                        </tr>
+                    </table>
+                `;
+            }
+
+            function formatSizeBreakdown(sizes) {
+                if (!sizes) return '';
+                const parts = [];
+                const keys = ['xs', 's', 'm', 'l', 'xl', '2xl', '3xl', 'custom'];
+                keys.forEach(k => {
+                    if (sizes[k] && Number(sizes[k]) > 0) {
+                        parts.push(`${k.toUpperCase()}: ${sizes[k]}`);
+                    }
+                });
+                if (parts.length === 0) return '';
+                return `<div class="item-detail font-mono-num">${parts.join(' &bull; ')}</div>`;
+            }
+
+            function getInvoiceBalanceText(invId) {
+                const inv = window.demoStore.getInvoice(invId);
+                return inv ? `QAR ${Number(inv.balance_due).toFixed(2)}` : '—';
+            }
+        });
+    </script>
+</body>
+</html>

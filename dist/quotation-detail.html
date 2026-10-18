@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" class="app-root bg-slate-50" data-appearance="clean">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation Details — QUALITIES Uniforms & Gifts Solutions</title>
+    <link rel="icon" href="./favicon.ico">
+    <script>
+        try {
+            if (localStorage.getItem('qualities:appearance') === 'previous') {
+                document.documentElement.dataset.appearance = 'previous';
+            }
+        } catch {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/app.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body class="app-shell text-slate-800 antialiased bg-slate-100 flex flex-col md:flex-row min-h-screen">
+
+    <aside id="sidebar" class="app-sidebar w-full md:w-64 bg-[#0a192f] text-slate-200 flex flex-col flex-shrink-0 z-30 transition-all duration-300 border-r border-slate-800">
+        <div class="shrink-0 px-4 py-2 md:px-5 md:py-3 border-b border-slate-800/80 flex items-center justify-between gap-3">
+            <a href="./index.html" class="min-w-0 inline-flex items-center gap-3 md:flex-col md:items-start md:gap-1">
+                <img src="./branding/qualities-logo.png" alt="QUALITIES Uniforms & Gifts" width="160" height="94" class="ui-brand-logo h-auto object-contain shrink-0">
+                <div class="flex flex-wrap items-center gap-1.5 text-[9px] text-slate-400">
+                    <span class="px-1.5 py-0.5 rounded bg-[#d4af37]/15 text-[#d4af37] font-bold border border-[#d4af37]/30">ERP</span>
+                    <span>Operations &amp; Billing</span>
+                </div>
+            </a>
+            <button id="sidebarToggle" type="button" aria-label="Toggle navigation" class="md:hidden shrink-0 text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+        </div>
+
+        <nav id="sidebarNavigation" aria-label="Main navigation" class="hidden md:block flex-1 min-h-0 px-3 py-4 space-y-1 overflow-y-auto">
+            <div class="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Operations &amp; Billing</div>
+
+            <a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="./quotations.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-[#132a4a] text-white border-l-4 border-[#d4af37]">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>Quotations</span>
+                </div>
+            </a>
+
+            <a href="./invoices.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span>Sales Invoices</span>
+                </div>
+            </a>
+
+            <a href="./production.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                    <span>Production Pipeline</span>
+                </div>
+            </a>
+
+            <a href="./delivery.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                <span>Delivery Notes</span>
+            </a>
+
+            <a href="./payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Payment Receipts</span>
+            </a>
+
+            <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Master Records</div>
+
+            <a href="./customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Customers</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div id="appWorkspace" class="app-workspace flex flex-col flex-1 min-w-0">
+        <header class="app-header shrink-0 sticky top-0 z-20" data-app-header>
+            <div class="flex items-center gap-3">
+                <a href="./quotations.html" class="text-xs text-slate-500 hover:text-slate-800 font-semibold">&larr; Back to Quotations</a>
+                <h1 id="headerQuoteTitle" class="ui-page-title app-header-title">Quotation Proposal</h1>
+            </div>
+            <div class="app-header-controls">
+                <div class="app-header-clock" title="Doha, Qatar">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><span class="app-header-clock-label">Doha</span><time data-header-clock>05:30 PM</time></div>
+                </div>
+            </div>
+        </header>
+
+        <div id="appFlashMessages" class="shrink-0 px-4 sm:px-6 pt-3"></div>
+
+        <main class="app-main px-4 sm:px-6 pb-12 flex-1">
+            <div class="ui-page pt-2 space-y-6">
+
+                <!-- Header Actions Bar -->
+                <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span id="qNumber" class="text-lg font-black font-mono-num text-[#0a192f]">QT-2026-001</span>
+                            <span id="qStatusBadge" class="px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-800">Draft</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Proposal created on <span id="qDate" class="font-semibold text-slate-700"></span></p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <a id="btnPrintQuote" href="#" target="_blank" class="px-3.5 py-2 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                            <span>Print Quotation</span>
+                        </a>
+
+                        <button id="btnConvertToInvoice" type="button" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors">
+                            <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                            <span>Convert to Invoice</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Customer & Proposal Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-5 space-y-2 text-xs">
+                        <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2">Client Information</h3>
+                        <div><strong class="text-slate-500">Name:</strong> <span id="qCustName" class="font-bold text-slate-900 ml-1"></span></div>
+                        <div><strong class="text-slate-500">Company:</strong> <span id="qCustCompany" class="text-slate-700 ml-1"></span></div>
+                        <div><strong class="text-slate-500">Contact:</strong> <span id="qCustContact" class="text-slate-700 ml-1"></span></div>
+                        <div><strong class="text-slate-500">Address:</strong> <span id="qCustAddress" class="text-slate-700 ml-1"></span></div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-5 space-y-2 text-xs">
+                        <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2">Production Schedule &amp; Category</h3>
+                        <div><strong class="text-slate-500">Category:</strong> <span id="qCategory" class="font-semibold text-slate-800 ml-1"></span></div>
+                        <div><strong class="text-slate-500">Target Delivery Date:</strong> <span id="qDeliveryDate" class="font-mono-num font-bold text-slate-800 ml-1"></span></div>
+                        <div><strong class="text-slate-500">Total Units:</strong> <span id="qTotalUnits" class="font-mono-num font-bold text-slate-900 ml-1"></span> pieces</div>
+                        <div><strong class="text-slate-500">Grand Total:</strong> <span id="qGrandTotalHeader" class="font-mono-num font-bold text-slate-900 ml-1"></span></div>
+                    </div>
+                </div>
+
+                <!-- Itemized Size Matrix Table -->
+                <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
+                    <div class="p-4 border-b border-slate-100">
+                        <h3 class="font-bold text-sm text-slate-900">Garment Size Matrix &amp; Item Charges</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="ui-table w-full min-w-[900px] text-left text-xs">
+                            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="px-4 py-3 min-w-44">Item Description</th>
+                                    <th class="px-2 py-3 text-center">XS</th>
+                                    <th class="px-2 py-3 text-center">S</th>
+                                    <th class="px-2 py-3 text-center">M</th>
+                                    <th class="px-2 py-3 text-center">L</th>
+                                    <th class="px-2 py-3 text-center">XL</th>
+                                    <th class="px-2 py-3 text-center">2XL</th>
+                                    <th class="px-2 py-3 text-center">3XL</th>
+                                    <th class="px-2 py-3 text-center">Custom</th>
+                                    <th class="px-3 py-3 text-center">Total Qty</th>
+                                    <th class="px-3 py-3 text-right">Unit QAR</th>
+                                    <th class="px-3 py-3 text-right">Line Total (QAR)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="qItemsTbody" class="divide-y divide-slate-100 font-mono-num"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Financial Summary Footer -->
+                    <div class="p-6 bg-slate-50 border-t border-slate-200 flex flex-col items-end space-y-1.5 text-xs">
+                        <div class="w-64 flex justify-between text-slate-600">
+                            <span>Subtotal:</span>
+                            <strong class="font-mono-num text-slate-900" id="qSubtotal">QAR 0.00</strong>
+                        </div>
+                        <div class="w-64 flex justify-between text-slate-600">
+                            <span>Setup Charges:</span>
+                            <span class="font-mono-num" id="qSetup">QAR 0.00</span>
+                        </div>
+                        <div class="w-64 flex justify-between text-slate-600">
+                            <span>Print Charges:</span>
+                            <span class="font-mono-num" id="qPrint">QAR 0.00</span>
+                        </div>
+                        <div class="w-64 flex justify-between text-slate-600">
+                            <span>Discount:</span>
+                            <span class="font-mono-num text-emerald-700" id="qDiscount">- QAR 0.00</span>
+                        </div>
+                        <div class="w-64 flex justify-between text-sm font-extrabold text-[#0a192f] pt-2 border-t border-slate-300">
+                            <span>Grand Total:</span>
+                            <span class="font-mono-num" id="qGrandTotal">QAR 0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div id="qNotesCard" class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-5 text-xs space-y-1">
+                    <h4 class="font-bold text-slate-800">Proposal Terms &amp; Scope of Work</h4>
+                    <p id="qNotes" class="text-slate-600 whitespace-pre-line"></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./assets/demo-store.js"></script>
+    <script src="./assets/demo-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const quoteId = params.get('id') || 'QT-2026-001';
+            let quote = null;
+
+            function render() {
+                quote = window.demoStore.getQuotation(quoteId);
+                if (!quote) {
+                    alert('Quotation not found.');
+                    window.location.href = './quotations.html';
+                    return;
+                }
+
+                const cust = window.demoStore.getCustomer(quote.customer_id);
+
+                document.getElementById('headerQuoteTitle').textContent = `Quotation ${quote.quotation_number}`;
+                document.getElementById('qNumber').textContent = quote.quotation_number;
+                document.getElementById('qDate').textContent = quote.quotation_date;
+
+                const statusBadge = document.getElementById('qStatusBadge');
+                statusBadge.textContent = quote.status;
+                statusBadge.className = `px-2 py-0.5 rounded text-xs font-bold ${
+                    quote.status === 'Invoiced' ? 'bg-emerald-100 text-emerald-800' :
+                    (quote.status === 'Approved' ? 'bg-sky-100 text-sky-800' :
+                    (quote.status === 'Sent' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'))
+                }`;
+
+                document.getElementById('btnPrintQuote').href = `./print-document.html?type=quotation&id=${encodeURIComponent(quote.quotation_number)}`;
+
+                const convertBtn = document.getElementById('btnConvertToInvoice');
+                if (quote.status === 'Invoiced') {
+                    convertBtn.textContent = 'Already Invoiced';
+                    convertBtn.disabled = true;
+                    convertBtn.className = 'px-4 py-2 rounded-lg bg-slate-200 text-slate-500 text-xs font-bold cursor-not-allowed';
+                }
+
+                // Client info
+                document.getElementById('qCustName').textContent = cust ? cust.name : 'Walk-in Customer';
+                document.getElementById('qCustCompany').textContent = cust ? cust.company_name || '—' : '—';
+                document.getElementById('qCustContact').textContent = cust ? `${cust.phone || ''} ${cust.email ? '· ' + cust.email : ''}` : '—';
+                document.getElementById('qCustAddress').textContent = cust ? cust.address || '—' : '—';
+
+                // Schedule
+                document.getElementById('qCategory').textContent = quote.category;
+                document.getElementById('qDeliveryDate').textContent = quote.delivery_date || 'Standard (14 Days)';
+                document.getElementById('qTotalUnits').textContent = quote.total_qty;
+                document.getElementById('qGrandTotalHeader').textContent = `QAR ${quote.grand_total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+
+                // Items table
+                const tbody = document.getElementById('qItemsTbody');
+                tbody.innerHTML = '';
+                (quote.items || []).forEach(item => {
+                    const sizes = item.sizes || {};
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition-colors';
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 font-sans font-bold text-slate-900">${item.product_name}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes.xs || 0}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes.s || 0}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes.m || 0}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes.l || 0}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes.xl || 0}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes['2xl'] || 0}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes['3xl'] || 0}</td>
+                        <td class="px-2 py-3 text-center text-slate-600">${sizes.custom || 0}</td>
+                        <td class="px-3 py-3 text-center font-bold text-slate-900">${item.total_qty}</td>
+                        <td class="px-3 py-3 text-right">QAR ${Number(item.unit_price).toFixed(2)}</td>
+                        <td class="px-3 py-3 text-right font-bold text-slate-900">QAR ${Number(item.line_total).toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Financial summary
+                document.getElementById('qSubtotal').textContent = `QAR ${(quote.subtotal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+                document.getElementById('qSetup').textContent = `QAR ${(quote.setup_charges || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+                document.getElementById('qPrint').textContent = `QAR ${(quote.print_charges || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+                document.getElementById('qDiscount').textContent = `- QAR ${(quote.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+                document.getElementById('qGrandTotal').textContent = `QAR ${(quote.grand_total || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+
+                document.getElementById('qNotes').textContent = quote.notes || 'Standard manufacturing terms apply. Delivery schedule valid for 30 days from proposal date.';
+            }
+
+            document.getElementById('btnConvertToInvoice').addEventListener('click', () => {
+                if (!quote) return;
+                if (confirm(`Convert quotation ${quote.quotation_number} into a Sales Invoice and queue production order?`)) {
+                    try {
+                        const inv = window.demoStore.convertQuotationToInvoice(quote.quotation_number);
+                        window.location.href = `./invoice-detail.html?id=${encodeURIComponent(inv.invoice_number)}`;
+                    } catch (e) {
+                        alert('Could not convert quotation: ' + e.message);
+                    }
+                }
+            });
+
+            render();
+            window.demoStore.subscribe(render);
+        });
+    </script>
+</body>
+</html>

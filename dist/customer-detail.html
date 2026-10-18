@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" class="app-root bg-slate-50" data-appearance="clean">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details — QUALITIES Uniforms & Gifts Solutions</title>
+    <link rel="icon" href="./favicon.ico">
+    <script>
+        try {
+            if (localStorage.getItem('qualities:appearance') === 'previous') {
+                document.documentElement.dataset.appearance = 'previous';
+            }
+        } catch {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/app.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body class="app-shell text-slate-800 antialiased bg-slate-100 flex flex-col md:flex-row min-h-screen">
+
+    <!-- Fixed / Sticky Navy Sidebar -->
+    <aside id="sidebar" class="app-sidebar w-full md:w-64 bg-[#0a192f] text-slate-200 flex flex-col flex-shrink-0 z-30 transition-all duration-300 border-r border-slate-800">
+        <div class="shrink-0 px-4 py-2 md:px-5 md:py-3 border-b border-slate-800/80 flex items-center justify-between gap-3">
+            <a href="./index.html" class="min-w-0 inline-flex items-center gap-3 md:flex-col md:items-start md:gap-1">
+                <img src="./branding/qualities-logo.png" alt="QUALITIES Uniforms & Gifts" width="160" height="94" class="ui-brand-logo h-auto object-contain shrink-0">
+                <div class="flex flex-wrap items-center gap-1.5 text-[9px] text-slate-400">
+                    <span class="px-1.5 py-0.5 rounded bg-[#d4af37]/15 text-[#d4af37] font-bold border border-[#d4af37]/30">ERP</span>
+                    <span>Operations &amp; Billing</span>
+                </div>
+            </a>
+            <button id="sidebarToggle" type="button" aria-label="Toggle navigation" class="md:hidden shrink-0 text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+        </div>
+
+        <nav id="sidebarNavigation" aria-label="Main navigation" class="hidden md:block flex-1 min-h-0 px-3 py-4 space-y-1 overflow-y-auto">
+            <div class="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Operations &amp; Billing</div>
+
+            <a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="./quotations.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>Quotations</span>
+                </div>
+            </a>
+
+            <a href="./invoices.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span>Sales Invoices</span>
+                </div>
+            </a>
+
+            <a href="./production.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                    <span>Production Pipeline</span>
+                </div>
+            </a>
+
+            <a href="./delivery.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                <span>Delivery Notes</span>
+            </a>
+
+            <a href="./payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Payment Receipts</span>
+            </a>
+
+            <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Master Records</div>
+
+            <a href="./customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-[#132a4a] text-white border-l-4 border-[#d4af37]">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Customers</span>
+            </a>
+        </nav>
+
+        <div class="hidden md:block shrink-0 p-4 border-t border-slate-800 bg-[#07111e]/80">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-[#1e293b] border border-slate-700 flex items-center justify-center font-bold text-white text-xs">QA</div>
+                <div class="overflow-hidden">
+                    <div class="text-xs font-bold text-white truncate">QUALITIES Uniforms</div>
+                    <div class="text-[11px] text-emerald-400 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Counter Online (QAR)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div id="appWorkspace" class="app-workspace flex flex-col flex-1 min-w-0">
+        <!-- Top App Header -->
+        <header class="app-header shrink-0 sticky top-0 z-20" data-app-header>
+            <div class="flex items-center gap-3">
+                <a href="./customers.html" class="text-xs text-slate-500 hover:text-slate-800 font-semibold">&larr; Back</a>
+                <h1 id="headerCustomerName" class="ui-page-title app-header-title">Customer History</h1>
+            </div>
+            <div class="app-header-controls" aria-label="Workspace controls">
+                <div class="app-header-clock" title="Doha, Qatar (UTC+03:00)">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><span class="app-header-clock-label">Doha</span><time data-header-clock>05:30 PM</time></div>
+                </div>
+
+                <details class="app-header-dropdown" data-header-notifications>
+                    <summary class="app-header-icon-button" aria-label="Notifications">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 21h4" stroke-linecap="round"/></svg>
+                        <span class="app-header-notification-dot" data-header-notification-dot hidden></span>
+                    </summary>
+                    <div id="headerNotificationPanel" class="app-header-menu">
+                        <div class="app-header-menu-heading"><h2>Notifications</h2><button type="button" data-header-notification-clear hidden>Clear all</button></div>
+                        <p class="app-header-empty" data-header-notification-empty>No notifications yet.</p>
+                        <ul class="app-header-notices" data-header-notification-list hidden></ul>
+                    </div>
+                </details>
+
+                <details class="app-header-dropdown" data-header-profile>
+                    <summary class="app-header-profile">
+                        <span class="app-header-avatar">SM</span>
+                        <span class="app-header-profile-copy">
+                            <span class="app-header-user-name">Shop Manager (Doha)</span>
+                            <span class="app-header-user-role">Administrator</span>
+                        </span>
+                        <svg class="app-header-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m6 8 4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </summary>
+                    <div id="headerProfilePanel" class="app-header-menu app-header-profile-panel">
+                        <p class="app-header-profile-heading font-bold text-slate-900">Shop Manager (Doha)</p>
+                        <p class="text-xs text-slate-500">Administrator</p>
+                        <div class="mt-4 pt-3 border-t border-slate-200">
+                            <button type="button" onclick="resetDemoData()" class="w-full text-left text-xs text-rose-600 hover:text-rose-800 font-semibold py-1">↺ Reset Demo Records</button>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </header>
+
+        <div id="appFlashMessages" class="shrink-0 px-4 sm:px-6 pt-3"></div>
+
+        <main class="app-main px-4 sm:px-6 pb-12 flex-1">
+            <div class="ui-page pt-2 space-y-6">
+
+                <!-- Customer Profile Card -->
+                <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-6">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span id="custCodeBadge" class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-[#0a192f] text-white">CUST-QAT-001</span>
+                                <h2 id="custName" class="text-lg font-extrabold text-slate-900">Customer Name</h2>
+                            </div>
+                            <p id="custCompany" class="text-xs text-slate-500 mt-1 font-semibold">Company Name</p>
+                            <div class="flex flex-wrap items-center gap-4 text-xs text-slate-600 mt-2">
+                                <span id="custPhone">Phone</span>
+                                <span>•</span>
+                                <span id="custEmail">Email</span>
+                                <span>•</span>
+                                <span id="custAddress">Address</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3">
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-right">
+                                <span class="text-xs text-slate-500 block">Balance Due</span>
+                                <span id="custBalance" class="text-lg font-extrabold font-mono-num text-rose-700">QAR 0.00</span>
+                            </div>
+                            <button type="button" onclick="openEditModal()" class="px-3.5 py-2 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50">
+                                Edit Profile
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="pt-4 flex flex-wrap items-center gap-2">
+                        <a id="btnNewQuote" href="./quotation-create.html" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#0a192f] text-white hover:bg-[#132a4a]">
+                            + Create Quotation
+                        </a>
+                        <a id="btnNewInvoice" href="./invoice-create.html" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-700 text-white hover:bg-sky-800">
+                            + Direct Invoice
+                        </a>
+                        <a id="btnNewPayment" href="./payment-create.html" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700">
+                            Record Payment
+                        </a>
+                    </div>
+                </div>
+
+                <!-- History Sections -->
+                <div class="space-y-6">
+                    <!-- Invoices -->
+                    <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-900">Invoices (<span id="countInvoices">0</span>)</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="ui-table w-full text-left text-xs">
+                                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-4 py-2.5">Invoice #</th>
+                                        <th class="px-4 py-2.5">Date</th>
+                                        <th class="px-4 py-2.5">Due Date</th>
+                                        <th class="px-4 py-2.5 text-right">Grand Total</th>
+                                        <th class="px-4 py-2.5 text-right">Balance Due</th>
+                                        <th class="px-4 py-2.5 text-center">Status</th>
+                                        <th class="px-4 py-2.5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyCustInvoices" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Quotations -->
+                    <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-900">Quotations (<span id="countQuotes">0</span>)</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="ui-table w-full text-left text-xs">
+                                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-4 py-2.5">Quotation #</th>
+                                        <th class="px-4 py-2.5">Category</th>
+                                        <th class="px-4 py-2.5">Date</th>
+                                        <th class="px-4 py-2.5 text-center">Units</th>
+                                        <th class="px-4 py-2.5 text-right">Total (QAR)</th>
+                                        <th class="px-4 py-2.5 text-center">Status</th>
+                                        <th class="px-4 py-2.5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyCustQuotes" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Payment Receipts -->
+                    <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-900">Payment Receipts (<span id="countReceipts">0</span>)</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="ui-table w-full text-left text-xs">
+                                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-4 py-2.5">Receipt #</th>
+                                        <th class="px-4 py-2.5">Date</th>
+                                        <th class="px-4 py-2.5">Method</th>
+                                        <th class="px-4 py-2.5">Reference</th>
+                                        <th class="px-4 py-2.5 text-right">Amount (QAR)</th>
+                                        <th class="px-4 py-2.5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyCustReceipts" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <dialog id="editCustomerModal" class="app-dialog">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-900">Edit Customer Profile</h2>
+            <button type="button" onclick="document.getElementById('editCustomerModal').close()" class="text-slate-400 hover:text-slate-700">&times;</button>
+        </div>
+        <form id="editCustomerForm" class="p-4 space-y-3 text-xs">
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Name *</label>
+                <input type="text" id="edit_name" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Company / Group</label>
+                <input type="text" id="edit_company" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Phone</label>
+                    <input type="tel" id="edit_phone" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Email</label>
+                    <input type="email" id="edit_email" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Address</label>
+                <input type="text" id="edit_address" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                <button type="button" onclick="document.getElementById('editCustomerModal').close()" class="px-3 py-1.5 border border-slate-300 rounded-lg text-slate-600">Cancel</button>
+                <button type="submit" class="px-4 py-1.5 bg-[#0a192f] text-white font-bold rounded-lg hover:bg-[#132a4a]">Save changes</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="./assets/demo-store.js"></script>
+    <script src="./assets/demo-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const customerId = params.get('id') || 'CUST-QAT-001';
+            let currentCustomer = null;
+
+            function render() {
+                currentCustomer = window.demoStore.getCustomer(customerId);
+                if (!currentCustomer) {
+                    alert('Customer not found');
+                    window.location.href = './customers.html';
+                    return;
+                }
+
+                document.getElementById('headerCustomerName').textContent = currentCustomer.name;
+                document.getElementById('custCodeBadge').textContent = currentCustomer.customer_code;
+                document.getElementById('custName').textContent = currentCustomer.name;
+                document.getElementById('custCompany').textContent = currentCustomer.company_name || 'No corporate group';
+                document.getElementById('custPhone').textContent = currentCustomer.phone || 'No phone';
+                document.getElementById('custEmail').textContent = currentCustomer.email || 'No email';
+                document.getElementById('custAddress').textContent = currentCustomer.address || 'No address recorded';
+                document.getElementById('custBalance').textContent = 'QAR ' + (currentCustomer.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                // Link actions
+                document.getElementById('btnNewQuote').href = `./quotation-create.html?customer_id=${encodeURIComponent(currentCustomer.customer_code)}`;
+                document.getElementById('btnNewInvoice').href = `./invoice-create.html?customer_id=${encodeURIComponent(currentCustomer.customer_code)}`;
+                document.getElementById('btnNewPayment').href = `./payment-create.html?customer_id=${encodeURIComponent(currentCustomer.customer_code)}`;
+
+                // Invoices
+                const invoices = window.demoStore.getInvoices().filter(i => i.customer_id === currentCustomer.id || i.customer_id === currentCustomer.customer_code);
+                document.getElementById('countInvoices').textContent = invoices.length;
+                const invTbody = document.getElementById('tbodyCustInvoices');
+                invTbody.innerHTML = '';
+                if (invoices.length === 0) {
+                    invTbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">No invoices for this customer.</td></tr>';
+                } else {
+                    invoices.forEach(inv => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-slate-50 transition-colors';
+                        tr.innerHTML = `
+                            <td class="px-4 py-2.5 font-mono-num font-bold text-[#0a192f]"><a href="./invoice-detail.html?id=${encodeURIComponent(inv.invoice_number)}" class="hover:underline">${inv.invoice_number}</a></td>
+                            <td class="px-4 py-2.5 text-slate-600">${inv.invoice_date}</td>
+                            <td class="px-4 py-2.5 text-slate-600">${inv.due_date}</td>
+                            <td class="px-4 py-2.5 text-right font-mono-num font-bold">QAR ${inv.grand_total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td class="px-4 py-2.5 text-right font-mono-num font-bold ${inv.balance_due > 0 ? 'text-rose-700' : 'text-slate-600'}">QAR ${inv.balance_due.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td class="px-4 py-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${inv.status === 'Paid' ? 'bg-emerald-100 text-emerald-800' : (inv.status === 'Partially Paid' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')}">${inv.status}</span></td>
+                            <td class="px-4 py-2.5 text-right"><a href="./invoice-detail.html?id=${encodeURIComponent(inv.invoice_number)}" class="font-bold text-[#0a192f] hover:underline">View</a></td>
+                        `;
+                        invTbody.appendChild(tr);
+                    });
+                }
+
+                // Quotes
+                const quotes = window.demoStore.getQuotations().filter(q => q.customer_id === currentCustomer.id || q.customer_id === currentCustomer.customer_code);
+                document.getElementById('countQuotes').textContent = quotes.length;
+                const qTbody = document.getElementById('tbodyCustQuotes');
+                qTbody.innerHTML = '';
+                if (quotes.length === 0) {
+                    qTbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">No quotations recorded.</td></tr>';
+                } else {
+                    quotes.forEach(q => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-slate-50 transition-colors';
+                        tr.innerHTML = `
+                            <td class="px-4 py-2.5 font-mono-num font-bold text-[#0a192f]"><a href="./quotation-detail.html?id=${encodeURIComponent(q.quotation_number)}" class="hover:underline">${q.quotation_number}</a></td>
+                            <td class="px-4 py-2.5 text-slate-700">${q.category}</td>
+                            <td class="px-4 py-2.5 text-slate-600">${q.quotation_date}</td>
+                            <td class="px-4 py-2.5 text-center font-mono-num">${q.total_qty}</td>
+                            <td class="px-4 py-2.5 text-right font-mono-num font-bold">QAR ${q.grand_total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td class="px-4 py-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${q.status === 'Invoiced' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">${q.status}</span></td>
+                            <td class="px-4 py-2.5 text-right"><a href="./quotation-detail.html?id=${encodeURIComponent(q.quotation_number)}" class="font-bold text-[#0a192f] hover:underline">View</a></td>
+                        `;
+                        qTbody.appendChild(tr);
+                    });
+                }
+
+                // Receipts
+                const receipts = window.demoStore.getReceipts().filter(r => r.customer_id === currentCustomer.id || r.customer_id === currentCustomer.customer_code);
+                document.getElementById('countReceipts').textContent = receipts.length;
+                const rTbody = document.getElementById('tbodyCustReceipts');
+                rTbody.innerHTML = '';
+                if (receipts.length === 0) {
+                    rTbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">No payment receipts found.</td></tr>';
+                } else {
+                    receipts.forEach(r => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-slate-50 transition-colors';
+                        tr.innerHTML = `
+                            <td class="px-4 py-2.5 font-mono-num font-bold text-[#0a192f]"><a href="./payment-detail.html?id=${encodeURIComponent(r.receipt_number)}" class="hover:underline">${r.receipt_number}</a></td>
+                            <td class="px-4 py-2.5 text-slate-600">${r.payment_date}</td>
+                            <td class="px-4 py-2.5 text-slate-700">${r.payment_method}</td>
+                            <td class="px-4 py-2.5 font-mono-num text-slate-600">${r.reference_number || '—'}</td>
+                            <td class="px-4 py-2.5 text-right font-mono-num font-bold text-emerald-700">QAR ${r.amount_received.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td class="px-4 py-2.5 text-right"><a href="./payment-detail.html?id=${encodeURIComponent(r.receipt_number)}" class="font-bold text-[#0a192f] hover:underline">View</a></td>
+                        `;
+                        rTbody.appendChild(tr);
+                    });
+                }
+            }
+
+            window.openEditModal = function() {
+                if (!currentCustomer) return;
+                document.getElementById('edit_name').value = currentCustomer.name;
+                document.getElementById('edit_company').value = currentCustomer.company_name || '';
+                document.getElementById('edit_phone').value = currentCustomer.phone || '';
+                document.getElementById('edit_email').value = currentCustomer.email || '';
+                document.getElementById('edit_address').value = currentCustomer.address || '';
+                document.getElementById('editCustomerModal').showModal();
+            };
+
+            document.getElementById('editCustomerForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                window.demoStore.updateCustomer(currentCustomer.id, {
+                    name: document.getElementById('edit_name').value,
+                    company_name: document.getElementById('edit_company').value,
+                    phone: document.getElementById('edit_phone').value,
+                    email: document.getElementById('edit_email').value,
+                    address: document.getElementById('edit_address').value
+                });
+                document.getElementById('editCustomerModal').close();
+                window.showToast('success', 'Profile Updated', 'Customer profile updated successfully.');
+                render();
+            });
+
+            render();
+            window.demoStore.subscribe(() => render());
+        });
+    </script>
+</body>
+</html>

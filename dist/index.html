@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en" class="app-root bg-slate-50" data-appearance="clean">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operations Dashboard — QUALITIES Uniforms & Gifts Solutions</title>
+    <link rel="icon" href="./favicon.ico">
+    <script>
+        try {
+            if (localStorage.getItem('qualities:appearance') === 'previous') {
+                document.documentElement.dataset.appearance = 'previous';
+            }
+        } catch {}
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/app.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body class="app-shell text-slate-800 antialiased bg-slate-100 flex flex-col md:flex-row min-h-screen">
+
+    <!-- Fixed / Sticky Navy Sidebar -->
+    <aside id="sidebar" class="app-sidebar w-full md:w-64 bg-[#0a192f] text-slate-200 flex flex-col flex-shrink-0 z-30 transition-all duration-300 border-r border-slate-800">
+        <!-- Brand Logo & Header -->
+        <div class="shrink-0 px-4 py-2 md:px-5 md:py-3 border-b border-slate-800/80 flex items-center justify-between gap-3">
+            <a href="./index.html" aria-label="QUALITIES ERP - Dashboard" class="min-w-0 inline-flex items-center gap-3 md:flex-col md:items-start md:gap-1">
+                <img src="./branding/qualities-logo.png" alt="QUALITIES Uniforms & Gifts" width="160" height="94" class="ui-brand-logo h-auto object-contain shrink-0">
+                <div class="flex flex-wrap items-center gap-1.5 text-[9px] text-slate-400">
+                    <span class="px-1.5 py-0.5 rounded bg-[#d4af37]/15 text-[#d4af37] font-bold border border-[#d4af37]/30">ERP</span>
+                    <span>Operations &amp; Billing</span>
+                </div>
+            </a>
+            <button id="sidebarToggle" type="button" aria-label="Toggle navigation" class="md:hidden shrink-0 text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav id="sidebarNavigation" aria-label="Main navigation" class="hidden md:block flex-1 min-h-0 px-3 py-4 space-y-1 overflow-y-auto">
+            <div class="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Operations &amp; Billing</div>
+
+            <!-- Dashboard -->
+            <a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-[#132a4a] text-white border-l-4 border-[#d4af37]">
+                <svg class="w-5 h-5 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Dashboard</span>
+            </a>
+
+            <!-- Quotations -->
+            <a href="./quotations.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>Quotations</span>
+                </div>
+            </a>
+
+            <!-- Sales Invoices -->
+            <a href="./invoices.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span>Sales Invoices</span>
+                </div>
+            </a>
+
+            <!-- Production Kanban Tracker -->
+            <a href="./production.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                    <span>Production Pipeline</span>
+                </div>
+            </a>
+
+            <!-- Delivery Notes -->
+            <a href="./delivery.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                <span>Delivery Notes</span>
+            </a>
+
+            <!-- Payment Receipts -->
+            <a href="./payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Payment Receipts</span>
+            </a>
+
+            <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Master Records</div>
+
+            <!-- Customers -->
+            <a href="./customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Customers</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="hidden md:block shrink-0 p-4 border-t border-slate-800 bg-[#07111e]/80">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-[#1e293b] border border-slate-700 flex items-center justify-center font-bold text-white text-xs">
+                    QA
+                </div>
+                <div class="overflow-hidden">
+                    <div class="text-xs font-bold text-white truncate">QUALITIES Uniforms</div>
+                    <div class="text-[11px] text-emerald-400 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Counter Online (QAR)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div id="appWorkspace" class="app-workspace flex flex-col flex-1 min-w-0">
+        <!-- Top App Header -->
+        <header class="app-header shrink-0 sticky top-0 z-20" data-app-header>
+            <h1 class="ui-page-title app-header-title">Operations Dashboard</h1>
+            <div class="app-header-controls" aria-label="Workspace controls">
+                <div class="app-header-clock" title="Doha, Qatar (UTC+03:00)">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><span class="app-header-clock-label">Doha</span><time data-header-clock>05:30 PM</time></div>
+                </div>
+
+                <!-- Notifications -->
+                <details class="app-header-dropdown" data-header-notifications>
+                    <summary class="app-header-icon-button" aria-label="Notifications">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 21h4" stroke-linecap="round"/></svg>
+                        <span class="app-header-notification-dot" data-header-notification-dot hidden></span>
+                    </summary>
+                    <div id="headerNotificationPanel" class="app-header-menu" aria-label="Recent notifications">
+                        <div class="app-header-menu-heading"><h2>Notifications</h2><button type="button" data-header-notification-clear hidden>Clear all</button></div>
+                        <p class="app-header-empty" data-header-notification-empty>No notifications yet. Updates will appear here.</p>
+                        <ul class="app-header-notices" data-header-notification-list hidden></ul>
+                    </div>
+                </details>
+
+                <!-- Profile & Appearance -->
+                <details class="app-header-dropdown" data-header-profile>
+                    <summary class="app-header-profile" aria-label="User details">
+                        <span class="app-header-avatar" aria-hidden="true">SM</span>
+                        <span class="app-header-profile-copy">
+                            <span class="app-header-user-name">Shop Manager (Doha)</span>
+                            <span class="app-header-user-role">Administrator</span>
+                        </span>
+                        <svg class="app-header-chevron" aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m6 8 4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </summary>
+                    <div id="headerProfilePanel" class="app-header-menu app-header-profile-panel">
+                        <p class="app-header-profile-heading font-bold text-slate-900">Shop Manager (Doha)</p>
+                        <p class="text-xs text-slate-500">Administrator</p>
+                        <p class="app-header-profile-email text-xs text-slate-400">admin@qualitiesqatar.com</p>
+                        <div class="app-header-profile-workspace text-xs text-slate-600 mt-2 flex items-center gap-1.5"><span class="app-header-online-dot w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>QUALITIES Uniforms Qatar</div>
+
+                        <fieldset class="app-appearance mt-4 border-t border-slate-200 pt-3">
+                            <legend class="app-appearance-label float-left mb-2 w-full text-[11px] font-semibold text-slate-500">Appearance</legend>
+                            <div class="app-appearance-options clear-both grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
+                                <button type="button" data-appearance-choice="clean" aria-pressed="true" class="min-h-8 rounded-md px-3 py-1.5 text-xs font-semibold text-slate-600 aria-pressed:bg-white aria-pressed:text-slate-900 aria-pressed:shadow-sm">Clean</button>
+                                <button type="button" data-appearance-choice="previous" aria-pressed="false" class="min-h-8 rounded-md px-3 py-1.5 text-xs font-semibold text-slate-600 aria-pressed:bg-white aria-pressed:text-slate-900 aria-pressed:shadow-sm">Previous</button>
+                            </div>
+                            <p class="app-appearance-hint mt-2 text-[11px] text-slate-500" data-appearance-status>Clean style is active.</p>
+                        </fieldset>
+
+                        <div class="mt-4 pt-3 border-t border-slate-200">
+                            <button type="button" onclick="resetDemoData()" class="w-full text-left text-xs text-rose-600 hover:text-rose-800 font-semibold py-1">
+                                ↺ Reset Demo Records
+                            </button>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </header>
+
+        <!-- Flash Notices Area -->
+        <div id="appFlashMessages" class="shrink-0 px-4 sm:px-6 pt-3"></div>
+
+        <!-- Main Dashboard Content -->
+        <main class="app-main px-4 sm:px-6 pb-12 flex-1">
+            <div class="erp-dashboard">
+                <div class="future-dashboard-top">
+                    <div class="future-dashboard-intro">
+                        <div class="future-dashboard-intro-copy">
+                            <p class="future-dashboard-eyebrow">Operations &amp; billing</p>
+                            <h2>Workspace overview</h2>
+                            <p class="future-dashboard-subtitle">Production, quotations and receivables at a glance.</p>
+                        </div>
+                    </div>
+
+                    <!-- Top Operational Metrics Cards -->
+                    <div class="dashboard-metrics" aria-label="Operations summary">
+                        <!-- 1. Ongoing production jobs -->
+                        <div data-metric="production" class="dashboard-metric ui-metric-card bg-white rounded-xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between">
+                                <a href="./production.html" class="ui-metric-label text-slate-500 hover:text-sky-700">Ongoing Production</a>
+                                <span class="ui-metric-icon w-8 h-8 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center font-bold text-xs border border-sky-100">
+                                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                </span>
+                            </div>
+                            <div class="mt-3">
+                                <div id="metricActiveOrders" class="ui-metric-value text-slate-900 font-mono-num">0</div>
+                                <a href="./production.html?status=completed" class="ui-help inline-block text-emerald-700 mt-1 hover:underline"><span id="metricCompletedOrders">0</span> production complete</a>
+                            </div>
+                        </div>
+
+                        <!-- 2. Pending Quotations -->
+                        <div data-metric="quotations" class="dashboard-metric ui-metric-card bg-white rounded-xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between">
+                                <a href="./quotations.html" class="ui-metric-label text-slate-500 hover:text-amber-700">Pending Quotations</a>
+                                <span class="ui-metric-icon w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-xs border border-amber-100">
+                                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </span>
+                            </div>
+                            <div class="mt-3">
+                                <div id="metricPendingQuotes" class="ui-metric-value text-slate-900 font-mono-num">0</div>
+                                <div class="ui-help text-slate-500 mt-1">Draft and sent proposals</div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Ready Deliveries -->
+                        <div data-metric="delivery" class="dashboard-metric ui-metric-card bg-white rounded-xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between">
+                                <a href="./delivery.html" class="ui-metric-label text-slate-500 hover:text-emerald-700">Ready for Delivery</a>
+                                <span class="ui-metric-icon w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs border border-emerald-100">
+                                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                </span>
+                            </div>
+                            <div class="mt-3">
+                                <div id="metricReadyDeliveries" class="ui-metric-value text-slate-900 font-mono-num">0</div>
+                                <div class="ui-help text-slate-500 mt-1">
+                                    <a href="./production.html?stage=Ready for Delivery" class="text-emerald-600 font-semibold hover:underline">Ready to dispatch</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Overdue Receivables -->
+                        <div data-metric="receivables" class="dashboard-metric ui-metric-card bg-white rounded-xl border border-rose-200/80 shadow-xs hover:border-rose-300 transition-all flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between">
+                                <span class="ui-metric-label text-rose-700">Overdue Payments</span>
+                                <span class="ui-metric-icon w-8 h-8 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center font-bold text-xs border border-rose-100">
+                                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </span>
+                            </div>
+                            <div class="mt-3">
+                                <div class="ui-metric-value text-rose-900 font-mono-num">
+                                    <span class="dashboard-currency text-xs">QAR</span> <span id="metricOverdueQAR">0.00</span>
+                                </div>
+                                <div class="ui-help text-rose-700 mt-1">
+                                    Total Outstanding: QAR <span id="metricTotalReceivablesQAR">0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Bar -->
+                    <section id="dashboardQuickActions" aria-labelledby="counter-billing-title" class="dashboard-actions">
+                        <div class="dashboard-action-label flex items-center gap-2.5 shrink-0">
+                            <div class="w-8 h-8 shrink-0 rounded-lg bg-[#d4af37]/20 border border-[#d4af37]/40 flex items-center justify-center text-[#d4af37]">
+                                <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            </div>
+                            <h2 id="counter-billing-title" class="ui-section-heading text-white">Counter Billing</h2>
+                        </div>
+                        <div class="dashboard-action-grid">
+                            <a href="./quotation-create.html" class="dashboard-action dashboard-action-primary">
+                                <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                <span>New Quotation</span>
+                            </a>
+                            <a href="./invoice-create.html" class="dashboard-action dashboard-action-secondary">
+                                <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <span>New Invoice</span>
+                            </a>
+                            <a href="./payment-create.html" class="dashboard-action dashboard-action-secondary">
+                                <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                <span>Record Payment</span>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Production Charts Grid -->
+                <div class="dashboard-charts-grid" aria-label="Production charts">
+                    <!-- Workload progress bars -->
+                    <section data-chart="workload" class="dashboard-chart-card" id="dashboardWorkloadChart" aria-labelledby="dashboard-workload-title">
+                        <div class="dashboard-chart-heading">
+                            <div>
+                                <h2 id="dashboard-workload-title">Production workload</h2>
+                                <p>Ongoing jobs by current stage</p>
+                            </div>
+                            <span id="workloadTotalJobs" class="dashboard-chart-unit font-bold text-slate-800">0 jobs</span>
+                        </div>
+                        <ul id="workloadBarsList" class="dashboard-workload" aria-label="Ongoing production jobs per stage">
+                            <!-- Populated dynamically -->
+                        </ul>
+                        <div class="dashboard-chart-scale" aria-hidden="true"><span>0 jobs</span><span id="workloadScaleMax">5 jobs</span></div>
+                        <p class="dashboard-chart-summary text-xs text-slate-400 mt-2">Select a bar to view jobs in that stage.</p>
+                    </section>
+
+                    <!-- Interactive Donut Chart -->
+                    <section data-chart="production" class="dashboard-chart-card production-overview" id="dashboardProductionChart" aria-labelledby="dashboard-production-title" data-production-donut data-donut-style="interactive">
+                        <div class="dashboard-chart-heading production-overview__heading">
+                            <div>
+                                <h2 id="dashboard-production-title">Production overview</h2>
+                                <p>All production jobs · ongoing and complete</p>
+                            </div>
+                        </div>
+                        <div class="production-overview__body flex flex-col sm:flex-row items-center gap-6 mt-4">
+                            <div class="production-donut relative flex flex-col items-center">
+                                <div class="production-donut__visual relative w-48 h-48">
+                                    <svg class="production-donut__svg w-full h-full" viewBox="0 0 240 240" role="group">
+                                        <circle class="production-donut__track text-slate-100 stroke-current" cx="120" cy="120" r="86" fill="none" stroke-width="28" />
+                                        <g transform="rotate(-90 120 120)">
+                                            <!-- Completed arc (emerald) -->
+                                            <circle id="donutCompletedArc" cx="120" cy="120" r="86" fill="none" stroke="#10b981" stroke-width="28" pathLength="100" stroke-dasharray="0 100" stroke-dashoffset="0" class="transition-all duration-700"/>
+                                            <!-- Ongoing arc (navy/sky) -->
+                                            <circle id="donutOngoingArc" cx="120" cy="120" r="86" fill="none" stroke="#0ea5e9" stroke-width="28" pathLength="100" stroke-dasharray="0 100" stroke-dashoffset="0" class="transition-all duration-700"/>
+                                        </g>
+                                    </svg>
+                                    <div class="production-donut__center absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                                        <strong id="donutCenterPercent" class="text-2xl font-black text-slate-900 font-mono-num">0%</strong>
+                                        <span class="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">complete</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="production-overview__breakdown flex-1 min-w-0 w-full">
+                                <p class="production-overview__total mb-3">
+                                    <strong id="donutTotalJobs" class="text-lg font-bold text-slate-900 font-mono-num">0</strong>
+                                    <span class="text-xs text-slate-500 ml-1">Total jobs tracked</span>
+                                </p>
+                                <ul class="production-overview__legend space-y-2 text-xs">
+                                    <li class="flex items-center justify-between p-2 rounded-lg bg-sky-50/70 border border-sky-100">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-3 h-3 rounded-full bg-sky-500"></span>
+                                            <span class="font-semibold text-slate-800">Ongoing Jobs</span>
+                                        </div>
+                                        <div class="font-mono-num font-bold text-sky-900"><span id="donutLegendOngoing">0</span> <small class="text-slate-400 font-normal ml-1">(<span id="donutLegendOngoingPct">0</span>%)</small></div>
+                                    </li>
+                                    <li class="flex items-center justify-between p-2 rounded-lg bg-emerald-50/70 border border-emerald-100">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                            <span class="font-semibold text-slate-800">Completed Jobs</span>
+                                        </div>
+                                        <div class="font-mono-num font-bold text-emerald-900"><span id="donutLegendCompleted">0</span> <small class="text-slate-400 font-normal ml-1">(<span id="donutLegendCompletedPct">0</span>%)</small></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Production Jobs & Quotations Layout -->
+                <div class="dashboard-content-grid mt-6">
+                    <!-- Jobs Table -->
+                    <div class="dashboard-jobs dashboard-panel min-w-0 bg-white rounded-xl border border-slate-200/90 shadow-xs">
+                        <div class="ui-panel-header border-b border-slate-100 p-4 flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <h2 id="jobsTableTitle" class="ui-section-heading text-slate-900 text-sm font-bold">Ongoing Production Jobs</h2>
+                                <p class="ui-help text-slate-500 text-xs">Delivery and payments are tracked separately.</p>
+                            </div>
+                            <a href="./production.html" class="text-xs font-bold text-[#0a192f] hover:text-[#d4af37] flex items-center gap-1">
+                                <span>Full Production Board</span>
+                                <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </a>
+                        </div>
+
+                        <!-- Status Tabs -->
+                        <nav aria-label="Production job status" class="dashboard-status-tabs flex gap-2 px-4 py-3 border-b border-slate-100">
+                            <button id="tabOngoing" type="button" class="dashboard-status-tab rounded-lg px-3 py-1.5 text-xs font-bold bg-slate-900 text-white">Ongoing (<span id="tabOngoingCount">0</span>)</button>
+                            <button id="tabCompleted" type="button" class="dashboard-status-tab rounded-lg px-3 py-1.5 text-xs font-bold bg-slate-100 text-slate-700">Production complete (<span id="tabCompletedCount">0</span>)</button>
+                        </nav>
+
+                        <div class="dashboard-table-wrap overflow-x-auto">
+                            <table class="dashboard-jobs-table ui-table w-full text-left text-xs" role="table">
+                                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3">Order ID</th>
+                                        <th scope="col" class="px-4 py-3">Customer / Organization</th>
+                                        <th scope="col" class="px-4 py-3">Items &amp; Quantity</th>
+                                        <th scope="col" class="px-4 py-3">Current Stage</th>
+                                        <th scope="col" class="px-4 py-3 text-right">Target Due</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboardJobsTbody" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Recent Quotations & Company Info -->
+                    <div class="dashboard-secondary ui-secondary-stack min-w-0 space-y-6">
+                        <!-- Recent Quotations Card -->
+                        <div class="dashboard-quotes dashboard-panel bg-white rounded-xl border border-slate-200/90 shadow-xs">
+                            <div class="ui-panel-header border-b border-slate-100 p-4 flex items-center justify-between">
+                                <div>
+                                    <h2 class="ui-section-heading text-slate-900 text-sm font-bold">Recent Quotations</h2>
+                                    <p class="ui-help text-slate-500 text-xs">Latest pricing proposals</p>
+                                </div>
+                                <a href="./quotations.html" class="text-xs font-bold text-[#0a192f] hover:text-[#d4af37]">All Quotes</a>
+                            </div>
+                            <div id="recentQuotesList" class="dashboard-quote-list divide-y divide-slate-100">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Shop Quick Info Card -->
+                        <div class="dashboard-company ui-help bg-slate-50 rounded-xl border border-slate-200 p-4 text-slate-600 space-y-2 text-xs">
+                            <div class="font-bold text-slate-800 flex items-center gap-1.5 text-sm">
+                                QUALITIES Uniforms &amp; Gifts Solutions
+                            </div>
+                            <div><strong>Location:</strong> Industrial Area, Street 24, Building 18, Doha, Qatar</div>
+                            <div><strong>Services:</strong> School Uniforms, Corporate Wear, Computerized Embroidery, DTF Printing &amp; Promotional Gifts</div>
+                            <div><strong>Contact:</strong> +974 5522 1178</div>
+                            <div class="break-words">info@qualitiesqatar.com</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Customer Modal Dialog -->
+    <dialog id="quickCustomerModal" class="app-dialog" aria-labelledby="quickCustomerTitle">
+        <div class="app-customer-header flex items-center justify-between p-4 border-b border-slate-100">
+            <div>
+                <h2 id="quickCustomerTitle" class="text-sm font-bold text-slate-900">New customer</h2>
+                <p id="quickCustomerDescription" class="text-xs text-slate-500">Add a customer for quotations, invoices and payments.</p>
+            </div>
+            <button type="button" onclick="closeQuickCustomerModal()" class="text-slate-400 hover:text-slate-700" aria-label="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+        <form id="quickCustomerForm" class="p-4 space-y-3 text-xs" novalidate>
+            <div>
+                <label for="qc_name" class="block font-semibold text-slate-700 mb-1">Customer / Organization Name *</label>
+                <input type="text" id="qc_name" required maxlength="255" placeholder="e.g. Doha Academy" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+                <label for="qc_company_name" class="block font-semibold text-slate-700 mb-1">Company / Group Name</label>
+                <input type="text" id="qc_company_name" maxlength="255" placeholder="e.g. Qatar Education Group" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label for="qc_phone" class="block font-semibold text-slate-700 mb-1">Phone Number</label>
+                    <input type="tel" id="qc_phone" placeholder="+974 5512 3456" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="qc_email" class="block font-semibold text-slate-700 mb-1">Email Address</label>
+                    <input type="email" id="qc_email" placeholder="name@company.qa" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+            </div>
+            <div>
+                <label for="qc_address" class="block font-semibold text-slate-700 mb-1">Address / Zone</label>
+                <input type="text" id="qc_address" placeholder="e.g. Al Sadd, Zone 38, Doha" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                <button type="button" onclick="closeQuickCustomerModal()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 font-semibold">Cancel</button>
+                <button type="submit" class="px-4 py-1.5 rounded-lg bg-[#0a192f] text-white hover:bg-[#132a4a] font-bold">Save customer</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="./assets/demo-store.js"></script>
+    <script src="./assets/demo-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let activeTab = 'ongoing';
+
+            function renderDashboard() {
+                const metrics = window.demoStore.getDashboardMetrics();
+
+                // Top cards
+                document.getElementById('metricActiveOrders').textContent = metrics.activeOrdersCount;
+                document.getElementById('metricCompletedOrders').textContent = metrics.completedOrdersCount;
+                document.getElementById('metricPendingQuotes').textContent = metrics.pendingQuotationsCount;
+                document.getElementById('metricReadyDeliveries').textContent = metrics.readyDeliveriesCount;
+                document.getElementById('metricOverdueQAR').textContent = metrics.overduePaymentsQAR.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('metricTotalReceivablesQAR').textContent = metrics.totalReceivablesQAR.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                // Workload chart
+                const charts = metrics.productionCharts;
+                document.getElementById('workloadTotalJobs').textContent = `${charts.active} ${charts.active === 1 ? 'job' : 'jobs'}`;
+                document.getElementById('workloadScaleMax').textContent = `${charts.max} jobs`;
+
+                const workloadList = document.getElementById('workloadBarsList');
+                workloadList.innerHTML = '';
+                charts.workload.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <a class="dashboard-workload-row flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors" href="./production.html?stage=${encodeURIComponent(item.stage)}">
+                            <span class="dashboard-workload-name text-xs font-semibold text-slate-700 w-44 truncate">${item.label}</span>
+                            <strong class="dashboard-workload-value font-mono-num text-xs font-bold text-slate-900 w-8 text-right">${item.count}</strong>
+                            <span class="dashboard-workload-track flex-1 h-2 rounded-full bg-slate-100 overflow-hidden ml-2">
+                                <span class="block h-full bg-sky-500 rounded-full transition-all duration-500" style="width: ${item.percent}%"></span>
+                            </span>
+                        </a>
+                    `;
+                    workloadList.appendChild(li);
+                });
+
+                // Donut Chart
+                const total = charts.total;
+                const completedPct = total > 0 ? Number(((charts.completed / total) * 100).toFixed(1)) : 0;
+                const ongoingPct = total > 0 ? Number(((charts.active / total) * 100).toFixed(1)) : 0;
+
+                document.getElementById('donutCenterPercent').textContent = `${completedPct}%`;
+                document.getElementById('donutTotalJobs').textContent = total;
+                document.getElementById('donutLegendOngoing').textContent = charts.active;
+                document.getElementById('donutLegendOngoingPct').textContent = ongoingPct;
+                document.getElementById('donutLegendCompleted').textContent = charts.completed;
+                document.getElementById('donutLegendCompletedPct').textContent = completedPct;
+
+                const compArc = document.getElementById('donutCompletedArc');
+                const onArc = document.getElementById('donutOngoingArc');
+                if (compArc && onArc) {
+                    compArc.setAttribute('stroke-dasharray', `${completedPct} ${100 - completedPct}`);
+                    compArc.setAttribute('stroke-dashoffset', '0');
+                    onArc.setAttribute('stroke-dasharray', `${ongoingPct} ${100 - ongoingPct}`);
+                    onArc.setAttribute('stroke-dashoffset', `-${completedPct}`);
+                }
+
+                // Table Tabs
+                document.getElementById('tabOngoingCount').textContent = metrics.activeOrdersCount;
+                document.getElementById('tabCompletedCount').textContent = metrics.completedOrdersCount;
+
+                // Jobs Table
+                const orders = window.demoStore.getProductionOrders().filter(o => activeTab === 'completed' ? o.stage === 'Completed' : o.stage !== 'Completed');
+                const tbody = document.getElementById('dashboardJobsTbody');
+                tbody.innerHTML = '';
+
+                if (orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-400">No ${activeTab} production jobs.</td></tr>`;
+                } else {
+                    orders.forEach(order => {
+                        const cust = window.demoStore.getCustomer(order.customer_id);
+                        const badgeColor = {
+                            'Confirmed': 'bg-slate-100 text-slate-800 border-slate-200',
+                            'Cutting & Stitching': 'bg-amber-50 text-amber-800 border-amber-200',
+                            'Embroidery / DTF Printing': 'bg-purple-50 text-purple-800 border-purple-200',
+                            'Quality Check': 'bg-sky-50 text-sky-800 border-sky-200',
+                            'Ready for Delivery': 'bg-emerald-50 text-emerald-800 border-emerald-200',
+                            'Completed': 'bg-green-100 text-green-900 border-green-200'
+                        }[order.stage] || 'bg-slate-100 text-slate-800 border-slate-200';
+
+                        const tr = document.createElement('tr');
+                        tr.className = 'dashboard-job-row hover:bg-slate-50/80 transition-colors';
+                        tr.innerHTML = `
+                            <td class="px-4 py-3 font-mono-num font-bold text-[#0a192f]">
+                                <a href="./production.html?search=${encodeURIComponent(order.order_number)}" class="hover:underline">${order.order_number}</a>
+                                ${order.invoice_id ? `<span class="block text-[10px] text-slate-500 font-normal"><a href="./invoice-detail.html?id=${encodeURIComponent(order.invoice_id)}" class="hover:underline">${order.invoice_id}</a></span>` : ''}
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="ui-table-primary font-bold text-slate-900"><a href="./customer-detail.html?id=${encodeURIComponent(order.customer_id)}" class="hover:underline">${cust ? cust.name : 'Walk-in'}</a></div>
+                                <div class="text-[11px] text-slate-500">${cust ? cust.phone : ''}</div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="ui-table-secondary text-slate-600 break-words">${order.job_summary || order.item_name}</div>
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-bold text-[10px] font-mono-num mt-1">
+                                    ${order.quantity_summary || order.total_qty + ' units'}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="ui-badge inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-semibold ${badgeColor}">
+                                    ${order.stage}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-right font-mono-num">
+                                <span class="text-slate-600">${order.target_date || 'Not set'}</span>
+                                ${order.priority === 'Urgent' ? '<span class="block text-[10px] text-rose-600 font-bold">URGENT</span>' : ''}
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // Recent Quotations List
+                const recentQuotes = window.demoStore.getQuotations().slice(0, 5);
+                const qList = document.getElementById('recentQuotesList');
+                qList.innerHTML = '';
+                if (recentQuotes.length === 0) {
+                    qList.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">No quotations recorded.</div>';
+                } else {
+                    recentQuotes.forEach(q => {
+                        const cust = window.demoStore.getCustomer(q.customer_id);
+                        const statusClass = q.status === 'Invoiced' ? 'bg-emerald-100 text-emerald-800' : (q.status === 'Approved' ? 'bg-sky-100 text-sky-800' : 'bg-slate-100 text-slate-700');
+                        const div = document.createElement('div');
+                        div.className = 'dashboard-quote p-3.5 hover:bg-slate-50 transition-colors flex items-center justify-between gap-3';
+                        div.innerHTML = `
+                            <div class="min-w-0">
+                                <a href="./quotation-detail.html?id=${encodeURIComponent(q.quotation_number)}" class="font-bold text-xs text-[#0a192f] hover:text-[#d4af37] font-mono-num block">
+                                    ${q.quotation_number}
+                                </a>
+                                <div class="ui-table-secondary text-slate-600 break-words">${cust ? cust.name : 'Walk-in'}</div>
+                                <div class="ui-table-secondary text-slate-400 text-[11px]">${q.category} • ${q.total_qty} units</div>
+                            </div>
+                            <div class="text-right flex-shrink-0">
+                                <div class="font-mono-num font-extrabold text-xs text-slate-900">
+                                    <span class="text-[10px] text-slate-400 font-normal">QAR</span> ${q.grand_total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </div>
+                                <span class="inline-block mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${statusClass}">
+                                    ${q.status}
+                                </span>
+                            </div>
+                        `;
+                        qList.appendChild(div);
+                    });
+                }
+            }
+
+            // Tab click handling
+            const tabOngoing = document.getElementById('tabOngoing');
+            const tabCompleted = document.getElementById('tabCompleted');
+            tabOngoing.addEventListener('click', () => {
+                activeTab = 'ongoing';
+                tabOngoing.className = 'dashboard-status-tab rounded-lg px-3 py-1.5 text-xs font-bold bg-slate-900 text-white';
+                tabCompleted.className = 'dashboard-status-tab rounded-lg px-3 py-1.5 text-xs font-bold bg-slate-100 text-slate-700';
+                document.getElementById('jobsTableTitle').textContent = 'Ongoing Production Jobs';
+                renderDashboard();
+            });
+            tabCompleted.addEventListener('click', () => {
+                activeTab = 'completed';
+                tabCompleted.className = 'dashboard-status-tab rounded-lg px-3 py-1.5 text-xs font-bold bg-slate-900 text-white';
+                tabOngoing.className = 'dashboard-status-tab rounded-lg px-3 py-1.5 text-xs font-bold bg-slate-100 text-slate-700';
+                document.getElementById('jobsTableTitle').textContent = 'Completed Production Jobs';
+                renderDashboard();
+            });
+
+            // Initial render and subscribe
+            renderDashboard();
+            window.demoStore.subscribe(() => renderDashboard());
+        });
+    </script>
+</body>
+</html>

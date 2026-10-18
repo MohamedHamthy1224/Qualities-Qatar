@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" class="app-root bg-slate-50" data-appearance="clean">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Delivery Note — QUALITIES Uniforms &amp; Gifts Solutions</title>
+    <link rel="icon" href="./favicon.ico">
+    <script>
+        try {
+            if (localStorage.getItem('qualities:appearance') === 'previous') {
+                document.documentElement.dataset.appearance = 'previous';
+            }
+        } catch {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/app.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+        .size-matrix-input { width: 44px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 2px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+    </style>
+</head>
+<body class="app-shell text-slate-800 antialiased bg-slate-100 flex flex-col md:flex-row min-h-screen">
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="app-sidebar w-full md:w-64 bg-[#0a192f] text-slate-200 flex flex-col flex-shrink-0 z-30 transition-all duration-300 border-r border-slate-800">
+        <div class="shrink-0 px-4 py-2 md:px-5 md:py-3 border-b border-slate-800/80 flex items-center justify-between gap-3">
+            <a href="./index.html" class="min-w-0 inline-flex items-center gap-3 md:flex-col md:items-start md:gap-1">
+                <img src="./branding/qualities-logo.png" alt="QUALITIES Uniforms & Gifts" width="160" height="94" class="ui-brand-logo h-auto object-contain shrink-0">
+                <div class="flex flex-wrap items-center gap-1.5 text-[9px] text-slate-400">
+                    <span class="px-1.5 py-0.5 rounded bg-[#d4af37]/15 text-[#d4af37] font-bold border border-[#d4af37]/30">ERP</span>
+                    <span>Operations &amp; Billing</span>
+                </div>
+            </a>
+            <button id="sidebarToggle" type="button" aria-label="Toggle navigation" class="md:hidden shrink-0 text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+        </div>
+
+        <nav id="sidebarNavigation" aria-label="Main navigation" class="hidden md:block flex-1 min-h-0 px-3 py-4 space-y-1 overflow-y-auto">
+            <div class="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Operations &amp; Billing</div>
+
+            <a href="./index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="./quotations.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>Quotations</span>
+                </div>
+            </a>
+
+            <a href="./invoices.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span>Sales Invoices</span>
+                </div>
+            </a>
+
+            <a href="./production.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                    <span>Production Pipeline</span>
+                </div>
+            </a>
+
+            <a href="./delivery.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-[#132a4a] text-white border-l-4 border-[#d4af37]">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                <span>Delivery Notes</span>
+            </a>
+
+            <a href="./payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Payment Receipts</span>
+            </a>
+
+            <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Master Records</div>
+
+            <a href="./customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-slate-300 hover:bg-slate-800/60 hover:text-white">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Customers</span>
+            </a>
+        </nav>
+
+        <div class="hidden md:block shrink-0 p-4 border-t border-slate-800 bg-[#07111e]/80">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-[#1e293b] border border-slate-700 flex items-center justify-center font-bold text-white text-xs">QA</div>
+                <div class="overflow-hidden">
+                    <div class="text-xs font-bold text-white truncate">QUALITIES Uniforms</div>
+                    <div class="text-[11px] text-emerald-400 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Counter Online (QAR)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div id="appWorkspace" class="app-workspace flex flex-col flex-1 min-w-0">
+        <header class="app-header shrink-0 sticky top-0 z-20" data-app-header>
+            <div class="flex items-center gap-3">
+                <a href="./delivery.html" class="text-xs text-slate-500 hover:text-slate-800 font-semibold">&larr; Back to Delivery Notes</a>
+                <h1 class="ui-page-title app-header-title">Create Delivery Note</h1>
+            </div>
+            <div class="app-header-controls">
+                <div class="app-header-clock" title="Doha, Qatar">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><span class="app-header-clock-label">Doha</span><time data-header-clock>05:30 PM</time></div>
+                </div>
+
+                <details class="app-header-dropdown" data-header-notifications>
+                    <summary class="app-header-icon-button" aria-label="Notifications">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 21h4" stroke-linecap="round"/></svg>
+                        <span class="app-header-notification-dot" data-header-notification-dot hidden></span>
+                    </summary>
+                    <div id="headerNotificationPanel" class="app-header-menu">
+                        <div class="app-header-menu-heading"><h2>Notifications</h2><button type="button" data-header-notification-clear hidden>Clear all</button></div>
+                        <p class="app-header-empty" data-header-notification-empty>No notifications yet.</p>
+                        <ul class="app-header-notices" data-header-notification-list hidden></ul>
+                    </div>
+                </details>
+
+                <details class="app-header-dropdown" data-header-profile>
+                    <summary class="app-header-profile">
+                        <span class="app-header-avatar">SM</span>
+                        <span class="app-header-profile-copy">
+                            <span class="app-header-user-name">Shop Manager (Doha)</span>
+                            <span class="app-header-user-role">Administrator</span>
+                        </span>
+                        <svg class="app-header-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m6 8 4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </summary>
+                    <div id="headerProfilePanel" class="app-header-menu app-header-profile-panel">
+                        <p class="app-header-profile-heading font-bold text-slate-900">Shop Manager (Doha)</p>
+                        <p class="text-xs text-slate-500">Administrator</p>
+                        <div class="mt-4 pt-3 border-t border-slate-200">
+                            <button type="button" onclick="resetDemoData()" class="w-full text-left text-xs text-rose-600 hover:text-rose-800 font-semibold py-1">↺ Reset Demo Records</button>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </header>
+
+        <div id="appFlashMessages" class="shrink-0 px-4 sm:px-6 pt-3"></div>
+
+        <main class="app-main px-4 sm:px-6 pb-12 flex-1">
+            <div class="ui-page pt-2 min-w-0 max-w-5xl mx-auto">
+                <form id="deliveryForm" class="space-y-4">
+
+                    <!-- Dispatch Details Card -->
+                    <div class="ui-section bg-white rounded-xl border border-slate-200/90 shadow-xs p-5">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
+                            <div>
+                                <h2 class="ui-section-heading font-bold text-slate-900 text-sm">Dispatch Details</h2>
+                                <p class="ui-help text-slate-500 text-xs mt-0.5">Choose an invoice to load its items for handover.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                            <div class="lg:col-span-2 min-w-0">
+                                <label for="invoiceSelect" class="ui-field-label block font-semibold text-slate-700 mb-1">Sales Invoice *</label>
+                                <select id="invoiceSelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
+                                    <option value="">-- Choose Sales Invoice --</option>
+                                    <!-- Invoices injected by JS -->
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="deliveryNumber" class="ui-field-label block font-semibold text-slate-700 mb-1">Delivery Note Number *</label>
+                                <input id="deliveryNumber" type="text" maxlength="50" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono-num font-bold text-[#0a192f] bg-slate-50 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label for="dispatchDate" class="ui-field-label block font-semibold text-slate-700 mb-1">Dispatch Date *</label>
+                                <input id="dispatchDate" type="date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label for="recipientName" class="ui-field-label block font-semibold text-slate-700 mb-1">Recipient Name *</label>
+                                <input type="text" id="recipientName" maxlength="255" required placeholder="Authorized receiver" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label for="recipientPhone" class="ui-field-label block font-semibold text-slate-700 mb-1">Recipient Phone</label>
+                                <input type="text" id="recipientPhone" maxlength="50" placeholder="+974" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none font-mono-num">
+                            </div>
+
+                            <div>
+                                <label for="driverName" class="ui-field-label block font-semibold text-slate-700 mb-1">Driver / Vehicle</label>
+                                <input id="driverName" type="text" maxlength="255" placeholder="e.g. Rashid (Van 04)" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label for="deliveryStatus" class="ui-field-label block font-semibold text-slate-700 mb-1">Dispatch Status *</label>
+                                <select id="deliveryStatus" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
+                                    <option value="Dispatched" selected>Out for Delivery</option>
+                                    <option value="Pending">Pending Dispatch</option>
+                                    <option value="Delivered">Delivered &amp; Signed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Items to Deliver Card -->
+                    <div class="ui-section bg-white rounded-xl border border-slate-200/90 shadow-xs p-5 space-y-4 min-w-0">
+                        <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h3 class="ui-section-heading font-bold text-slate-900 text-sm">Items to Deliver</h3>
+                                <p class="ui-help text-slate-500 text-xs mt-0.5">Enter quantities for this dispatch; zero for items to be delivered later.</p>
+                            </div>
+                        </div>
+
+                        <p id="deliveryEmptyNotice" class="ui-help text-slate-500 py-6 text-center text-xs">Select a sales invoice above to load its items.</p>
+
+                        <div id="tableWrapper" class="hidden overflow-x-auto max-w-full">
+                            <table id="deliveryItemsTable" class="ui-table w-full min-w-[760px] text-left border border-slate-200 text-xs">
+                                <thead class="bg-slate-100 text-slate-700 border-b border-slate-200 font-bold">
+                                    <tr>
+                                        <th class="px-3 py-2.5 min-w-44">Item Description</th>
+                                        <th class="px-1 py-2.5 text-center">XS</th>
+                                        <th class="px-1 py-2.5 text-center">S</th>
+                                        <th class="px-1 py-2.5 text-center">M</th>
+                                        <th class="px-1 py-2.5 text-center">L</th>
+                                        <th class="px-1 py-2.5 text-center">XL</th>
+                                        <th class="px-1 py-2.5 text-center">2XL</th>
+                                        <th class="px-1 py-2.5 text-center">3XL</th>
+                                        <th class="px-1 py-2.5 text-center">Custom</th>
+                                        <th class="px-3 py-2.5 text-center min-w-24 bg-slate-200/50">Dispatch Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deliveryTbody" class="divide-y divide-slate-200">
+                                    <!-- Injected rows -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <label for="driverNotes" class="ui-field-label block font-semibold text-slate-700 mb-1 text-xs">Handover instructions</label>
+                            <textarea id="driverNotes" rows="2" placeholder="Delivery location, contact instructions or receiving bay details" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none"></textarea>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                            <div class="text-xs text-slate-600">Total Handover Quantity: <strong id="totalDelivPieces" class="text-slate-900 font-mono-num text-sm">0</strong> units</div>
+                            <button id="generateDeliveryButton" type="submit" disabled class="px-5 py-2.5 rounded-lg text-xs font-bold text-white bg-[#0a192f] hover:bg-[#132a4a] disabled:opacity-50 disabled:cursor-not-allowed transition-all">Generate Delivery Note</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="./assets/demo-store.js"></script>
+    <script src="./assets/demo-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const invoiceSelect = document.getElementById('invoiceSelect');
+            const deliveryNumberInput = document.getElementById('deliveryNumber');
+            const dispatchDateInput = document.getElementById('dispatchDate');
+            const recipientNameInput = document.getElementById('recipientName');
+            const recipientPhoneInput = document.getElementById('recipientPhone');
+            const driverNameInput = document.getElementById('driverName');
+            const deliveryStatusSelect = document.getElementById('deliveryStatus');
+            const driverNotesInput = document.getElementById('driverNotes');
+            const deliveryEmptyNotice = document.getElementById('deliveryEmptyNotice');
+            const tableWrapper = document.getElementById('tableWrapper');
+            const deliveryTbody = document.getElementById('deliveryTbody');
+            const totalDelivPieces = document.getElementById('totalDelivPieces');
+            const generateDeliveryButton = document.getElementById('generateDeliveryButton');
+            const deliveryForm = document.getElementById('deliveryForm');
+
+            // Default dates & suggested delivery number
+            dispatchDateInput.value = new Date().toISOString().split('T')[0];
+            const nextDnNum = 'DN-2026-' + String(window.demoStore.getDeliveryNotes().length + 501);
+            deliveryNumberInput.value = nextDnNum;
+
+            // Load invoices into dropdown
+            const invoices = window.demoStore.getInvoices();
+            const urlParams = new URLSearchParams(window.location.search);
+            const preselectedInvoiceId = urlParams.get('invoice_id');
+
+            invoices.forEach(inv => {
+                const cust = window.demoStore.getCustomer(inv.customer_id);
+                const opt = document.createElement('option');
+                opt.value = inv.invoice_number;
+                opt.textContent = `${inv.invoice_number} — ${cust ? cust.name : 'Walk-in'} (${inv.total_qty} units)`;
+                if (preselectedInvoiceId && inv.invoice_number === preselectedInvoiceId) {
+                    opt.selected = true;
+                }
+                invoiceSelect.appendChild(opt);
+            });
+
+            function renderItemsForSelectedInvoice() {
+                const invoiceId = invoiceSelect.value;
+                deliveryTbody.innerHTML = '';
+
+                if (!invoiceId) {
+                    deliveryEmptyNotice.classList.remove('hidden');
+                    tableWrapper.classList.add('hidden');
+                    generateDeliveryButton.disabled = true;
+                    totalDelivPieces.textContent = '0';
+                    return;
+                }
+
+                const invoice = window.demoStore.getInvoice(invoiceId);
+                if (!invoice || !invoice.items || invoice.items.length === 0) {
+                    deliveryEmptyNotice.textContent = 'No item rows found for this invoice.';
+                    deliveryEmptyNotice.classList.remove('hidden');
+                    tableWrapper.classList.add('hidden');
+                    generateDeliveryButton.disabled = true;
+                    return;
+                }
+
+                // Auto-fill recipient from customer
+                const cust = window.demoStore.getCustomer(invoice.customer_id);
+                if (cust) {
+                    recipientNameInput.value = cust.name;
+                    recipientPhoneInput.value = cust.phone;
+                }
+
+                deliveryEmptyNotice.classList.add('hidden');
+                tableWrapper.classList.remove('hidden');
+                generateDeliveryButton.disabled = false;
+
+                invoice.items.forEach((item, idx) => {
+                    const sizes = item.sizes || { xs: 0, s: 0, m: 0, l: 0, xl: 0, '2xl': 0, '3xl': 0, custom: 0 };
+                    const hasSizes = Object.values(sizes).some(v => Number(v) > 0);
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'deliv-row hover:bg-slate-50';
+                    tr.dataset.hasSizes = hasSizes ? '1' : '0';
+                    tr.dataset.productName = item.product_name;
+
+                    tr.innerHTML = `
+                        <td class="p-2.5">
+                            <span class="delivery-product font-semibold text-slate-900">${item.product_name}</span>
+                            <p class="delivery-remaining text-[11px] text-slate-500 mt-0.5">Invoice Qty: <strong>${item.total_qty}</strong> units</p>
+                        </td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes.xs || 9999}" data-size="xs" value="${sizes.xs || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes.s || 9999}" data-size="s" value="${sizes.s || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes.m || 9999}" data-size="m" value="${sizes.m || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes.l || 9999}" data-size="l" value="${sizes.l || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes.xl || 9999}" data-size="xl" value="${sizes.xl || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes['2xl'] || 9999}" data-size="2xl" value="${sizes['2xl'] || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes['3xl'] || 9999}" data-size="3xl" value="${sizes['3xl'] || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-1 text-center"><input type="number" min="0" step="1" max="${sizes.custom || 9999}" data-size="custom" value="${sizes.custom || 0}" ${!hasSizes ? 'disabled' : ''} class="size-matrix-input deliv-size ${!hasSizes ? 'bg-slate-100 text-slate-300' : ''}"></td>
+                        <td class="p-2 text-center bg-slate-50">
+                            <input type="number" min="0" step="1" required value="${item.total_qty}" ${hasSizes ? 'readonly' : ''} class="deliv-qty w-16 p-1 text-center border border-slate-300 rounded font-mono-num font-bold text-slate-900 bg-white">
+                        </td>
+                    `;
+                    deliveryTbody.appendChild(tr);
+                });
+
+                attachRowRecalculations();
+                recalcTotal();
+            }
+
+            function attachRowRecalculations() {
+                deliveryTbody.querySelectorAll('.deliv-row').forEach(row => {
+                    const hasSizes = row.dataset.hasSizes === '1';
+                    const qtyInput = row.querySelector('.deliv-qty');
+
+                    if (hasSizes) {
+                        row.querySelectorAll('.deliv-size').forEach(szInput => {
+                            szInput.addEventListener('input', () => {
+                                let sum = 0;
+                                row.querySelectorAll('.deliv-size').forEach(inp => {
+                                    sum += Math.max(0, parseInt(inp.value) || 0);
+                                });
+                                qtyInput.value = sum;
+                                recalcTotal();
+                            });
+                        });
+                    } else {
+                        qtyInput.addEventListener('input', recalcTotal);
+                    }
+                });
+            }
+
+            function recalcTotal() {
+                let total = 0;
+                deliveryTbody.querySelectorAll('.deliv-qty').forEach(q => {
+                    total += Math.max(0, parseInt(q.value) || 0);
+                });
+                totalDelivPieces.textContent = total;
+                generateDeliveryButton.disabled = total <= 0;
+            }
+
+            invoiceSelect.addEventListener('change', renderItemsForSelectedInvoice);
+
+            if (invoiceSelect.value) {
+                renderItemsForSelectedInvoice();
+            }
+
+            deliveryForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const invId = invoiceSelect.value;
+                if (!invId) {
+                    alert('Please choose a sales invoice');
+                    return;
+                }
+
+                const invoice = window.demoStore.getInvoice(invId);
+                const items = [];
+                let totalQty = 0;
+
+                deliveryTbody.querySelectorAll('.deliv-row').forEach(row => {
+                    const productName = row.dataset.productName;
+                    const qty = parseInt(row.querySelector('.deliv-qty').value) || 0;
+                    totalQty += qty;
+
+                    const sizes = {
+                        xs: parseInt(row.querySelector('[data-size="xs"]')?.value) || 0,
+                        s: parseInt(row.querySelector('[data-size="s"]')?.value) || 0,
+                        m: parseInt(row.querySelector('[data-size="m"]')?.value) || 0,
+                        l: parseInt(row.querySelector('[data-size="l"]')?.value) || 0,
+                        xl: parseInt(row.querySelector('[data-size="xl"]')?.value) || 0,
+                        '2xl': parseInt(row.querySelector('[data-size="2xl"]')?.value) || 0,
+                        '3xl': parseInt(row.querySelector('[data-size="3xl"]')?.value) || 0,
+                        custom: parseInt(row.querySelector('[data-size="custom"]')?.value) || 0
+                    };
+
+                    items.push({
+                        product_name: productName,
+                        total_qty: qty,
+                        sizes: sizes
+                    });
+                });
+
+                const newDn = window.demoStore.addDeliveryNote({
+                    delivery_number: deliveryNumberInput.value.trim(),
+                    invoice_id: invId,
+                    customer_id: invoice.customer_id,
+                    dispatch_date: dispatchDateInput.value,
+                    recipient_name: recipientNameInput.value.trim(),
+                    recipient_phone: recipientPhoneInput.value.trim(),
+                    driver_name: driverNameInput.value.trim(),
+                    driver_notes: driverNotesInput.value.trim(),
+                    status: deliveryStatusSelect.value,
+                    total_qty: totalQty,
+                    items: items
+                });
+
+                if (window.showToast) {
+                    window.showToast(`Delivery Note ${newDn.delivery_number} generated successfully!`, 'success');
+                }
+
+                setTimeout(() => {
+                    window.location.href = `./delivery-detail.html?id=${encodeURIComponent(newDn.delivery_number)}`;
+                }, 400);
+            });
+        });
+    </script>
+</body>
+</html>
