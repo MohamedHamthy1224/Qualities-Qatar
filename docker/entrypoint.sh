@@ -29,7 +29,7 @@ chmod -R 775 storage bootstrap/cache
 if [ -z "$APP_KEY" ]; then
     if ! grep -q "^APP_KEY=base64:" .env 2>/dev/null; then
         echo "Generating application encryption key..."
-        php artisan key:generate --force
+        php artisan key:generate --force || true
     fi
 fi
 
@@ -49,11 +49,13 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
-# Reconfigure Apache to bind to the dynamic port passed by Railway / Render (e.g. 8080)
+# Configure Apache port: ensure Apache listens on both 80 and $PORT
 TARGET_PORT="${PORT:-80}"
-echo "Configuring Apache to listen on port ${TARGET_PORT}..."
-sed -i "s/Listen 80/Listen ${TARGET_PORT}/g" /etc/apache2/ports.conf
-sed -i "s/<VirtualHost \*:80>/<VirtualHost \*:${TARGET_PORT}>/g" /etc/apache2/sites-available/000-default.conf
+echo "Configuring Apache ports (default 80, target ${TARGET_PORT})..."
+if [ "$TARGET_PORT" != "80" ]; then
+    echo "Listen ${TARGET_PORT}" >> /etc/apache2/ports.conf
+    sed -i "s/<VirtualHost \*:80>/<VirtualHost \*:80 \*:${TARGET_PORT}>/g" /etc/apache2/sites-available/000-default.conf
+fi
 
-echo "Starting Apache web server on port ${TARGET_PORT}..."
+echo "Starting Apache web server on port 80 and ${TARGET_PORT}..."
 exec apache2-foreground
