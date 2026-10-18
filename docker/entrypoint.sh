@@ -48,16 +48,20 @@ if [ "${RUN_SEEDER:-false}" = "true" ]; then
 fi
 
 # ── 6. Prevent Apache MPM conflicts (AH00534: More than one MPM loaded) ─────
-a2dismod -f mpm_event mpm_worker 2>/dev/null || true
-a2enmod mpm_prefork 2>/dev/null || true
+echo "==> Ensuring single Apache MPM (mpm_prefork)..."
+rm -f /etc/apache2/mods-enabled/mpm_*.conf /etc/apache2/mods-enabled/mpm_*.load 2>/dev/null || true
+a2enmod mpm_prefork || true
 
 # ── 7. Configure Apache to listen on Railway's dynamic $PORT ─────────────────
 TARGET_PORT="${PORT:-80}"
 echo "==> Configuring Apache for port ${TARGET_PORT}..."
 
-# Update ports.conf and default VirtualHost to listen on TARGET_PORT
-sed -i "s/^Listen .*/Listen ${TARGET_PORT}/" /etc/apache2/ports.conf
+# Explicitly set ports.conf to listen on TARGET_PORT
+echo "Listen ${TARGET_PORT}" > /etc/apache2/ports.conf
 sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${TARGET_PORT}>/g" /etc/apache2/sites-available/000-default.conf
+
+# Verify Apache configuration
+apache2ctl configtest || true
 
 echo "================================================"
 echo " QUALITIES Qatar - Starting"

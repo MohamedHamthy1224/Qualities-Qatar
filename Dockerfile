@@ -43,7 +43,7 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!/var/www/html/public/!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
     && a2enmod rewrite headers \
-    && a2dismod -f mpm_event mpm_worker 2>/dev/null || true \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.conf /etc/apache2/mods-enabled/mpm_*.load \
     && a2enmod mpm_prefork
 
 # Apache: Allow .htaccess overrides for Laravel routing
