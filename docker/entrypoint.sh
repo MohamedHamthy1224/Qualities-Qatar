@@ -47,21 +47,17 @@ if [ "${RUN_SEEDER:-false}" = "true" ]; then
     php artisan db:seed --force || echo "WARNING: Seed failed"
 fi
 
-# ── 6. Configure Apache to listen on Railway's dynamic $PORT ─────────────────
+# ── 6. Prevent Apache MPM conflicts (AH00534: More than one MPM loaded) ─────
+a2dismod -f mpm_event mpm_worker 2>/dev/null || true
+a2enmod mpm_prefork 2>/dev/null || true
+
+# ── 7. Configure Apache to listen on Railway's dynamic $PORT ─────────────────
 TARGET_PORT="${PORT:-80}"
 echo "==> Configuring Apache for port ${TARGET_PORT}..."
 
-if [ "$TARGET_PORT" != "80" ]; then
-    # Only add if not already present
-    if ! grep -q "^Listen ${TARGET_PORT}$" /etc/apache2/ports.conf; then
-        echo "Listen ${TARGET_PORT}" >> /etc/apache2/ports.conf
-    fi
-    # Update VirtualHost if not already updated
-    if grep -q "<VirtualHost \*:80>" /etc/apache2/sites-available/000-default.conf; then
-        sed -i "s|<VirtualHost \*:80>|<VirtualHost *:80 *:${TARGET_PORT}>|g" \
-            /etc/apache2/sites-available/000-default.conf
-    fi
-fi
+# Update ports.conf and default VirtualHost to listen on TARGET_PORT
+sed -i "s/^Listen .*/Listen ${TARGET_PORT}/" /etc/apache2/ports.conf
+sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${TARGET_PORT}>/g" /etc/apache2/sites-available/000-default.conf
 
 echo "================================================"
 echo " QUALITIES Qatar - Starting"

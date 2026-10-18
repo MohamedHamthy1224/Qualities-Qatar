@@ -40,10 +40,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Configure Apache document root, rewrite & headers modules
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
+RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!/var/www/html/public/!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
     && a2enmod rewrite headers \
-    && a2dismod mpm_event mpm_worker || true \
+    && a2dismod -f mpm_event mpm_worker 2>/dev/null || true \
     && a2enmod mpm_prefork
 
 # Apache: Allow .htaccess overrides for Laravel routing
