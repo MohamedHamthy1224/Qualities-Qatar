@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "test": "node --test tests/js/pricing.test.js tests/js/delivery.test.js tests/js/table-pagination.test.js tests/js/production-donut.test.js tests/js/payment-form.test.js",
         "build": "vite build",
         "dev": "vite"
     },

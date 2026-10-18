@@ -1,0 +1,206 @@
+/* The refined workspace is isolated behind the existing appearance switch. */
+.future-dashboard-top { display: contents; }
+.future-dashboard-intro, .future-donut-center { display: none; }
+
+@media screen {
+    :root[data-appearance="clean"] {
+        --future-canvas: #f3f6fa;
+        --future-ink: #182a42;
+        --future-muted: #607088;
+        --future-border: #e1e8f1;
+        --future-accent: #187d70;
+        --future-accent-soft: #e9f6f1;
+        --clean-ink: var(--future-ink);
+        --clean-muted: var(--future-muted);
+        --clean-border: var(--future-border);
+        --clean-radius: 12px;
+        --clean-soft: #f5f8fb;
+        --clean-sidebar-background: #101d2e;
+        --clean-sidebar-ink: #b1bfd1;
+        --clean-sidebar-border: #ffffff14;
+        background: var(--future-canvas);
+    }
+    :root[data-appearance="clean"] :is(body, .app-workspace, .app-main) { background: var(--future-canvas); }
+    :root[data-appearance="clean"] .app-main { padding-top: 8px; }
+    :root[data-appearance="clean"] .app-main ::selection { background: #cbe9e1; color: #142f35; }
+
+    /* Low contrast navigation chrome gives the data the strongest emphasis. */
+    :root[data-appearance="clean"] .app-sidebar { border: 1px solid #243349; background: var(--clean-sidebar-background); }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child { padding: 20px 17px 17px; border-color: #ffffff12; }
+    :root[data-appearance="clean"] .ui-brand-logo { width: 124px; }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child .text-slate-400 { color: #a5b5ca; }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child [class~="text-[#d4af37]"] { border-color: #d4af373b; background: #d4af3714; color: #e5c76a; }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child .text-white { color: #ecf2fa; }
+    :root[data-appearance="clean"] .app-sidebar nav { padding: 20px 11px; }
+    :root[data-appearance="clean"] .app-sidebar nav > div { color: #98a9c0; font-size: 9px; font-weight: 600; letter-spacing: .085em; }
+    :root[data-appearance="clean"] .app-sidebar nav > a { position: relative; min-height: 39px; padding: 9px 11px; border: 1px solid transparent; border-radius: 8px; color: #b1bfd1; font-size: 12px; font-weight: 500; }
+    :root[data-appearance="clean"] .app-sidebar nav > a svg { width: 17px; height: 17px; color: #96a9c1; }
+    :root[data-appearance="clean"] .app-sidebar nav > a:hover { background: #ffffff08; color: #f1f6fd; }
+    :root[data-appearance="clean"] .app-sidebar nav > a[aria-current="page"] { border-color: #6ad4b526; background: #153f43; color: #baf5e4; }
+    :root[data-appearance="clean"] .app-sidebar nav > a[aria-current="page"] svg { color: #9fe7d1; }
+    :root[data-appearance="clean"] .app-sidebar nav > a[aria-current="page"]::before { position: absolute; top: 12px; bottom: 12px; left: -1px; width: 2px; border-radius: 2px; background: #8ae2c8; content: ''; }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child { padding: 15px 13px; border-color: #ffffff12; background: transparent; }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child .text-white { color: #dce6f4; font-size: 10px; font-weight: 500; }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child [class~="bg-[#1e293b]"] { width: 30px; height: 30px; border-color: #ffffff14; background: #20324b; color: #e6ca7b; }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child .text-emerald-400 { color: #a3b6cb; font-size: 9px; }
+    :root[data-appearance="clean"] .app-sidebar :is(a, button):focus-visible { outline-color: #b0ebde; }
+    :root[data-appearance="clean"] #sidebarToggle { color: #d9e5f3; }
+    :root[data-appearance="clean"] #sidebarToggle:hover { background: #ffffff0d; color: #fff; }
+
+    :root[data-appearance="clean"] .app-header { min-height: 68px; border-bottom-color: transparent; background: var(--future-canvas); }
+    :root[data-appearance="clean"] .app-header-title { color: var(--future-ink); font-size: 17px; font-weight: 600; letter-spacing: -.35px; }
+    :root[data-appearance="clean"] :is(.app-header-clock, .app-header-icon-button, .app-header-profile) { border-color: #e2e9f1; background: #ffffffd9; box-shadow: 0 2px 4px #20345103; }
+    :root[data-appearance="clean"] .app-header-clock time { color: #31465f; }
+    :root[data-appearance="clean"] .app-header-user-name { color: #253a53; }
+    :root[data-appearance="clean"] .app-header-user-role { color: #65758c; }
+    :root[data-appearance="clean"] .app-header-menu { border-color: #dce5f0; border-radius: 13px; background: #fffffffa; box-shadow: 0 16px 45px #132b471c; }
+    :root[data-appearance="clean"] .app-header-avatar { border-color: #e5decd; background: #f8f3e8; color: #78602a; }
+
+    /* One control and surface language across every module. */
+    :root[data-appearance="clean"] .app-main :is(.ui-section, .ui-metric-card, .dashboard-panel, .dashboard-stage-panel, .dashboard-metric, .dashboard-chart-card, .production-filter-panel, .production-table-panel, [class~="rounded-xl"][class~="border"]) { border-color: var(--future-border); border-radius: 12px; box-shadow: 0 2px 5px #1c355003; }
+    :root[data-appearance="clean"] .app-main .ui-section-heading { color: var(--future-ink); }
+    :root[data-appearance="clean"] .ui-filter-bar { padding: 10px 12px; border-radius: 11px; background: #fff; }
+    :root[data-appearance="clean"] .ui-register-header { padding: 13px 16px; background: #fff; }
+    :root[data-appearance="clean"] .ui-register-heading h2 { font-size: 13px; }
+    :root[data-appearance="clean"] .ui-table { color: #4c5f77; }
+    :root[data-appearance="clean"] .ui-table thead { background: #f8fafd; }
+    :root[data-appearance="clean"] .ui-table th { color: #617189; font-size: 11px; }
+    :root[data-appearance="clean"] .ui-table td { border-color: #eef2f7; }
+    :root[data-appearance="clean"] .ui-table tbody tr:hover { background: #f7fafc; }
+    :root[data-appearance="clean"] :is(.ui-page-actions, .ui-record-actions) :is(a, button) { border-radius: 7px; font-size: 12px; }
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#0a192f]"],
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#d4af37]"],
+    :root[data-appearance="clean"] .app-main button.bg-slate-900,
+    :root[data-appearance="clean"] .app-button-primary:not([data-destructive="true"]) { border-color: #1c344f; background: #1c344f; color: #fff; }
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#0a192f]"]:hover,
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#d4af37]"]:hover,
+    :root[data-appearance="clean"] .app-main button.bg-slate-900:hover,
+    :root[data-appearance="clean"] .app-button-primary:not([data-destructive="true"]):hover { border-color: #294d6f; background: #294d6f; }
+    :root[data-appearance="clean"] .app-main :is(input:not([type="checkbox"], [type="radio"], [type="hidden"]), select, textarea) { border-color: #dbe3ee; border-radius: 7px; color: #304660; }
+    :root[data-appearance="clean"] .app-main :is(input, select, textarea):focus { border-color: #65958f; --tw-ring-color: #d3ebe5; }
+    :root[data-appearance="clean"] .ui-pagination { background: #fff; border-color: #e7edf5; }
+    :root[data-appearance="clean"] .ui-pagination__button[aria-current] { border-color: #1c344f; background: #1c344f; }
+    :root[data-appearance="clean"] .app-dialog { border-color: var(--future-border); border-radius: 14px; }
+    :root[data-appearance="clean"] .app-dialog::backdrop { background: #10223855; }
+
+    /* A concise overview leads into real operational counts and work. */
+    :root[data-appearance="clean"] .erp-dashboard {
+        --dashboard-ink: var(--future-ink);
+        --dashboard-muted: var(--future-muted);
+        --dashboard-border: var(--future-border);
+        --dashboard-subtle: #f7f9fc;
+        --dashboard-chart-complete: #279d84;
+        gap: 18px;
+        padding-top: 0;
+    }
+    :root[data-appearance="clean"] .future-dashboard-top { display: grid; gap: 18px; }
+    :root[data-appearance="clean"] .future-dashboard-intro { display: flex; align-items: center; min-width: 0; padding: 0 1px 2px; }
+    :root[data-appearance="clean"] .future-dashboard-eyebrow { margin-bottom: 5px; color: #5b7089; font-size: 9px; line-height: 14px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase; }
+    :root[data-appearance="clean"] .future-dashboard-intro h2 { color: #182d45; font-size: 21px; line-height: 28px; font-weight: 600; letter-spacing: -.6px; }
+    :root[data-appearance="clean"] .future-dashboard-subtitle { margin-top: 3px; color: var(--future-muted); font-size: 12px; line-height: 19px; }
+    :root[data-appearance="clean"] .dashboard-metrics { gap: 13px; }
+    :root[data-appearance="clean"] .dashboard-metric { padding: 16px 17px; background: #fff; }
+    :root[data-appearance="clean"] .dashboard-metric:first-child { border-top-width: 1px; padding-top: 16px; background: linear-gradient(115deg, #f5faff, #fff 85%); }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-label { color: #576c86; font-size: 12px; font-weight: 500; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-value { margin-top: 0; color: #182f49; font-size: 27px; line-height: 34px; font-weight: 600; letter-spacing: -.9px; }
+    :root[data-appearance="clean"] .dashboard-metric > .mt-3 { margin-top: 10px; gap: 4px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-icon { width: 30px; height: 30px; border-radius: 9px; background: #ecf3fd; color: #3a6fa7; }
+    :root[data-appearance="clean"] .dashboard-metric[data-metric="quotations"] .ui-metric-icon { background: #fbf5e8; color: #936c26; }
+    :root[data-appearance="clean"] .dashboard-metric[data-metric="delivery"] .ui-metric-icon { background: #eaf6f1; color: #277f69; }
+    :root[data-appearance="clean"] .dashboard-metric[data-metric="receivables"] .ui-metric-icon { background: #fdf0f3; color: #af375e; }
+    :root[data-appearance="clean"] .dashboard-metric[data-metric="receivables"] .ui-metric-value { color: #ac2d54; }
+    :root[data-appearance="clean"] .dashboard-currency { color: inherit; font-size: 10px; font-weight: 600; }
+    :root[data-appearance="clean"] .dashboard-metric .ui-help { color: #607088; }
+    :root[data-appearance="clean"] .dashboard-metric a.ui-help { color: #326658; }
+    :root[data-appearance="clean"] .dashboard-actions { min-height: 62px; gap: 12px; padding: 12px 16px; border-color: var(--future-border); border-radius: 12px; background: #fff; }
+    :root[data-appearance="clean"] .dashboard-actions > div:first-child > div { width: 30px; height: 30px; border-color: #e6ede8; background: #f2f7f3; color: #5b7f64; }
+    :root[data-appearance="clean"] .dashboard-action-label { color: #324860; font-size: 12px; }
+    :root[data-appearance="clean"] .dashboard-action { min-height: 35px; padding: 7px 13px; border-radius: 7px; font-size: 12px; }
+    :root[data-appearance="clean"] .dashboard-action-primary { border-color: #1c344f; background: #1c344f; box-shadow: 0 3px 6px #16345413; }
+    :root[data-appearance="clean"] .dashboard-action-primary:hover { border-color: #294d6f; background: #294d6f; }
+    :root[data-appearance="clean"] .dashboard-action-secondary { border-color: #dfe6ef; color: #425971; background: #fff; }
+    :root[data-appearance="clean"] .dashboard-action-secondary:hover { border-color: #bdcfde; color: #203e5c; background: #f7fafc; }
+
+    :root[data-appearance="clean"] :is(.dashboard-charts-grid, .dashboard-content-grid, .dashboard-secondary) { gap: 18px; }
+    :root[data-appearance="clean"] .dashboard-chart-card { padding: 17px 18px; }
+    :root[data-appearance="clean"] .dashboard-chart-heading { margin-bottom: 13px; }
+    :root[data-appearance="clean"] .dashboard-chart-heading h2 { color: #213b56; font-size: 13px; }
+    :root[data-appearance="clean"] .dashboard-chart-heading p { color: #63768d; font-size: 11px; }
+    :root[data-appearance="clean"] .dashboard-chart-unit { padding: 3px 7px; border: 1px solid #e9eef5; border-radius: 5px; background: #f8fafc; color: #516984; font-size: 10px; }
+    :root[data-appearance="clean"] .dashboard-workload-row { min-height: 40px; padding: 5px 7px; }
+    :root[data-appearance="clean"] .dashboard-workload-name { color: #4d6580; font-size: 11px; }
+    :root[data-appearance="clean"] .dashboard-workload-value { color: #2c4765; font-size: 12px; }
+    :root[data-appearance="clean"] .dashboard-workload-track { height: 6px; border-radius: 4px; background: #edf2f8; }
+    :root[data-appearance="clean"] .dashboard-workload-track > span { background: #417da0; }
+    :root[data-appearance="clean"] .dashboard-workload li:nth-child(2) .dashboard-workload-track > span { background: #3b8e8c; }
+    :root[data-appearance="clean"] .dashboard-workload li:nth-child(3) .dashboard-workload-track > span { background: #7d84ad; }
+    :root[data-appearance="clean"] :is(.dashboard-chart-scale, .dashboard-chart-summary) { color: #63768d; font-size: 10px; }
+    :root[data-appearance="clean"] .dashboard-production-split { gap: 16px 22px; padding-block: 1px; }
+    :root[data-appearance="clean"] .dashboard-production-visual { position: relative; width: 146px; background: conic-gradient(#294968 0deg var(--chart-active-angle, 0deg), var(--dashboard-chart-complete) var(--chart-active-angle, 0deg) 360deg); }
+    :root[data-appearance="clean"] .future-donut-center { position: absolute; inset: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border: 1px solid #f0f4f8; border-radius: 50%; background: #fff; }
+    :root[data-appearance="clean"] .future-donut-center strong { color: #254760; font-size: 22px; line-height: 29px; font-weight: 600; letter-spacing: -.6px; font-variant-numeric: tabular-nums; }
+    :root[data-appearance="clean"] .future-donut-center span { color: #63768d; font-size: 10px; }
+    :root[data-appearance="clean"] .dashboard-pie-total { flex-direction: row; align-items: baseline; gap: 6px; }
+    :root[data-appearance="clean"] .dashboard-pie-total > strong { color: #243e59; font-size: 24px; line-height: 31px; }
+    :root[data-appearance="clean"] .dashboard-pie-total > span { color: #60758c; font-size: 11px; }
+    :root[data-appearance="clean"] .dashboard-chart-legend { gap: 2px; margin-top: 9px; }
+    :root[data-appearance="clean"] .dashboard-chart-legend li > a { min-height: 37px; }
+    :root[data-appearance="clean"] .dashboard-chart-legend-label { color: #506882; font-size: 11px; }
+    :root[data-appearance="clean"] .dashboard-chart-swatch { width: 8px; height: 8px; border-radius: 3px; background: #294968; }
+    :root[data-appearance="clean"] .dashboard-chart-swatch[data-series="completed"] { background: var(--dashboard-chart-complete); }
+    :root[data-appearance="clean"] .dashboard-chart-percentage { margin-top: 0; color: #62768d; font-size: 10px; line-height: 15px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-panel-header { padding: 15px 16px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-panel-header > a { color: #3a6379; }
+    :root[data-appearance="clean"] .dashboard-status-tabs { gap: 7px; padding: 9px 14px; }
+    :root[data-appearance="clean"] .dashboard-status-tab { min-height: 31px; border: 1px solid transparent; background: #f5f8fb; color: #5a7089; }
+    :root[data-appearance="clean"] .dashboard-status-tab[aria-current] { border-color: #d4e8e4; background: #edf7f4; color: #1b6c60; }
+    :root[data-appearance="clean"] .erp-dashboard .dashboard-jobs-table th { background: #f8fafd; color: #61748d; font-size: 10px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-table-primary { color: #243e58; font-size: 12px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-table-secondary { color: #62758c; }
+    :root[data-appearance="clean"] .dashboard-quote { padding: 14px 16px; }
+    :root[data-appearance="clean"] .dashboard-company { border-color: #dce7e9; background: #eef6f6; color: #506b78; }
+    :root[data-appearance="clean"] .dashboard-company > div:first-child { color: #315160; }
+    :root[data-appearance="clean"] .production-view-option[aria-current="true"] { border-color: #d2e2df; color: #1c6c60; background: #edf7f4; }
+    :root[data-appearance="clean"] .production-filter-actions :is(button, .production-filter-button) { border-color: #1c344f; background: #1c344f; }
+}
+
+@media screen and (min-width: 768px) {
+    :root[data-appearance="clean"] .app-sidebar { flex: 0 0 216px; width: 216px; height: calc(100dvh - 24px); max-height: calc(100% - 24px); margin: 12px 0 12px 12px; border-radius: 16px; box-shadow: 0 12px 30px #172e4812; }
+}
+@media screen {
+    @container dashboard (min-width: 880px) {
+        :root[data-appearance="clean"] .dashboard-charts-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+    }
+    @container dashboard (min-width: 1120px) {
+        :root[data-appearance="clean"] .dashboard-content-grid { grid-template-columns: minmax(0, 1fr) 304px; }
+    }
+}
+@media screen and (max-width: 767px) {
+    :root[data-appearance="clean"] .app-sidebar { border-width: 0 0 1px; border-color: #243349; }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child { padding: 7px 14px; }
+    :root[data-appearance="clean"] .ui-brand-logo { width: 86px; }
+    :root[data-appearance="clean"] .app-sidebar nav { padding: 12px; }
+    :root[data-appearance="clean"] .app-sidebar nav > a { min-height: 44px; font-size: 13px; }
+}
+@media screen and (max-width: 639px) {
+    :root[data-appearance="clean"] .app-header { min-height: 60px; }
+    :root[data-appearance="clean"] .app-main { padding-top: 6px; }
+    :root[data-appearance="clean"] .future-dashboard-top, :root[data-appearance="clean"] .erp-dashboard { gap: 14px; }
+    :root[data-appearance="clean"] .future-dashboard-eyebrow { font-size: 9px; }
+    :root[data-appearance="clean"] .future-dashboard-intro h2 { font-size: 19px; line-height: 26px; }
+    :root[data-appearance="clean"] .future-dashboard-subtitle { font-size: 11px; line-height: 17px; }
+    :root[data-appearance="clean"] .dashboard-metric { padding: 13px; }
+    :root[data-appearance="clean"] .dashboard-metric:first-child { padding-top: 13px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-value { font-size: 24px; line-height: 32px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-label { font-size: 11px; line-height: 17px; }
+    :root[data-appearance="clean"] .dashboard-metrics { gap: 10px; }
+    :root[data-appearance="clean"] .dashboard-actions { padding: 13px; }
+    :root[data-appearance="clean"] .dashboard-action { min-height: 44px; padding-inline: 10px; font-size: 11px; }
+    :root[data-appearance="clean"] .dashboard-chart-card { padding: 16px; }
+    :root[data-appearance="clean"] .dashboard-chart-legend li > a { min-height: 44px; }
+    :root[data-appearance="clean"] .dashboard-status-tab { min-height: 40px; }
+    :root[data-appearance="clean"] .ui-register-actions :is(a, button) { font-size: 11px; }
+}
+@media screen and (max-width: 479px) {
+    :root[data-appearance="clean"] .app-header-title { font-size: clamp(12px, 3.35vw, 16px); letter-spacing: -.2px; }
+}

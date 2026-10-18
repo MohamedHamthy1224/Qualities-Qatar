@@ -1,0 +1,83 @@
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 16px;
+    min-height: 72px;
+    padding: 12px 24px;
+    border-bottom: 1px solid #e9edf2;
+    background: #f7f8fa;
+}
+.app-header-title { flex: 1 1 auto; min-width: 0; overflow: hidden; color: #243145; text-overflow: ellipsis; white-space: nowrap; }
+.app-header-controls { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: 9px; min-width: 0; }
+.app-header-clock,
+.app-header-icon-button,
+.app-header-profile { border: 1px solid #edf0f4; background: #fff; box-shadow: 0 2px 5px rgb(15 23 42 / 2%); }
+.app-header-clock { display: flex; flex: none; align-items: center; gap: 8px; min-height: 42px; padding: 6px 13px; border-radius: 999px; }
+.app-header-clock > svg { width: 17px; height: 17px; color: #7d8797; }
+.app-header-clock > div { display: grid; gap: 1px; }
+.app-header-clock-label { color: #778294; font-size: 10px; line-height: 13px; }
+.app-header-clock time { color: #26354a; font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.app-header-dropdown { position: static; flex: none; }
+.app-header-dropdown > summary { list-style: none; cursor: pointer; touch-action: manipulation; }
+.app-header-dropdown > summary::-webkit-details-marker { display: none; }
+.app-header-icon-button { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: #788396; }
+.app-header-icon-button > svg { width: 19px; height: 19px; }
+.app-header-notification-dot { position: absolute; top: 9px; right: 9px; width: 7px; height: 7px; border: 2px solid #fff; border-radius: 50%; background: #f16a75; box-sizing: content-box; }
+.app-header-profile { display: flex; align-items: center; gap: 9px; min-height: 44px; max-width: 240px; padding: 4px 12px 4px 5px; border-radius: 999px; }
+.app-header-avatar { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border: 1px solid #e9e2d7; border-radius: 50%; background: #f5efe5; color: #735731; font-size: 11px; font-weight: 700; }
+.app-header-profile-copy { display: grid; gap: 1px; min-width: 0; max-width: 150px; }
+.app-header-user-name { overflow: hidden; color: #243145; font-size: 12px; line-height: 16px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.app-header-user-role { overflow: hidden; color: #8590a0; font-size: 10px; line-height: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.app-header-chevron { flex: none; width: 15px; height: 15px; margin-left: 6px; color: #637084; }
+.app-header-dropdown[open] > summary,
+.app-header-dropdown > summary:hover { border-color: #dce3eb; background: #fdfefe; }
+.app-header-dropdown > summary:focus-visible,
+.app-header-menu button:focus-visible { outline: 2px solid #64748b; outline-offset: 3px; }
+.app-header-menu { position: absolute; top: calc(100% + 10px); right: 0; z-index: 50; width: min(340px, calc(100vw - 32px)); max-height: min(440px, calc(100dvh - 120px)); overflow-y: auto; border: 1px solid #e3e8ef; border-radius: 16px; background: #fff; box-shadow: 0 14px 42px rgb(15 23 42 / 12%); }
+.app-header-menu-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border-bottom: 1px solid #edf1f5; }
+.app-header-menu-heading h2 { color: #26354a; font-size: 13px; line-height: 20px; font-weight: 600; }
+.app-header-menu-heading button { padding: 3px 0; color: #64748b; font-size: 11px; line-height: 18px; cursor: pointer; }
+.app-header-menu-heading button:hover { color: #0f172a; text-decoration: underline; }
+.app-header-empty { padding: 22px 18px; color: #778294; font-size: 12px; line-height: 20px; }
+.app-header-notices { margin: 0; padding: 0; list-style: none; }
+.app-header-notice { padding: 14px 18px; border-bottom: 1px solid #edf1f5; }
+.app-header-notice:last-child { border-bottom: 0; }
+.app-header-notice-title { display: block; color: #26354a; font-size: 12px; line-height: 18px; font-weight: 600; }
+.app-header-notice[data-type="error"] .app-header-notice-title { color: #be123c; }
+.app-header-notice-message { margin-top: 3px; color: #64748b; font-size: 12px; line-height: 19px; white-space: pre-line; overflow-wrap: anywhere; }
+.app-header-notice-time { display: block; margin-top: 6px; color: #8b96a5; font-size: 10px; line-height: 15px; }
+.app-header-profile-panel { width: min(280px, calc(100vw - 32px)); padding: 18px; color: #7a8595; font-size: 12px; line-height: 19px; overflow-wrap: anywhere; }
+.app-header-profile-heading { margin-bottom: 3px; color: #26354a; font-size: 13px; font-weight: 600; }
+.app-header-profile-email { margin-top: 5px; }
+.app-header-profile-workspace { display: flex; align-items: flex-start; gap: 7px; margin-top: 14px; padding-top: 13px; border-top: 1px solid #edf1f5; font-size: 11px; line-height: 18px; }
+.app-header-online-dot { flex: none; width: 6px; height: 6px; margin-top: 6px; border-radius: 50%; background: #3fa98c; }
+.app-header [hidden] { display: none !important; }
+@media (max-width: 639px) {
+    .app-header { min-height: 64px; padding: 10px 16px; }
+    .app-header-controls { gap: 7px; }
+}
+@media (max-width: 479px) {
+    .app-header { gap: 10px; padding-inline: 12px; }
+    .app-header-title { font-size: clamp(12px, 3.35vw, 16px); }
+    .app-header-controls { gap: 5px; }
+    .app-header-profile-copy { display: none; }
+    .app-header-profile { gap: 0; min-height: 36px; padding: 3px; }
+    .app-header-avatar { width: 28px; height: 28px; }
+    .app-header-chevron { display: none; }
+    .app-header-clock { min-height: 36px; padding: 6px 8px; }
+    .app-header-clock > svg, .app-header-clock-label { display: none; }
+    .app-header-clock time { font-size: 11px; }
+    .app-header-icon-button { width: 36px; height: 36px; }
+    .app-header-notification-dot { top: 6px; right: 6px; }
+}
+@media (max-width: 359px) {
+    .app-header { gap: 8px; padding-inline: 10px; }
+    .app-header-controls { gap: 4px; }
+    .app-header-clock { padding-inline: 6px; }
+    .app-header-clock time { font-size: 10px; }
+    .app-header-icon-button { width: 32px; height: 32px; }
+    .app-header-profile { min-height: 32px; padding: 2px; }
+    .app-header-avatar { width: 26px; height: 26px; }
+}

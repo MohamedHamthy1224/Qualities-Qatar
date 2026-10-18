@@ -6,13 +6,19 @@ use App\Models\Customer;
 use App\Models\SalesInvoice;
 use App\Models\DeliveryNote;
 use App\Models\DeliveryItem;
+use App\Services\DocumentNumber;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class DeliveryController extends Controller
 {
     public function index(Request $request)
     {
+        $pagination = validator($request->query(), [
+            'per_page' => 'nullable|integer|in:10,15,20,25,50',
+            'page' => 'nullable|integer|min:1',
+        ])->validate();
+
         $query = DeliveryNote::with(['customer', 'invoice', 'items']);
 
         if ($request->filled('status')) {
@@ -30,7 +36,8 @@ class DeliveryController extends Controller
             });
         }
 
-        $deliveryNotes = $query->orderBy('id', 'desc')->paginate(15);
+        $deliveryNotes = $query->orderBy('id', 'desc')
+            ->paginate((int) ($pagination['per_page'] ?? 15))->withQueryString();
         $pendingCount = DeliveryNote::where('status', 'Pending')->count();
         $dispatchedCount = DeliveryNote::where('status', 'Dispatched')->count();
         $deliveredCount = DeliveryNote::where('status', 'Delivered')->count();
@@ -40,25 +47,29 @@ class DeliveryController extends Controller
 
     public function create(Request $request)
     {
-        $invoices = SalesInvoice::with(['customer', 'items'])->orderBy('id', 'desc')->get();
+        $invoices = SalesInvoice::with(['customer', 'items', 'deliveryNotes.items'])->orderBy('id', 'desc')->get();
         $selectedInvoice = null;
 
-        if ($request->filled('invoice_id')) {
-            $selectedInvoice = SalesInvoice::with(['customer', 'items'])->find($request->invoice_id);
+        if ($request->old('invoice_id', $request->input('invoice_id'))) {
+            $selectedInvoice = $invoices->firstWhere('id', $request->old('invoice_id', $request->input('invoice_id')));
         }
 
-        $year = date('Y');
-        $count = DeliveryNote::whereYear('created_at', $year)->count() + 1;
-        $suggestedNumber = 'DN-' . $year . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+        $invoiceOptions = $invoices->mapWithKeys(function ($invoice) {
+            return [$invoice->id => array_merge(DeliveryNote::availabilityFor($invoice), [
+                'customer_name' => $invoice->customer?->name ?? '',
+                'customer_phone' => $invoice->customer?->phone ?? '',
+            ])];
+        });
+        $suggestedNumber = DocumentNumber::next(DeliveryNote::class, 'delivery_number', 'DN-' . date('Y') . '-');
 
-        return view('delivery.create', compact('invoices', 'selectedInvoice', 'suggestedNumber'));
+        return view('delivery.create', compact('invoices', 'selectedInvoice', 'suggestedNumber', 'invoiceOptions'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'invoice_id' => 'required|exists:sales_invoices,id',
-            'delivery_number' => 'required|string|unique:delivery_notes,delivery_number',
+            'delivery_number' => 'required|string|max:50|unique:delivery_notes,delivery_number',
             'dispatch_date' => 'required|date',
             'recipient_name' => 'required|string|max:255',
             'recipient_phone' => 'nullable|string|max:50',
@@ -66,52 +77,69 @@ class DeliveryController extends Controller
             'driver_notes' => 'nullable|string',
             'status' => 'required|in:Pending,Dispatched,Delivered',
             'items' => 'required|array|min:1',
-        ]);
+            'items.*.invoice_item_id' => 'required|integer|distinct',
+            'items.*.total_qty' => 'required|integer|min:0|max:2147483647',
+        ];
+        foreach (DeliveryItem::SIZE_FIELDS as $field) {
+            $rules['items.*.' . $field] = 'nullable|integer|min:0|max:2147483647';
+        }
+        $validated = $request->validate($rules);
 
-        return DB::transaction(function () use ($request) {
-            $invoice = SalesInvoice::findOrFail($request->invoice_id);
-
-            $deliveryNote = DeliveryNote::create([
-                'delivery_number' => $request->delivery_number,
-                'invoice_id' => $invoice->id,
-                'customer_id' => $invoice->customer_id,
-                'dispatch_date' => $request->dispatch_date,
-                'recipient_name' => $request->recipient_name,
-                'recipient_phone' => $request->recipient_phone,
-                'driver_name' => $request->driver_name,
-                'driver_notes' => $request->driver_notes,
-                'status' => $request->status,
-                'delivered_at' => $request->status === 'Delivered' ? now() : null,
-            ]);
-
-            foreach ($request->items as $item) {
-                $sizeXs = (int)($item['size_xs'] ?? 0);
-                $sizeS = (int)($item['size_s'] ?? 0);
-                $sizeM = (int)($item['size_m'] ?? 0);
-                $sizeL = (int)($item['size_l'] ?? 0);
-                $sizeXl = (int)($item['size_xl'] ?? 0);
-                $size2xl = (int)($item['size_2xl'] ?? 0);
-                $size3xl = (int)($item['size_3xl'] ?? 0);
-                $sizeCustom = (int)($item['size_custom'] ?? 0);
-
-                $totalQty = $sizeXs + $sizeS + $sizeM + $sizeL + $sizeXl + $size2xl + $size3xl + $sizeCustom;
-                if ($totalQty <= 0 && isset($item['total_qty']) && (int)$item['total_qty'] > 0) {
-                    $totalQty = (int)$item['total_qty'];
+        return DocumentNumber::transaction(function () use ($validated) {
+            // Lock the invoice before checking remaining quantities and creating any reservation.
+            $invoice = SalesInvoice::whereKey($validated['invoice_id'])->lockForUpdate()->firstOrFail();
+            if (DeliveryNote::where('delivery_number', $validated['delivery_number'])->exists()) {
+                throw ValidationException::withMessages(['delivery_number' => 'This delivery note number has already been recorded.']);
+            }
+            $availability = DeliveryNote::availabilityFor($invoice);
+            if ($availability['needs_review']) {
+                throw ValidationException::withMessages(['invoice_id' => 'Historical delivery items do not match this invoice unambiguously. Review its existing delivery notes before creating another dispatch.']);
+            }
+            $availableItems = $availability['items']->keyBy('invoice_item_id');
+            $deliveryItems = [];
+            foreach ($validated['items'] as $index => $item) {
+                $available = $availableItems->get($item['invoice_item_id']);
+                if (!$available) {
+                    throw ValidationException::withMessages(["items.$index.invoice_item_id" => 'This item does not belong to the selected invoice.']);
                 }
-
-                $deliveryNote->items()->create([
-                    'product_name' => $item['product_name'],
-                    'size_xs' => $sizeXs,
-                    'size_s' => $sizeS,
-                    'size_m' => $sizeM,
-                    'size_l' => $sizeL,
-                    'size_xl' => $sizeXl,
-                    'size_2xl' => $size2xl,
-                    'size_3xl' => $size3xl,
-                    'size_custom' => $sizeCustom,
-                    'total_qty' => $totalQty,
+                $sizes = [];
+                foreach (DeliveryItem::SIZE_FIELDS as $field) {
+                    $sizes[$field] = (int) ($item[$field] ?? 0);
+                    if ($sizes[$field] > $available[$field]) {
+                        throw ValidationException::withMessages(["items.$index.$field" => 'The quantity exceeds the remaining invoice quantity for this size.']);
+                    }
+                }
+                $quantity = $available['has_sizes'] ? array_sum($sizes) : (int) $item['total_qty'];
+                if ($quantity > $available['total_qty']) {
+                    throw ValidationException::withMessages(["items.$index.total_qty" => 'The quantity exceeds the remaining invoice quantity.']);
+                }
+                if ($quantity === 0) {
+                    continue;
+                }
+                $deliveryItems[] = array_merge($sizes, [
+                    'invoice_item_id' => $available['invoice_item_id'],
+                    'product_name' => $available['product_name'],
+                    'total_qty' => $quantity,
                 ]);
             }
+            if (!$deliveryItems) {
+                throw ValidationException::withMessages(['items' => 'Enter a positive quantity for at least one invoice item.']);
+            }
+
+            $deliveryNote = DeliveryNote::create([
+                'delivery_number' => $validated['delivery_number'],
+                'invoice_id' => $invoice->id,
+                'customer_id' => $invoice->customer_id,
+                'dispatch_date' => $validated['dispatch_date'],
+                'recipient_name' => $validated['recipient_name'],
+                'recipient_phone' => $validated['recipient_phone'] ?? null,
+                'driver_name' => $validated['driver_name'] ?? null,
+                'driver_notes' => $validated['driver_notes'] ?? null,
+                'status' => $validated['status'],
+                'delivered_at' => $validated['status'] === 'Delivered' ? now() : null,
+            ]);
+
+            $deliveryNote->items()->createMany($deliveryItems);
 
             return redirect()->route('delivery.show', $deliveryNote)
                 ->with('success', "Delivery Note {$deliveryNote->delivery_number} created successfully.");
@@ -120,7 +148,7 @@ class DeliveryController extends Controller
 
     public function show(DeliveryNote $deliveryNote)
     {
-        $deliveryNote->load(['customer', 'invoice', 'items']);
+        $deliveryNote->load(['customer', 'invoice', 'items.invoiceItem']);
 
         return view('delivery.show', compact('deliveryNote'));
     }
@@ -129,10 +157,7 @@ class DeliveryController extends Controller
     {
         $request->validate(['status' => 'required|in:Pending,Dispatched,Delivered']);
 
-        $data = ['status' => $request->status];
-        if ($request->status === 'Delivered' && !$deliveryNote->delivered_at) {
-            $data['delivered_at'] = now();
-        }
+        $data = ['status' => $request->status, 'delivered_at' => $request->status === 'Delivered' ? ($deliveryNote->delivered_at ?? now()) : null];
 
         $deliveryNote->update($data);
 

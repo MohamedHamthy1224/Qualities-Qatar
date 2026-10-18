@@ -4,7 +4,7 @@
 @section('page_title', "Quotation {$quotation->quotation_number}")
 
 @section('header_action')
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
         <a href="{{ route('quotations.index') }}" class="text-xs text-slate-500 hover:text-slate-800 font-semibold px-2 py-1">
             &larr; All Quotes
         </a>
@@ -21,55 +21,52 @@
             <span>Download PDF</span>
         </a>
 
-        <!-- 1-Click Convert to Invoice Button -->
+        <!-- Approval creates the linked invoice automatically. -->
         @if($quotation->invoice)
             <a href="{{ route('invoices.show', $quotation->invoice) }}" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-xs">
                 <span>View Invoice: {{ $quotation->invoice->invoice_number }}</span>
             </a>
-        @else
-            <form action="{{ route('quotations.convert', $quotation) }}" method="POST" class="inline">
+        @elseif(in_array($quotation->status, ['Draft', 'Sent', 'Approved'], true))
+            <form action="{{ route('quotations.update-status', $quotation) }}" method="POST" class="inline" onsubmit="confirmQuotationApproval(event)">
                 @csrf
-                <button type="submit" onclick="return confirm('Convert this quotation into an official Sales Invoice and queue it to the Production Kanban Pipeline?')" class="inline-flex items-center gap-1.5 bg-[#d4af37] hover:bg-[#c59b27] text-slate-950 px-3.5 py-1.5 rounded-lg text-xs font-extrabold shadow-sm">
+                @method('PATCH')
+                <input type="hidden" name="status" value="Approved">
+                <button type="submit" class="inline-flex items-center gap-1.5 bg-[#d4af37] hover:bg-[#c59b27] text-slate-950 px-3.5 py-1.5 rounded-lg text-xs font-extrabold shadow-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    <span>Convert to Sales Invoice (1-Click)</span>
+                    <span>Approve quotation</span>
                 </button>
             </form>
+        @else
+            <span class="text-xs text-slate-500">Change the status below to approve this quotation.</span>
         @endif
     </div>
 @endsection
 
 @section('content')
-<div class="space-y-6 pt-2 max-w-5xl mx-auto">
+<div class="ui-page pt-2 max-w-5xl mx-auto">
 
-    <!-- Converted Notice Banner -->
+    <!-- Linked Invoice Notice -->
     @if($quotation->invoice)
-        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center justify-between text-xs text-emerald-900">
+        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs text-emerald-900">
             <div class="flex items-center gap-2">
                 <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span><strong>Quotation Converted:</strong> This quotation has been converted into official Sales Invoice <strong>{{ $quotation->invoice->invoice_number }}</strong>.</span>
+                <span><strong>Approved &amp; invoiced:</strong> Linked to sales invoice <strong>{{ $quotation->invoice->invoice_number }}</strong>.</span>
             </div>
             <a href="{{ route('invoices.show', $quotation->invoice) }}" class="font-bold underline hover:text-emerald-700">Open Sales Invoice &rarr;</a>
         </div>
     @endif
 
     <!-- Document Card -->
-    <div class="bg-white rounded-xl border border-slate-200/90 shadow-sm p-6 sm:p-8 space-y-6">
+    <div class="bg-white rounded-xl border border-slate-200/90 shadow-sm ui-section ui-page">
+        <div class="ui-record-actions no-print">@yield('header_action')</div>
 
         <!-- Branded Header -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-6">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-[#0a192f] text-white flex items-center justify-center font-extrabold text-2xl border-2 border-[#d4af37] shadow-md">
-                    Q
-                </div>
-                <div>
-                    <h2 class="font-extrabold text-slate-900 text-lg tracking-tight">QUALITIES UNIFORMS & GIFTS SOLUTIONS</h2>
-                    <p class="text-xs text-slate-500">Salwa Road, Near Wholesale Market, Zone 56, Doha, State of Qatar</p>
-                    <p class="text-[11px] text-slate-400">Tel: +974 4455 1234 | WhatsApp: +974 5588 9922 | sales@qualitiesqatar.com</p>
-                </div>
-            </div>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            @include('documents.company')
+
 
             <div class="text-left sm:text-right">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">OFFICIAL QUOTATION</div>
+                <div class="ui-field-label text-slate-500">Quotation</div>
                 <div class="text-2xl font-extrabold text-[#0a192f] font-mono-num">{{ $quotation->quotation_number }}</div>
                 <div class="mt-1">
                     @php
@@ -89,10 +86,17 @@
         </div>
 
         <!-- Client & Quotation Meta Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50/80 p-4 rounded-xl border border-slate-200/80 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200/80 text-xs">
             <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">PROPOSAL PREPARED FOR:</span>
-                <div class="font-bold text-sm text-slate-900">{{ $quotation->customer->name }}</div>
+                <span class="ui-field-label text-slate-500 block mb-1">Prepared for</span>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <div class="font-bold text-sm text-slate-900">{{ $quotation->customer->name }}</div>
+                    @if($quotation->customer && $quotation->customer->customer_code)
+                        <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono-num font-bold text-xs border border-slate-200">
+                            {{ $quotation->customer->customer_code }}
+                        </span>
+                    @endif
+                </div>
                 @if($quotation->customer->company_name)
                     <div class="font-semibold text-slate-700">{{ $quotation->customer->company_name }}</div>
                 @endif
@@ -102,7 +106,7 @@
             </div>
 
             <div class="sm:text-right space-y-1">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">PROPOSAL DETAILS:</span>
+                <span class="ui-field-label text-slate-500 block mb-1">Quotation details</span>
                 <div>Quotation Date: <strong class="font-mono-num text-slate-900">{{ $quotation->quotation_date->format('d M Y') }}</strong></div>
                 <div>Target Delivery: <strong class="font-mono-num text-slate-900">{{ $quotation->delivery_date ? $quotation->delivery_date->format('d M Y') : 'Standard 7 Days' }}</strong></div>
                 <div>Category: <span class="font-semibold text-[#0a192f]">{{ $quotation->category }}</span></div>
@@ -112,94 +116,27 @@
 
         <!-- Itemized Size Matrix Table -->
         <div>
-            <div class="flex items-center justify-between mb-2">
-                <h3 class="font-bold text-xs text-slate-900 uppercase tracking-wider">Itemized Uniform Size Breakdown Matrix</h3>
-                <span class="text-xs text-slate-500 font-mono-num">Total Batch Units: <strong>{{ $quotation->total_qty }} pcs</strong></span>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <h3 class="ui-section-heading text-slate-900">Items & sizes</h3>
+                <span class="ui-help text-slate-500 font-mono-num">Total quantity: <strong>{{ $quotation->total_qty }} units</strong></span>
             </div>
 
-            <div class="overflow-x-auto border border-slate-200 rounded-lg">
-                <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-                        <tr>
-                            <th class="px-3 py-2.5 min-w-[200px]">Item Description & Category</th>
-                            <th class="px-1.5 py-2.5 text-center">XS</th>
-                            <th class="px-1.5 py-2.5 text-center">S</th>
-                            <th class="px-1.5 py-2.5 text-center">M</th>
-                            <th class="px-1.5 py-2.5 text-center">L</th>
-                            <th class="px-1.5 py-2.5 text-center">XL</th>
-                            <th class="px-1.5 py-2.5 text-center">2XL</th>
-                            <th class="px-1.5 py-2.5 text-center">3XL</th>
-                            <th class="px-1.5 py-2.5 text-center">Custom</th>
-                            <th class="px-2 py-2.5 text-center bg-slate-200/60 font-mono-num">Qty</th>
-                            <th class="px-2 py-2.5 text-right font-mono-num">Unit Price</th>
-                            <th class="px-3 py-2.5 text-right bg-slate-200/60 font-mono-num">Line Total (QAR)</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 font-mono-num">
-                        @foreach($quotation->items as $item)
-                            @php
-                                $itemCatClass = match($item->category) {
-                                    'School Uniforms' => 'bg-sky-100 text-sky-800 border-sky-300',
-                                    'Corporate Uniforms' => 'bg-indigo-100 text-indigo-800 border-indigo-300',
-                                    'Sportswear' => 'bg-amber-100 text-amber-800 border-amber-300',
-                                    'Computerized Embroidery' => 'bg-emerald-100 text-emerald-800 border-emerald-300',
-                                    'DTF Printing' => 'bg-cyan-100 text-cyan-800 border-cyan-300',
-                                    'Promotional Gifts' => 'bg-purple-100 text-purple-800 border-purple-300',
-                                    default => 'bg-slate-100 text-slate-700 border-slate-300',
-                                };
-                            @endphp
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-3 py-2.5 font-sans">
-                                    <div class="flex items-center gap-1.5 mb-1">
-                                        <span class="inline-block text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider border {{ $itemCatClass }}">
-                                            {{ $item->category }}
-                                        </span>
-                                        @if($item->input_mode !== 'garment_matrix')
-                                            <span class="text-[10px] text-slate-400 font-medium capitalize">({{ str_replace('_', ' ', $item->input_mode) }})</span>
-                                        @endif
-                                    </div>
-                                    <div class="font-bold text-slate-900 text-xs">{{ $item->product_name }}</div>
-                                    @if($item->custom_size_notes)
-                                        <div class="text-[11px] text-slate-500 font-normal mt-0.5">Spec: {{ $item->custom_size_notes }}</div>
-                                    @endif
-                                </td>
-
-                                @if($item->input_mode === 'garment_matrix')
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_xs > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_xs }}</td>
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_s > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_s }}</td>
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_m > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_m }}</td>
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_l > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_l }}</td>
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_xl }}</td>
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_2xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_2xl }}</td>
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_3xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_3xl }}</td>
-                                    <td class="px-1.5 py-2.5 text-center {{ $item->size_custom > 0 ? 'font-bold text-purple-700 bg-purple-50' : 'text-slate-300' }}">{{ $item->size_custom }}</td>
-                                @else
-                                    <td colspan="8" class="px-2 py-2.5 text-center text-slate-500 italic font-sans bg-slate-50/50">
-                                        Flat Quantity: <strong>{{ $item->total_qty }} {{ $item->pricing_unit ?? 'units' }}</strong>
-                                    </td>
-                                @endif
-
-                                <td class="px-2 py-2.5 text-center bg-slate-50 font-bold text-slate-900">{{ $item->total_qty }}</td>
-                                <td class="px-2 py-2.5 text-right">{{ number_format($item->unit_price, 2) }}</td>
-                                <td class="px-3 py-2.5 text-right font-extrabold text-slate-900 bg-slate-50">{{ number_format($item->line_total, 2) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div data-paginated-table-region class="border border-slate-200 rounded-lg">
+                @include('documents.items', ['items' => $quotation->items])
             </div>
         </div>
 
         <!-- Artwork Attachment & Financial Totals -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
             <!-- Left: Artwork & Notes -->
             <div class="space-y-4">
                 @if($quotation->artwork_file)
                     <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50/60">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Attached Client Artwork / WhatsApp Reference</span>
-                        <div class="flex items-center gap-3">
+                        <span class="ui-field-label text-slate-500 block mb-2">Customer artwork</span>
+                        <div class="flex flex-wrap items-center gap-3">
                             <img src="{{ asset('storage/' . $quotation->artwork_file) }}" alt="Artwork" class="w-24 h-24 object-contain rounded-lg border border-slate-300 bg-white shadow-xs">
                             <div class="text-xs">
-                                <div class="font-bold text-slate-800">WhatsApp / Artwork Attachment</div>
+                                <div class="font-semibold text-slate-800">Artwork attachment</div>
                                 <a href="{{ asset('storage/' . $quotation->artwork_file) }}" target="_blank" class="text-sky-600 hover:underline font-semibold text-[11px] block mt-1">Open Original File &rarr;</a>
                             </div>
                         </div>
@@ -208,14 +145,14 @@
 
                 @if($quotation->notes)
                     <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Production Notes:</span>
+                        <span class="ui-field-label text-slate-500 block mb-1">Production notes</span>
                         <p class="text-slate-700 whitespace-pre-line">{{ $quotation->notes }}</p>
                     </div>
                 @endif
             </div>
 
             <!-- Right: Financial Breakdown -->
-            <div class="bg-slate-50 rounded-xl border border-slate-200 p-5 space-y-2.5 text-xs font-mono-num">
+            <div class="ui-section bg-slate-50 rounded-xl border border-slate-200 space-y-2.5 text-xs font-mono-num">
                 <div class="flex items-center justify-between text-slate-600 font-sans">
                     <span>Subtotal:</span>
                     <span class="font-mono-num font-bold text-slate-900">QAR {{ number_format($quotation->subtotal, 2) }}</span>
@@ -239,12 +176,9 @@
                     </div>
                 @endif
 
-                <div class="border-t border-slate-200 pt-3 flex items-center justify-between font-sans">
-                    <div>
-                        <span class="font-extrabold text-sm text-slate-900 block">Grand Total (QAR)</span>
-                        <span class="text-[10px] text-slate-500">Tax/VAT inclusive where applicable</span>
-                    </div>
-                    <div class="text-xl sm:text-2xl font-black text-[#0a192f] font-mono-num">
+                <div class="ui-total-row border-t border-slate-200 pt-3 font-sans">
+                    <span class="ui-total-label text-slate-900">Grand Total</span>
+                    <div class="ui-total-value text-[#0a192f] font-mono-num">
                         QAR {{ number_format($quotation->grand_total, 2) }}
                     </div>
                 </div>
@@ -252,29 +186,66 @@
         </div>
 
         <!-- Footer Sign-off Note -->
-        <div class="pt-6 border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="pt-4 border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-                <div>Validity: <strong>30 days from date of issuance</strong></div>
-                <div>Authorized Signature: <strong>QUALITIES Uniforms & Gifts Solutions</strong></div>
+                @if(config('company.quotation_terms'))<div class="whitespace-pre-line">{{ config('company.quotation_terms') }}</div>@endif
+                <div>Prepared by: <strong>{{ config('company.name') }}</strong></div>
             </div>
             <div class="flex items-center gap-2">
                 <!-- Status updater form -->
-                <form action="{{ route('quotations.update-status', $quotation) }}" method="POST" class="inline-flex items-center gap-1.5">
+                @unless($quotation->invoice)
+                <form action="{{ route('quotations.update-status', $quotation) }}" method="POST" class="inline-flex flex-wrap items-center gap-1.5" onsubmit="confirmQuotationApproval(event)">
                     @csrf
                     @method('PATCH')
-                    <label class="text-[11px] font-bold text-slate-500">Change Status:</label>
-                    <select name="status" onchange="this.form.submit()" class="text-xs border border-slate-300 rounded px-2 py-1 font-semibold focus:outline-none">
-                        <option value="Draft" {{ $quotation->status === 'Draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="Sent" {{ $quotation->status === 'Sent' ? 'selected' : '' }}>Sent</option>
-                        <option value="Approved" {{ $quotation->status === 'Approved' ? 'selected' : '' }}>Approved</option>
-                        <option value="Invoiced" {{ $quotation->status === 'Invoiced' ? 'selected' : '' }}>Invoiced</option>
+                    <label for="quotation-status" class="ui-field-label text-slate-500">Change Status:</label>
+                    <select id="quotation-status" name="status" aria-describedby="quotation-status-help" data-original-status="{{ $quotation->status }}" onchange="this.form.requestSubmit()" class="text-xs border border-slate-300 rounded px-2 py-1 font-semibold focus:outline-none focus:ring-2 focus:ring-[#0a192f]">
+                        <option value="Draft" {{ $quotation->status === 'Draft' ? 'selected' : '' }}>Draft — not sent</option>
+                        <option value="Sent" {{ $quotation->status === 'Sent' ? 'selected' : '' }}>Sent — sent to customer</option>
+                        <option value="Approved" {{ $quotation->status === 'Approved' ? 'selected' : '' }}>Approved — create invoice</option>
                         <option value="Cancelled" {{ $quotation->status === 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                     </select>
                 </form>
+                @endunless
             </div>
         </div>
+        @unless($quotation->invoice)
+            <p id="quotation-status-help" class="ui-help text-slate-500 no-print">Draft means not sent. Mark Sent after sending the quotation to the customer; this does not send a message automatically. Approved confirms customer acceptance, creates a sales invoice and queues production. Cancelled means no longer proceeding. Selecting a status saves immediately.</p>
+        @endunless
 
     </div>
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    async function confirmQuotationApproval(event) {
+        const form = event.currentTarget;
+        if (form.elements.status.value !== 'Approved' || form.dataset.approvalConfirmed === 'true') return;
+        event.preventDefault();
+        if (form.dataset.approvalPending === 'true') return;
+
+        form.dataset.approvalPending = 'true';
+        const submitter = event.submitter;
+        try {
+            const confirmed = await window.appConfirm({
+                title: 'Approve quotation?',
+                message: 'Approving automatically creates a sales invoice and queues this job for production.',
+                confirmLabel: 'Approve quotation',
+                cancelLabel: 'Cancel',
+                destructive: false
+            });
+            if (confirmed) {
+                form.dataset.approvalConfirmed = 'true';
+                if (submitter) form.requestSubmit(submitter);
+                else form.requestSubmit();
+            } else if (form.elements.status.tagName === 'SELECT') {
+                form.elements.status.value = form.elements.status.dataset.originalStatus;
+            }
+        } finally {
+            delete form.dataset.approvalPending;
+            delete form.dataset.approvalConfirmed;
+        }
+    }
+</script>
+@endpush

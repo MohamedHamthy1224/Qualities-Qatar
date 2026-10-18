@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Services\DocumentNumber;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate(['search' => 'nullable|string|max:255', 'filter' => 'nullable|in:balance', 'per_page' => 'nullable|integer|in:8,10,15,20,25,50', 'page' => 'nullable|integer|min:1']);
         $query = Customer::withCount(['quotations', 'invoices', 'deliveryNotes', 'receipts']);
 
         if ($request->filled('search')) {
             $s = $request->search;
             $query->where(function ($q) use ($s) {
                 $q->where('name', 'like', "%{$s}%")
-                  ->orWhere('company_name', 'like', "%{$s}%")
-                  ->orWhere('phone', 'like', "%{$s}%")
-                  ->orWhere('customer_code', 'like', "%{$s}%")
-                  ->orWhere('email', 'like', "%{$s}%");
+                    ->orWhere('company_name', 'like', "%{$s}%")
+                    ->orWhere('phone', 'like', "%{$s}%")
+                    ->orWhere('customer_code', 'like', "%{$s}%")
+                    ->orWhere('email', 'like', "%{$s}%");
             });
         }
 
@@ -26,23 +28,33 @@ class CustomerController extends Controller
             $query->where('balance', '>', 0);
         }
 
-        $customers = $query->orderBy('name')->paginate(15);
+        $customers = $query->orderBy('name')->orderBy('id')->paginate((int) ($request->query('per_page') ?: 15))->withQueryString();
         $totalOutstanding = Customer::sum('balance');
+        $totalCustomers = Customer::count();
 
-        return view('customers.index', compact('customers', 'totalOutstanding'));
+        return view('customers.index', compact('customers', 'totalOutstanding', 'totalCustomers'));
     }
 
-    public function show(Customer $customer)
+    public function show(Request $request, Customer $customer)
     {
-        $customer->load([
-            'quotations.items',
-            'invoices.items',
-            'deliveryNotes.items',
-            'receipts.invoice',
-            'productionOrders'
+        $request->validate([
+            'quotes_page' => 'nullable|integer|min:1',
+            'invoices_page' => 'nullable|integer|min:1',
+            'delivery_page' => 'nullable|integer|min:1',
+            'receipts_page' => 'nullable|integer|min:1',
         ]);
 
-        return view('customers.show', compact('customer'));
+        $customer->loadCount(['quotations', 'invoices', 'deliveryNotes', 'receipts']);
+        $quotations = $customer->quotations()->paginate(15, ['*'], 'quotes_page')
+            ->withQueryString()->fragment('customer-quotations');
+        $invoices = $customer->invoices()->paginate(15, ['*'], 'invoices_page')
+            ->withQueryString()->fragment('customer-invoices');
+        $deliveryNotes = $customer->deliveryNotes()->with('invoice')->paginate(15, ['*'], 'delivery_page')
+            ->withQueryString()->fragment('customer-delivery');
+        $receipts = $customer->receipts()->paginate(15, ['*'], 'receipts_page')
+            ->withQueryString()->fragment('customer-receipts');
+
+        return view('customers.show', compact('customer', 'quotations', 'invoices', 'deliveryNotes', 'receipts'));
     }
 
     public function store(Request $request)
@@ -52,17 +64,13 @@ class CustomerController extends Controller
             'company_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:255',
-            'address' => 'nullable|string',
+            'address' => 'nullable|string|max:10000',
         ]);
 
-        // Generate customer code
-        $nextId = Customer::max('id') + 1;
-        $customerCode = 'CUST-QAT-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
-
-        $customer = Customer::create(array_merge($validated, [
-            'customer_code' => $customerCode,
+        $customer = DocumentNumber::transaction(fn () => Customer::create(array_merge($validated, [
+            'customer_code' => DocumentNumber::next(Customer::class, 'customer_code', 'CUST-QAT-'),
             'balance' => 0.00,
-        ]));
+        ])), 3);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
@@ -78,12 +86,12 @@ class CustomerController extends Controller
 
     public function update(Request $request, Customer $customer)
     {
-        $validated = $request->validate([
+        $validated = $request->validateWithBag('customerProfile', [
             'name' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:255',
-            'address' => 'nullable|string',
+            'address' => 'nullable|string|max:10000',
         ]);
 
         $customer->update($validated);
@@ -105,7 +113,7 @@ class CustomerController extends Controller
         return response()->json([
             'customer_id' => $customer->id,
             'customer_name' => $customer->name,
-            'balance' => (float)$customer->balance,
+            'balance' => (float) $customer->balance,
             'invoices' => $invoices,
         ]);
     }

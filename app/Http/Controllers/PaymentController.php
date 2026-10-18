@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\SalesInvoice;
 use App\Models\CustomerReceipt;
+use App\Services\DocumentNumber;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class PaymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = CustomerReceipt::with(['customer', 'invoice']);
+        $request->validate(['per_page' => 'nullable|integer|in:8,10,15,20,25,50', 'page' => 'nullable|integer|min:1']);
+
+        $query = CustomerReceipt::with(['customer', 'invoice', 'splitReceipts.invoice'])->whereNull('parent_receipt_id');
 
         if ($request->filled('method')) {
             $query->where('payment_method', $request->input('method'));
@@ -23,6 +27,7 @@ class PaymentController extends Controller
             $query->where(function ($q) use ($s) {
                 $q->where('receipt_number', 'like', "%{$s}%")
                   ->orWhere('reference_number', 'like', "%{$s}%")
+                  ->orWhereHas('splitReceipts', fn ($split) => $split->where('receipt_number', 'like', "%{$s}%"))
                   ->orWhereHas('customer', function ($cq) use ($s) {
                       $cq->where('name', 'like', "%{$s}%")
                          ->orWhere('company_name', 'like', "%{$s}%");
@@ -30,7 +35,7 @@ class PaymentController extends Controller
             });
         }
 
-        $receipts = $query->orderBy('id', 'desc')->paginate(15);
+        $receipts = $query->orderBy('id', 'desc')->paginate((int) ($request->query('per_page') ?: 15))->withQueryString();
         $totalCollected = CustomerReceipt::sum('amount_received');
         $todayCollected = CustomerReceipt::whereDate('payment_date', now()->toDateString())->sum('amount_received');
 
@@ -43,110 +48,95 @@ class PaymentController extends Controller
         $selectedCustomer = null;
         $selectedInvoice = null;
 
-        if ($request->filled('customer_id')) {
-            $selectedCustomer = Customer::with('invoices')->find($request->input('customer_id'));
+        if ($request->old('customer_id', $request->input('customer_id'))) {
+            $selectedCustomer = Customer::with('invoices')->find($request->old('customer_id', $request->input('customer_id')));
         }
 
-        if ($request->filled('invoice_id')) {
-            $selectedInvoice = SalesInvoice::with('customer')->find($request->input('invoice_id'));
-            if ($selectedInvoice) {
+        if ($request->old('invoice_id', $request->input('invoice_id'))) {
+            $selectedInvoice = SalesInvoice::with('customer')->find($request->old('invoice_id', $request->input('invoice_id')));
+            if ($selectedInvoice && (!$selectedCustomer || $selectedCustomer->is($selectedInvoice->customer))) {
                 $selectedCustomer = $selectedInvoice->customer;
+            } else {
+                $selectedInvoice = null;
             }
         }
 
-        $year = date('Y');
-        $count = CustomerReceipt::whereYear('created_at', $year)->count() + 1;
-        $suggestedNumber = 'RCPT-' . $year . '-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+        $suggestedNumber = DocumentNumber::next(CustomerReceipt::class, 'receipt_number', 'RCPT-' . date('Y') . '-');
+        $customerLocked = $selectedCustomer && ($request->filled('customer_id') || $request->filled('invoice_id'));
 
-        return view('payments.create', compact('customers', 'selectedCustomer', 'selectedInvoice', 'suggestedNumber'));
+        return view('payments.create', compact('customers', 'selectedCustomer', 'selectedInvoice', 'suggestedNumber', 'customerLocked'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'customer_id'    => 'required|exists:customers,id',
-            'invoice_id'     => 'nullable|exists:sales_invoices,id',
-            'receipt_number' => 'required|string|unique:customer_receipts,receipt_number',
-            'amount_received'=> 'required|numeric|min:0.01',
+            'invoice_id'     => ['nullable', Rule::exists('sales_invoices', 'id')->where('customer_id', $request->input('customer_id'))],
+            'receipt_number' => 'required|string|max:40|unique:customer_receipts,receipt_number',
+            'amount_received'=> 'required|numeric|decimal:0,2|min:0.01|max:9999999999.99',
             'payment_method' => 'required|in:Cash,Bank Transfer,Card,Cheque',
             'payment_date'   => 'required|date',
             'reference_number' => 'nullable|string|max:100',
             'notes'          => 'nullable|string',
         ]);
 
-        return DB::transaction(function () use ($request) {
+        return DocumentNumber::transaction(function () use ($validated) {
+            // Serialize allocations for a customer so simultaneous receipts cannot pay the same balance twice.
+            $customer = Customer::whereKey($validated['customer_id'])->lockForUpdate()->firstOrFail();
+            if (CustomerReceipt::where('receipt_number', $validated['receipt_number'])->exists()) {
+                throw ValidationException::withMessages(['receipt_number' => 'This receipt number has already been recorded.']);
+            }
+            $invoices = SalesInvoice::where('customer_id', $customer->id)
+                ->when($validated['invoice_id'] ?? null, fn ($query, $id) => $query->whereKey($id))
+                ->orderBy('invoice_date')->orderBy('id')->lockForUpdate()->get();
 
-            // ── 1. If a specific invoice was chosen, link the receipt directly ──────────
-            if ($request->invoice_id) {
-                $invoice = SalesInvoice::findOrFail($request->invoice_id);
-                $receipt = CustomerReceipt::create([
-                    'receipt_number'   => $request->receipt_number,
-                    'customer_id'      => $request->customer_id,
-                    'invoice_id'       => $invoice->id,
-                    'amount_received'  => $request->amount_received,
-                    'payment_method'   => $request->payment_method,
-                    'payment_date'     => $request->payment_date,
-                    'reference_number' => $request->reference_number,
-                    'notes'            => $request->notes,
+            $balances = $invoices->mapWithKeys(function ($invoice) {
+                $total = (int) round((float) $invoice->grand_total * 100);
+                $paid = (int) round((float) $invoice->receipts()->sum('amount_received') * 100);
+                return [$invoice->id => max(0, $total - $paid)];
+            });
+            $remaining = (int) round((float) $validated['amount_received'] * 100);
+            if ($remaining > $balances->sum()) {
+                throw ValidationException::withMessages([
+                    'amount_received' => 'The payment exceeds the available invoice balance of QAR ' . number_format($balances->sum() / 100, 2) . '.',
                 ]);
-                // Recalculate that invoice's paid_amount / balance_due / status
-                $invoice->updatePaymentStatus();
-
-            // ── 2. No specific invoice → auto-allocate against oldest open invoices ────
-            } else {
-                $remaining = (float) $request->amount_received;
-
-                // Save the receipt with no invoice link first (will be re-linked below)
-                $receipt = CustomerReceipt::create([
-                    'receipt_number'   => $request->receipt_number,
-                    'customer_id'      => $request->customer_id,
-                    'invoice_id'       => null,
-                    'amount_received'  => $request->amount_received,
-                    'payment_method'   => $request->payment_method,
-                    'payment_date'     => $request->payment_date,
-                    'reference_number' => $request->reference_number,
-                    'notes'            => $request->notes,
-                ]);
-
-                $openInvoices = SalesInvoice::where('customer_id', $request->customer_id)
-                    ->where('balance_due', '>', 0)
-                    ->orderBy('invoice_date', 'asc')
-                    ->get();
-
-                foreach ($openInvoices as $inv) {
-                    if ($remaining <= 0) break;
-
-                    // How much of this receipt goes to this invoice?
-                    $allocate = min($remaining, (float) $inv->balance_due);
-                    $remaining -= $allocate;
-
-                    // If this is the first invoice, re-link the main receipt record
-                    if ($receipt->invoice_id === null) {
-                        $receipt->update(['invoice_id' => $inv->id]);
-                        $inv->updatePaymentStatus();
-                    } else {
-                        // Create a split receipt for subsequent invoices
-                        $splitReceipt = CustomerReceipt::create([
-                            'receipt_number'   => $receipt->receipt_number . '-' . $inv->id,
-                            'customer_id'      => $receipt->customer_id,
-                            'invoice_id'       => $inv->id,
-                            'amount_received'  => $allocate,
-                            'payment_method'   => $receipt->payment_method,
-                            'payment_date'     => $receipt->payment_date,
-                            'reference_number' => $receipt->reference_number,
-                            'notes'            => $receipt->notes . ' [Split from ' . $receipt->receipt_number . ']',
-                        ]);
-                        $inv->updatePaymentStatus();
-                    }
-                }
             }
 
-            // ── 3. Always sync the customer's outstanding balance ─────────────────────
-            $customer = Customer::findOrFail($request->customer_id);
+            $receipt = null;
+            $suffix = 1;
+            foreach ($invoices as $invoice) {
+                $allocated = min($remaining, $balances[$invoice->id]);
+                if ($allocated <= 0) {
+                    continue;
+                }
+                $number = $validated['receipt_number'];
+                if ($receipt) {
+                    do {
+                        $number = $validated['receipt_number'] . '-' . ++$suffix;
+                    } while (CustomerReceipt::where('receipt_number', $number)->exists());
+                }
+                $allocation = CustomerReceipt::create([
+                    'receipt_number' => $number,
+                    'parent_receipt_id' => $receipt?->id,
+                    'customer_id' => $customer->id,
+                    'invoice_id' => $invoice->id,
+                    'amount_received' => $allocated / 100,
+                    'payment_method' => $validated['payment_method'],
+                    'payment_date' => $validated['payment_date'],
+                    'reference_number' => $validated['reference_number'] ?? null,
+                    'notes' => $validated['notes'] ?? null,
+                ]);
+                $receipt ??= $allocation;
+                $remaining -= $allocated;
+                $invoice->updatePaymentStatus();
+                if ($remaining === 0) {
+                    break;
+                }
+            }
             $customer->recalculateBalance();
 
             return redirect()->route('payments.show', $receipt)
-                ->with('success', "Payment receipt {$receipt->receipt_number} of QAR " . number_format((float) $receipt->amount_received, 2) . " recorded successfully.");
+                ->with('success', "Payment {$receipt->receipt_number} of QAR " . number_format((float) $validated['amount_received'], 2) . ' recorded and allocated successfully.');
         });
     }
 

@@ -1,0 +1,231 @@
+/* Dashboard-only presentation. Shared forms, calculations and workflows are untouched. */
+.erp-dashboard {
+    --dashboard-ink: var(--color-navy-900);
+    --dashboard-accent: var(--color-gold-500);
+    --dashboard-muted: #526176;
+    --dashboard-border: #dce3ed;
+    --dashboard-subtle: #f7f9fc;
+    --dashboard-chart-complete: #15803d;
+    container: dashboard / inline-size;
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+    padding-block: 16px 8px;
+    color: var(--dashboard-ink);
+    font-size: 14px;
+    line-height: 1.5;
+}
+.erp-dashboard :is(section, div, nav) { min-width: 0; }
+.erp-dashboard a { scroll-margin-block: 80px 24px; transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
+.erp-dashboard a:focus-visible { outline: 3px solid var(--dashboard-ink); outline-offset: 3px; }
+.erp-dashboard h2 { font-size: 15px; line-height: 22px; font-weight: 700; letter-spacing: -.15px; }
+.erp-dashboard .ui-help, .dashboard-supporting { color: var(--dashboard-muted); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
+.dashboard-panel, .dashboard-stage-panel, .dashboard-metric { border: 1px solid var(--dashboard-border); border-radius: 12px; background: #fff; box-shadow: 0 1px 2px #0a192f04; }
+
+/* Aligned, readable metrics with one restrained gold accent. */
+.dashboard-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.dashboard-metric { display: flex; flex-direction: column; padding: 16px; overflow: visible; }
+.dashboard-metric:first-child { border-top: 3px solid var(--dashboard-accent); padding-top: 14px; }
+.dashboard-metric > div:first-child { align-items: flex-start; gap: 8px; }
+.erp-dashboard .ui-metric-label { color: var(--dashboard-muted); font-size: 13px; line-height: 19px; font-weight: 600; }
+.erp-dashboard a.ui-metric-label:hover { color: var(--dashboard-ink); text-decoration: underline; text-underline-offset: 4px; }
+.erp-dashboard .ui-metric-icon { width: 30px; height: 30px; border: 0; border-radius: 8px; background: var(--dashboard-subtle); color: var(--dashboard-ink); }
+.dashboard-metric:nth-child(3) .ui-metric-icon { background: #f0fdf4; color: #166534; }
+.dashboard-metric:nth-child(4) .ui-metric-icon { background: #fff1f2; color: #9f1239; }
+.dashboard-metric > .mt-3 { display: flex; flex: 1; flex-direction: column; justify-content: flex-start; gap: 6px; margin-top: 12px; }
+.erp-dashboard .ui-metric-value { font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -.6px; overflow-wrap: anywhere; }
+.dashboard-metric .ui-help { margin-top: 0; }
+.dashboard-metric a.ui-help, .dashboard-metric .ui-help > a { display: inline-flex; align-items: center; align-self: flex-start; min-height: 24px; }
+.dashboard-metric .ui-help > a { color: #166534; }
+.dashboard-metric a.ui-help:hover, .dashboard-metric .ui-help > a:hover { color: var(--dashboard-ink); text-decoration: underline; text-underline-offset: 4px; }
+.dashboard-metric:nth-child(4) .ui-metric-value { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 7px; color: #9f1239; }
+.dashboard-metric:nth-child(4) .ui-metric-value > span:last-child { min-width: 0; max-width: 100%; }
+.dashboard-currency { font-family: var(--font-sans); font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
+
+/* A compact action desk, with a clear primary action and comfortable targets. */
+.dashboard-actions { display: grid; gap: 14px; align-items: center; padding: 16px 20px; border: 1px solid var(--color-navy-800); border-radius: 12px; background: var(--dashboard-ink); color: #fff; }
+.dashboard-actions > div:first-child { gap: 12px; }
+.dashboard-actions > div:first-child > div { width: 36px; height: 36px; border-radius: 9px; }
+.dashboard-action-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.dashboard-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 14px; border: 1px solid transparent; border-radius: 8px; font-size: 13px; line-height: 19px; font-weight: 600; text-align: center; }
+.dashboard-action svg { width: 17px; height: 17px; flex: none; }
+.dashboard-action-primary { grid-column: 1 / -1; background: var(--dashboard-accent); color: var(--dashboard-ink); }
+.dashboard-action-primary:hover { background: var(--color-gold-400); }
+.dashboard-action-primary:active { background: var(--color-gold-600); }
+.dashboard-action-secondary { border-color: #ffffff47; background: #ffffff0a; color: #fff; }
+.dashboard-action-secondary:hover { border-color: #ffffff70; background: #ffffff1f; }
+.dashboard-action-secondary:active { background: #ffffff2e; }
+.erp-dashboard .dashboard-action:focus-visible { outline-color: var(--dashboard-accent); }
+
+.dashboard-stage-panel { padding: 16px; }
+.dashboard-section-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 12px; }
+.dashboard-stages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.dashboard-stage { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; min-height: 56px; padding: 10px 12px; border: 1px solid var(--dashboard-border); border-radius: 8px; background: var(--dashboard-subtle); }
+.dashboard-stage:hover { border-color: #94a3b8; background: #f1f5f9; }
+.erp-dashboard .ui-stage-summary-label { flex: 1 1 60px; min-width: 0; color: var(--dashboard-muted); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
+.erp-dashboard .ui-stage-summary-value { flex: none; max-width: 100%; font-size: 18px; line-height: 26px; font-weight: 600; overflow-wrap: anywhere; }
+.dashboard-stage[data-stage="Completed"] .ui-stage-summary-value { color: #166534; }
+
+/* Production charts use the same job counts as the dashboard and remain readable without colour. */
+.dashboard-charts-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.dashboard-chart-card { min-width: 0; padding: 18px 20px; border: 1px solid var(--dashboard-border); border-radius: 12px; background: #fff; box-shadow: 0 1px 2px #0a192f04; }
+.dashboard-chart-heading { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 16px; }
+.dashboard-chart-heading p { margin-top: 3px; color: var(--dashboard-muted); font-size: 12px; line-height: 18px; }
+.dashboard-chart-unit { flex: none; padding-top: 3px; color: var(--dashboard-muted); font-size: 12px; line-height: 18px; }
+.dashboard-workload { display: grid; gap: 4px; padding: 0; margin: 0; list-style: none; }
+.dashboard-workload-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 5px 12px; min-height: 48px; padding: 6px 8px; border-radius: 6px; }
+.dashboard-workload-row:hover { background: var(--dashboard-subtle); }
+.dashboard-workload-row:active { background: #e9eef5; }
+.dashboard-workload-name { min-width: 0; color: var(--dashboard-ink); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
+.dashboard-workload-value { color: var(--dashboard-ink); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.dashboard-workload-track { grid-column: 1 / -1; height: 7px; overflow: hidden; border-radius: 4px; background: #e9eef5; }
+.dashboard-workload-track > span { display: block; width: clamp(0%, var(--chart-bar-width, 0%), 100%); height: 100%; border-radius: inherit; background: var(--dashboard-ink); }
+.dashboard-chart-scale { display: flex; justify-content: space-between; gap: 12px; margin: 8px 8px 0; color: var(--dashboard-muted); font-size: 12px; line-height: 18px; font-variant-numeric: tabular-nums; }
+.dashboard-production-split { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 20px 24px; padding-block: 4px; }
+.dashboard-pie { flex: none; width: 180px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--dashboard-ink) 0deg var(--chart-active-angle, 0deg), var(--dashboard-chart-complete) var(--chart-active-angle, 0deg) 360deg); }
+.dashboard-pie[data-empty="true"] { border: 1px dashed #aab6c5; background: var(--dashboard-subtle); }
+.dashboard-production-split > :not(.dashboard-pie) { flex: 1 1 150px; max-width: 100%; }
+.dashboard-pie-total { display: flex; flex-direction: column; gap: 2px; }
+.dashboard-pie-total > strong { color: var(--dashboard-ink); font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -.5px; font-variant-numeric: tabular-nums; }
+.dashboard-pie-total > span { color: var(--dashboard-muted); font-size: 12px; line-height: 18px; }
+.dashboard-chart-legend { display: grid; gap: 8px; padding: 0; margin: 12px 0 0; list-style: none; }
+.dashboard-chart-legend li > a { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 8px; min-height: 44px; padding: 6px 8px; margin-inline: -8px; border-radius: 6px; }
+.dashboard-chart-legend li > a:hover { background: var(--dashboard-subtle); }
+.dashboard-chart-legend li > a:active { background: #e9eef5; }
+.dashboard-chart-swatch { width: 10px; height: 10px; border-radius: 3px; background: var(--dashboard-ink); }
+.dashboard-chart-swatch[data-series="completed"] { background: var(--dashboard-chart-complete); }
+.dashboard-chart-legend-label { min-width: 0; color: var(--dashboard-muted); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
+.dashboard-chart-legend strong { color: var(--dashboard-ink); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.dashboard-chart-summary { margin-top: 14px; color: var(--dashboard-muted); font-size: 12px; line-height: 18px; }
+.dashboard-chart-empty { display: grid; align-content: center; min-height: 180px; padding: 20px 8px; color: var(--dashboard-muted); font-size: 13px; line-height: 20px; text-align: center; }
+.dashboard-chart-empty .dashboard-pie { justify-self: center; margin-bottom: 12px; }
+.dashboard-chart-empty strong { color: var(--dashboard-ink); font-weight: 600; }
+
+/* Respond to the available workspace; the sidebar must not squeeze the data. */
+.dashboard-content-grid { display: grid; align-items: start; gap: 20px; }
+.erp-dashboard .ui-panel-header { gap: 8px 16px; padding: 18px 20px; border-color: var(--dashboard-border); }
+.erp-dashboard .ui-panel-header > a { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; color: var(--dashboard-ink); font-size: 12px; line-height: 18px; font-weight: 600; }
+.erp-dashboard .ui-panel-header > a:hover { text-decoration: underline; text-decoration-color: var(--dashboard-accent); text-underline-offset: 5px; }
+.dashboard-status-tabs { flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 12px 20px; border-color: var(--dashboard-border); }
+.dashboard-status-tab { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; min-height: 40px; padding: 8px 12px; font-size: 13px; line-height: 20px; font-weight: 600; white-space: nowrap; }
+.dashboard-status-tab:not([aria-current]):hover { background: #e9eef5; }
+.dashboard-status-tab[aria-current] { background: var(--dashboard-ink); color: #fff; }
+
+.dashboard-jobs-table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 13px; line-height: 20px; }
+.erp-dashboard .dashboard-jobs-table th { padding: 12px 16px; background: var(--dashboard-subtle); color: var(--dashboard-muted); font-size: 11px; line-height: 17px; font-weight: 600; }
+.dashboard-jobs-table th:nth-child(1) { width: 17%; }
+.dashboard-jobs-table th:nth-child(2) { width: 23%; }
+.dashboard-jobs-table th:nth-child(3) { width: 28%; }
+.dashboard-jobs-table th:nth-child(4) { width: 17%; }
+.dashboard-jobs-table th:nth-child(5) { width: 15%; }
+.erp-dashboard .dashboard-jobs-table td { padding: 16px; vertical-align: top; border-bottom: 1px solid #e9eef5; overflow-wrap: anywhere; }
+.dashboard-jobs-table tr:last-child td { border-bottom: 0; }
+.erp-dashboard .dashboard-jobs-table .font-mono-num { white-space: normal; }
+.dashboard-jobs-table td:first-child { font-size: 12px; line-height: 20px; }
+.dashboard-jobs-table td:first-child > span { margin-top: 2px; color: var(--dashboard-muted); font-size: 11px; line-height: 16px; }
+.erp-dashboard .ui-table-primary { font-size: 13px; line-height: 20px; }
+.erp-dashboard .ui-table-secondary { font-size: 12px; line-height: 19px; }
+.dashboard-jobs-table td:nth-child(3) > span { margin-top: 6px; padding: 2px 7px; font-size: 11px; line-height: 17px; }
+.erp-dashboard .ui-badge { max-width: 100%; padding: 3px 7px; border-radius: 6px; font-size: 11px; line-height: 16px; font-weight: 600; white-space: normal; }
+.dashboard-jobs-table td:last-child { font-size: 11px; line-height: 18px; }
+.dashboard-jobs-table td:last-child > span:last-child:not(:first-child) { margin-top: 4px; }
+.erp-dashboard .dashboard-mobile-label { display: none; }
+.erp-dashboard :is(td, div).text-slate-400 { color: var(--dashboard-muted); }
+
+.dashboard-secondary { display: grid; align-content: start; gap: 20px; }
+.dashboard-quote-list { container: dashboard-quotes / inline-size; }
+.dashboard-quote { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 20px; padding: 16px 20px; }
+.dashboard-quote > div:first-child { min-width: 0; }
+.dashboard-quote > div:first-child > a { display: inline-block; max-width: 100%; min-height: 24px; color: var(--dashboard-ink); font-size: 12px; line-height: 20px; overflow-wrap: anywhere; }
+.dashboard-quote > div:first-child > a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.dashboard-quote .ui-table-secondary { margin-top: 3px; }
+.dashboard-quote-total { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; max-width: min(100%, 240px); }
+.dashboard-quote-total > div { font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.dashboard-quote-total > div > span { color: var(--dashboard-muted); font-size: 11px; }
+.dashboard-quote-total > span { margin: 0; padding: 3px 7px; font-size: 11px; line-height: 16px; }
+.dashboard-company { padding: 18px 20px; border-color: var(--dashboard-border); background: #f8fafc; color: var(--dashboard-muted); font-size: 12px; line-height: 19px; }
+.dashboard-company > div:first-child { color: var(--dashboard-ink); font-size: 13px; line-height: 21px; }
+
+@container dashboard (min-width: 560px) {
+    .dashboard-action-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .dashboard-action-primary { grid-column: auto; }
+    .dashboard-stages { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@container dashboard (min-width: 880px) {
+    .dashboard-charts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dashboard-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .dashboard-metric { padding: 18px; }
+    .dashboard-metric:first-child { padding-top: 16px; }
+    .dashboard-actions { grid-template-columns: minmax(0, 1fr) auto; }
+    .dashboard-stages { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .dashboard-stage { gap: 8px; }
+    .dashboard-secondary { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+}
+@container dashboard (min-width: 1120px) {
+    .dashboard-content-grid { grid-template-columns: minmax(0, 1fr) 320px; }
+    .dashboard-secondary { grid-template-columns: minmax(0, 1fr); }
+}
+@container dashboard (max-width: 759px) {
+    .dashboard-pie { width: 160px; }
+    /* Keep a single accessible table; its rows become readable mobile cards. */
+    .dashboard-jobs-table { display: block; table-layout: auto; }
+    .dashboard-jobs-table thead { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .dashboard-jobs-table tbody { display: grid; gap: 12px; padding: 16px; }
+    .dashboard-job-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 12px; padding: 16px; border: 1px solid var(--dashboard-border); border-radius: 9px; }
+    .erp-dashboard .dashboard-jobs-table td { display: block; min-width: 0; padding: 0; border: 0; }
+    .dashboard-job-row td:nth-child(1) { grid-column: 1; grid-row: 1; }
+    .dashboard-job-row td:nth-child(4) { grid-column: 2; grid-row: 1; text-align: right; }
+    .dashboard-job-row td:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+    .dashboard-job-row td:nth-child(3) { grid-column: 1 / -1; grid-row: 3; }
+    .erp-dashboard .dashboard-job-row td:nth-child(5) { grid-column: 1 / -1; grid-row: 4; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 4px 12px; padding-top: 10px; border-top: 1px solid #e9eef5; font-size: 12px; }
+    .erp-dashboard .dashboard-job-row td:nth-child(5) > span { grid-column: 2; margin-top: 0; }
+    .erp-dashboard .dashboard-job-row td:nth-child(5) > .dashboard-mobile-label { display: inline; grid-column: 1; color: var(--dashboard-muted); font-family: var(--font-sans); text-align: left; }
+    .erp-dashboard .ui-table-primary { font-size: 14px; line-height: 21px; }
+    .dashboard-status-tab, .erp-dashboard .ui-panel-header > a { min-height: 44px; }
+}
+@container dashboard (max-width: 399px) {
+    .dashboard-chart-card { padding: 16px; }
+    .dashboard-production-split { gap: 16px; }
+    .dashboard-production-split > :not(.dashboard-pie) { flex-basis: 100%; }
+    .dashboard-pie-total { flex-direction: row; align-items: baseline; gap: 8px; }
+    .dashboard-metrics { gap: 10px; }
+    .dashboard-metric { padding: 14px; }
+    .dashboard-metric:first-child { padding-top: 12px; }
+    .dashboard-metric > div:first-child { min-height: 38px; }
+    .dashboard-metric .ui-metric-icon { display: none; }
+    .dashboard-metric > .mt-3 { margin-top: 8px; gap: 4px; }
+    .erp-dashboard .ui-metric-value { font-size: 24px; line-height: 32px; }
+    .dashboard-metric:nth-child(4) .ui-metric-value { font-size: 20px; line-height: 28px; }
+    .dashboard-actions, .erp-dashboard .ui-panel-header { padding: 16px; }
+    .dashboard-action { min-height: 48px; padding: 10px; gap: 6px; }
+    .dashboard-stage { padding: 10px; gap: 8px; }
+    .dashboard-status-tabs { padding: 8px 12px; gap: 4px; }
+    .dashboard-status-tab { padding: 8px; font-size: 12px; }
+    .dashboard-jobs-table tbody { padding: 12px; }
+    .dashboard-job-row { padding: 14px; }
+}
+@container dashboard-quotes (max-width: 360px) {
+    .dashboard-quote { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+    .dashboard-quote-total { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; width: 100%; max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .erp-dashboard a { transition: none; } }
+.dashboard-chart-percentage { display: block; margin-top: 2px; color: var(--dashboard-muted); font-size: 12px; line-height: 18px; font-weight: 400; }
+@media print {
+    .erp-dashboard { display: block; }
+    .erp-dashboard > * + * { margin-top: 16px; }
+    .dashboard-actions { display: none; }
+    .dashboard-content-grid, .dashboard-secondary { display: block; }
+    .dashboard-secondary { margin-top: 16px; }
+    .dashboard-panel, .dashboard-metric { box-shadow: none; }
+    .dashboard-charts-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .dashboard-chart-card { break-inside: avoid; box-shadow: none; }
+    .dashboard-workload-track { border: 1px solid #aab6c5; }
+    .dashboard-pie { width: 140px; border: 1px solid #aab6c5; }
+    .dashboard-chart-swatch { border: 1px solid #526176; }
+    .dashboard-jobs-table { display: table; }
+    .dashboard-jobs-table thead { position: static; display: table-header-group; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; }
+    .dashboard-jobs-table tbody { display: table-row-group; padding: 0; }
+    .dashboard-job-row { display: table-row; }
+    .erp-dashboard .dashboard-jobs-table .dashboard-job-row td { display: table-cell; padding: 10px; }
+    .erp-dashboard .dashboard-job-row td > .dashboard-mobile-label { display: none; }
+}

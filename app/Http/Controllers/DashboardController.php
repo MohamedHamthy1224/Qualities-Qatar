@@ -3,50 +3,65 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomerReceipt;
+use App\Models\ProductionOrder;
 use App\Models\Quotation;
 use App\Models\SalesInvoice;
-use App\Models\ProductionOrder;
-use App\Models\DeliveryNote;
-use App\Models\CustomerReceipt;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // High-priority daily operational metrics
-        $todayOrdersCount = ProductionOrder::whereDate('created_at', now()->toDateString())->count();
-        if ($todayOrdersCount === 0) {
-            // Count active orders in pipeline for display if none created today
-            $todayOrdersCount = ProductionOrder::whereNotIn('stage', ['Completed'])->count();
+        $request->validate(['production_status' => 'nullable|in:ongoing,completed', 'per_page' => 'nullable|integer|in:8,10,15,20,25,50', 'page' => 'nullable|integer|min:1']);
+        $productionStatus = $request->input('production_status') ?: 'ongoing';
+        $activeOrdersCount = ProductionOrder::ongoing()->count();
+        $completedOrdersCount = ProductionOrder::where('stage', 'Completed')->count();
+        $stageCounts = ProductionOrder::selectRaw('stage, COUNT(*) as total')->groupBy('stage')->pluck('total', 'stage');
+        $overviewStages = ['Confirmed', 'Cutting & Stitching', 'Embroidery / DTF Printing', 'Quality Check', 'Ready for Delivery', 'Completed'];
+        $stages = array_filter(ProductionOrder::STAGES, fn ($label, $stage) => in_array($stage, $overviewStages, true) || $stageCounts->get($stage, 0) > 0, ARRAY_FILTER_USE_BOTH);
+        $stages += $stageCounts->keys()->diff(array_keys(ProductionOrder::STAGES))->mapWithKeys(fn ($stage) => [$stage => $stage])->all();
+
+        // Both charts describe the full production register, independently of the list below.
+        $workload = [];
+        foreach ($stages as $stage => $label) {
+            $count = (int) $stageCounts->get($stage, 0);
+            if ($stage !== 'Completed' && $count > 0) {
+                $workload[] = ['stage' => $stage, 'label' => $label, 'count' => $count];
+            }
         }
+        $maxWorkload = $workload === [] ? 0 : max(array_column($workload, 'count'));
+        $productionTotal = $activeOrdersCount + $completedOrdersCount;
+        $productionCharts = [
+            'workload' => array_map(fn ($entry) => $entry + [
+                'percent' => round($entry['count'] / $maxWorkload * 100, 2),
+            ], $workload),
+            'max' => $maxWorkload,
+            'active' => $activeOrdersCount,
+            'completed' => $completedOrdersCount,
+            'total' => $productionTotal,
+            'activePercent' => $productionTotal > 0 ? round($activeOrdersCount / $productionTotal * 100, 2) : 0.0,
+        ];
 
         $pendingQuotationsCount = Quotation::whereIn('status', ['Draft', 'Sent'])->count();
-        $readyDeliveriesCount = ProductionOrder::where('stage', 'Ready for Delivery')->count()
-            + DeliveryNote::where('status', 'Pending')->count();
+        // Count ready production jobs once; a pending delivery note is a separate dispatch record.
+        $readyDeliveriesCount = ProductionOrder::where('stage', 'Ready for Delivery')->count();
 
         $overduePaymentsQAR = SalesInvoice::where('balance_due', '>', 0)
-            ->where(function ($q) {
-                $q->where('due_date', '<', now()->toDateString())
-                  ->orWhereNull('due_date');
-            })
+            ->whereNotNull('due_date')
+            ->whereDate('due_date', '<', now()->toDateString())
             ->sum('balance_due');
 
         $totalReceivablesQAR = SalesInvoice::where('balance_due', '>', 0)->sum('balance_due');
         $totalCollectedTodayQAR = CustomerReceipt::whereDate('payment_date', now()->toDateString())->sum('amount_received');
 
-        // Recent Active Orders list
-        $recentOrders = ProductionOrder::with('customer', 'invoice', 'quotation')
-            ->orderByRaw("CASE stage 
-                WHEN 'Confirmed' THEN 1 
-                WHEN 'Cutting & Stitching' THEN 2 
-                WHEN 'Embroidery / DTF Printing' THEN 3 
-                WHEN 'Quality Check' THEN 4 
-                WHEN 'Ready for Delivery' THEN 5 
-                ELSE 6 END")
-            ->orderBy('id', 'desc')
-            ->take(8)
-            ->get();
+        $ordersQuery = ProductionOrder::with('customer', 'invoice.items', 'quotation.items');
+        if ($productionStatus === 'completed') {
+            $ordersQuery->where('stage', 'Completed')->orderByDesc('updated_at');
+        } else {
+            $ordersQuery->ongoing()->orderByRaw('target_date IS NULL')->orderBy('target_date');
+        }
+        $recentOrders = $ordersQuery->orderByDesc('id')->paginate((int) ($request->query('per_page') ?: 8))->withQueryString();
 
         // Recent Quotations
         $recentQuotations = Quotation::with('customer')
@@ -58,7 +73,12 @@ class DashboardController extends Controller
         $customers = Customer::orderBy('name')->get();
 
         return view('dashboard.index', compact(
-            'todayOrdersCount',
+            'activeOrdersCount',
+            'completedOrdersCount',
+            'productionStatus',
+            'stageCounts',
+            'stages',
+            'productionCharts',
             'pendingQuotationsCount',
             'readyDeliveriesCount',
             'overduePaymentsQAR',

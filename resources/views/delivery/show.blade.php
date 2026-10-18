@@ -4,7 +4,7 @@
 @section('page_title', "Delivery Note {$deliveryNote->delivery_number}")
 
 @section('header_action')
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
         <a href="{{ route('delivery.index') }}" class="text-xs text-slate-500 hover:text-slate-800 font-semibold px-2 py-1">
             &larr; All Delivery Notes
         </a>
@@ -24,11 +24,11 @@
 @endsection
 
 @section('content')
-<div class="space-y-6 pt-2 max-w-5xl mx-auto">
+<div class="ui-page pt-2 max-w-5xl mx-auto">
 
     <!-- Status & Action Bar -->
     <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
             @php
                 $statusColor = match($deliveryNote->status) {
                     'Delivered' => 'bg-emerald-50 text-emerald-800 border-emerald-300',
@@ -47,7 +47,7 @@
             @endif
         </div>
 
-        <form action="{{ route('delivery.update-status', $deliveryNote) }}" method="POST" class="flex items-center gap-2">
+        <form action="{{ route('delivery.update-status', $deliveryNote) }}" method="POST" class="flex flex-wrap items-center gap-2">
             @csrf
             @method('PATCH')
             <span class="text-xs font-bold text-slate-500">Update Status:</span>
@@ -60,56 +60,50 @@
     </div>
 
     <!-- Official Delivery Note Document -->
-    <div class="bg-white rounded-xl border border-slate-200/90 shadow-sm p-6 sm:p-8 space-y-6">
+    <div class="bg-white rounded-xl border border-slate-200/90 shadow-sm ui-section ui-page">
+        <div class="ui-record-actions no-print">@yield('header_action')</div>
 
         <!-- Branded Header -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-6">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-[#0a192f] text-white flex items-center justify-center font-extrabold text-2xl border-2 border-[#d4af37] shadow-md">
-                    Q
-                </div>
-                <div>
-                    <h2 class="font-extrabold text-slate-900 text-lg tracking-tight">QUALITIES UNIFORMS & GIFTS SOLUTIONS</h2>
-                    <p class="text-xs text-slate-500">Salwa Road, Near Wholesale Market, Zone 56, Doha, State of Qatar</p>
-                    <p class="text-[11px] text-slate-400">Tel: +974 4455 1234 | logistics@qualitiesqatar.com</p>
-                </div>
-            </div>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            @include('documents.company')
+
 
             <div class="text-left sm:text-right">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">DELIVERY HANDOVER NOTE</div>
-                <div class="text-2xl font-extrabold text-[#0a192f] font-mono-num">{{ $deliveryNote->delivery_number }}</div>
+                <div class="ui-field-label text-slate-500">Delivery note</div>
+                <div class="text-2xl font-extrabold text-[#0a192f] font-mono-num break-all">{{ $deliveryNote->delivery_number }}</div>
                 <div class="text-xs text-slate-500 font-mono-num mt-1">Dispatch: {{ $deliveryNote->dispatch_date->format('d M Y') }}</div>
             </div>
         </div>
 
         <!-- Recipient & Dispatch Meta Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50/80 p-4 rounded-xl border border-slate-200/80 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200/80 text-xs">
             <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">CUSTOMER / RECIPIENT:</span>
+                <span class="ui-field-label text-slate-500 block mb-1">Customer / recipient</span>
                 <div class="font-bold text-sm text-slate-900">{{ $deliveryNote->recipient_name }}</div>
                 <div class="font-semibold text-slate-700">{{ $deliveryNote->customer->name }}</div>
                 <div class="text-slate-600 mt-1">Phone: <strong class="font-mono-num">{{ $deliveryNote->recipient_phone ?? $deliveryNote->customer->phone ?? '—' }}</strong></div>
-                <div class="text-slate-600">Handover Location: {{ $deliveryNote->customer->address ?? 'Doha, Qatar' }}</div>
+                <div class="text-slate-600">Handover Location: {{ $deliveryNote->customer->address ?: '—' }}</div>
             </div>
 
             <div class="sm:text-right space-y-1">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">DISPATCH LOGISTICS:</span>
+                <span class="ui-field-label text-slate-500 block mb-1">Dispatch details</span>
                 <div>Invoice Reference: <a href="{{ route('invoices.show', $deliveryNote->invoice_id) }}" class="text-[#0a192f] font-mono-num font-bold hover:underline">{{ $deliveryNote->invoice->invoice_number }}</a></div>
-                <div>Driver / Vehicle: <strong class="text-slate-800">{{ $deliveryNote->driver_name ?? 'Delivery Van 04' }}</strong></div>
+                <div>Driver / Vehicle: <strong class="text-slate-800">{{ $deliveryNote->driver_name ?: '—' }}</strong></div>
                 <div>Dispatch Date: <strong class="font-mono-num text-slate-900">{{ $deliveryNote->dispatch_date->format('d M Y') }}</strong></div>
-                <div>Total Packaged Units: <strong class="font-mono-num text-slate-900">{{ $deliveryNote->items->sum('total_qty') }} pcs</strong></div>
+                <div>Total Handover Quantity: <strong class="font-mono-num text-slate-900">{{ $deliveryNote->items->sum('total_qty') }}</strong></div>
             </div>
         </div>
 
         <!-- Itemized Size Breakdown Matrix -->
         <div>
-            <div class="flex items-center justify-between mb-2">
-                <h3 class="font-bold text-xs text-slate-900 uppercase tracking-wider">Itemized Uniform Size Breakdown for Physical Handover</h3>
-                <span class="text-xs text-slate-500 font-mono-num">Total: <strong>{{ $deliveryNote->items->sum('total_qty') }} pcs</strong></span>
+            <div class="flex flex-wrap gap-2 items-center justify-between mb-2">
+                <h3 class="ui-section-heading text-slate-900">Items & sizes</h3>
+                <span class="ui-help text-slate-500 font-mono-num">Total quantity: <strong>{{ $deliveryNote->items->sum('total_qty') }}</strong></span>
             </div>
 
-            <div class="overflow-x-auto border border-slate-200 rounded-lg">
-                <table class="w-full text-left text-xs">
+            <div data-paginated-table-region class="border border-slate-200 rounded-lg">
+                <div class="overflow-x-auto">
+                <table id="deliveryDetailItemsTable" data-paginate-table data-pagination-label="delivery items" class="ui-table w-full text-left">
                     <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                         <tr>
                             <th class="px-3 py-2.5">Item Description</th>
@@ -138,25 +132,26 @@
                                 <td class="px-1.5 py-2.5 text-center {{ $item->size_2xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_2xl }}</td>
                                 <td class="px-1.5 py-2.5 text-center {{ $item->size_3xl > 0 ? 'font-bold text-slate-900 bg-sky-50/50' : 'text-slate-300' }}">{{ $item->size_3xl }}</td>
                                 <td class="px-1.5 py-2.5 text-center {{ $item->size_custom > 0 ? 'font-bold text-purple-700 bg-purple-50' : 'text-slate-300' }}">{{ $item->size_custom }}</td>
-                                <td class="px-3 py-2.5 text-center bg-slate-50 font-bold text-slate-900">{{ $item->total_qty }} pcs</td>
+                                <td class="px-3 py-2.5 text-center bg-slate-50 font-bold text-slate-900">{{ $item->total_qty }} {{ $item->invoiceItem?->pricing_unit ?: '' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 
         @if($deliveryNote->driver_notes)
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Driver & Dispatch Instructions:</span>
+                <span class="ui-field-label text-slate-500 block mb-1">Dispatch instructions</span>
                 <p class="text-slate-700">{{ $deliveryNote->driver_notes }}</p>
             </div>
         @endif
 
         <!-- Customer Handover Sign-off Box -->
-        <div class="pt-6 border-t-2 border-dashed border-slate-300 grid grid-cols-1 sm:grid-cols-2 gap-8 text-xs">
+        <div class="pt-4 border-t-2 border-dashed border-slate-300 grid grid-cols-1 sm:grid-cols-2 gap-8 text-xs">
             <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/50">
-                <span class="font-bold text-slate-700 block uppercase tracking-wider text-[10px]">Dispatched By (QUALITIES Operations):</span>
+                <span class="ui-field-label text-slate-700 block">Dispatched by</span>
                 <div class="pt-8 border-b border-slate-300"></div>
                 <div class="flex justify-between text-slate-500 text-[11px]">
                     <span>Driver / Logistics Officer Name</span>
@@ -165,8 +160,8 @@
             </div>
 
             <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/50">
-                <span class="font-bold text-slate-700 block uppercase tracking-wider text-[10px]">Customer Physical Receipt & Sign-off:</span>
-                <div class="text-[11px] text-slate-500">I hereby confirm receipt of the above items in sound condition & exact sizes.</div>
+                <span class="ui-field-label text-slate-700 block">Customer sign-off</span>
+                <div class="ui-help text-slate-500">I confirm receipt of the listed items in good condition and the stated sizes.</div>
                 <div class="pt-6 border-b border-slate-300"></div>
                 <div class="flex justify-between text-slate-500 text-[11px]">
                     <span>Receiver Full Name & QID/Mobile</span>

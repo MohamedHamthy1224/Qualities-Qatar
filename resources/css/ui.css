@@ -1,0 +1,102 @@
+/* Shared screen hierarchy: compact supporting text, readable data and controls. */
+:root {
+    --ui-text-secondary: 11px;
+    --ui-text-body: 12px;
+    --ui-text-heading: 13px;
+    --ui-section-gap: 20px;
+}
+.ui-page > :not([hidden], .hidden, input[type="hidden"], script, style, template) ~ :not([hidden], .hidden, input[type="hidden"], script, style, template) { margin-block-start: var(--ui-section-gap); }
+.ui-section { padding: 20px; }
+.ui-section-heading { font-size: var(--ui-text-heading); line-height: 19px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.ui-help { font-size: var(--ui-text-secondary); line-height: 17px; font-weight: 400; letter-spacing: 0; text-transform: none; overflow-wrap: anywhere; }
+.ui-field-label { font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.ui-metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; }
+.ui-metric-card { min-width: 0; padding: 14px; border-radius: 10px; }
+.ui-metric-label { font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.ui-metric-value { font-size: 20px; line-height: 28px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ui-metric-icon { width: 32px; height: 32px; flex: none; border-radius: 8px; }
+.ui-metric-icon > svg { width: 16px; height: 16px; }
+.ui-dashboard-metrics .ui-metric-value { font-size: 24px; line-height: 32px; }
+.ui-filter-bar { padding: 12px; gap: 8px; border-radius: 10px; }
+.ui-filter-row { display: flex; flex-flow: row nowrap; align-items: center; justify-content: space-between; min-width: 0; max-width: 100%; overflow-x: auto; }
+.ui-filter-form { display: flex; flex: 1 0 auto; flex-wrap: nowrap; align-items: center; gap: 8px; min-width: max-content; }
+.ui-filter-search { position: relative; flex: 1 1 18rem; width: 18rem; min-width: 8rem; max-width: 18rem; }
+.ui-filter-form > :is(select, button, a) { flex-shrink: 0; white-space: nowrap; }
+.ui-filter-row > :not(form) { flex: 0 0 auto; flex-wrap: nowrap; width: auto; white-space: nowrap; }
+.ui-filter-row > :not(form) > * { flex-shrink: 0; white-space: nowrap; }
+.ui-filter-bar :is(input:not([type="hidden"]), select, button[type="submit"]) { min-height: 32px; font-size: 12px; line-height: 18px; }
+.ui-table { font-size: var(--ui-text-body); line-height: 18px; }
+.ui-table th { padding-block: 10px; font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
+.ui-table td { padding-block: 10px; vertical-align: middle; }
+.ui-table-primary { font-size: 12px; line-height: 18px; font-weight: 600; }
+.ui-table-secondary { font-size: 11px; line-height: 16px; font-weight: 400; overflow-wrap: anywhere; }
+.ui-badge { display: inline-flex; align-items: center; white-space: nowrap; font-size: 10px; line-height: 15px; font-weight: 600; letter-spacing: 0; }
+.ui-table :is(td, th, span, div, a).font-mono-num { white-space: nowrap; }
+.ui-table .text-slate-400, .ui-table-secondary.text-slate-400, .ui-field-label.text-slate-400 { color: #64748b; }
+.ui-panel-header { padding: 14px 16px; }
+.ui-total-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.ui-total-label { font-size: 12px; line-height: 18px; font-weight: 600; }
+.ui-total-value { flex: none; white-space: nowrap; font-size: 20px; line-height: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ui-stage-summary { padding: 10px 12px; }
+.ui-stage-summary-label { font-size: 11px; line-height: 16px; font-weight: 500; }
+.ui-stage-summary-value { font-size: 18px; line-height: 25px; font-weight: 700; }
+.ui-secondary-stack { display: grid; align-content: start; gap: 16px; }
+.ui-secondary-stack > * { margin-block: 0; }
+.app-main :is(a, button, summary, select, input, textarea):focus-visible { outline: 2px solid #64748b; outline-offset: 3px; }
+.app-main :is(a, button, summary) { touch-action: manipulation; }
+.app-main ::selection { background: #dbeafe; color: #0f172a; }
+
+/* Keep navigation quiet and leave more room for the working area. */
+.ui-brand-logo { width: 160px; }
+.app-sidebar nav > a { min-height: 40px; padding-block: 9px; font-size: 13px; line-height: 20px; font-weight: 600; }
+.app-sidebar nav > a > svg { flex: none; }
+.ui-page-title { font-size: 18px; line-height: 26px; font-weight: 700; }
+.ui-page-actions { display: flex; flex: 0 1 auto; align-items: center; gap: 8px; min-width: 0; max-width: 100%; overflow-x: auto; padding: 4px; margin: -4px; }
+.ui-page-actions > div { display: flex; flex: 0 0 auto; flex-wrap: nowrap; align-items: center; gap: 8px; }
+.ui-page-actions :is(a, button) { flex-shrink: 0; min-height: 32px; align-items: center; font-size: 12px; line-height: 18px; font-weight: 600; white-space: nowrap; }
+.ui-register-header { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; min-width: 0; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
+.ui-register-heading { display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-width: 0; }
+.ui-register-heading h2 { color: #243145; overflow-wrap: anywhere; }
+.ui-register-count { color: #64748b; font-size: 11px; line-height: 17px; white-space: nowrap; }
+.ui-register-actions { flex: 0 0 auto; overflow: visible; }
+.ui-register-actions :is(a, button) > svg { flex-shrink: 0; }
+.ui-record-actions { min-width: 0; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
+.ui-record-actions > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; width: 100%; }
+.ui-record-actions > div > a:first-child { margin-right: auto; }
+.ui-record-actions :is(a, button) { display: inline-flex; align-items: center; min-height: 32px; max-width: 100%; font-size: 12px; line-height: 18px; white-space: normal; }
+.ui-record-actions :is(a, button) > svg { flex-shrink: 0; }
+.ui-record-actions form { min-width: 0; max-width: 100%; }
+.ui-record-actions > div > span { min-width: 0; }
+.ui-form-back { margin-bottom: 12px; }
+.ui-form-back a { display: inline-flex; align-items: center; min-height: 32px; color: #526176; font-size: 12px; line-height: 18px; font-weight: 500; }
+.ui-form-back a:hover { color: #0a192f; }
+/* Catalog labels reserve equal space so both selects and the add action share a baseline. */
+#documentForm .document-catalog-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px; margin-bottom: 6px; }
+#documentForm .document-catalog-label > span:first-child { flex-shrink: 0; }
+#documentForm .document-catalog-controls :is(.catalog-select, #addCatalogItemButton) { width: 100%; height: 40px; min-height: 40px; }
+@media (max-width: 1023px) {
+    #documentForm .document-catalog-controls :is(.catalog-select, #addCatalogItemButton) { height: 44px; min-height: 44px; }
+}
+@media (max-width: 639px) {
+    .ui-section { padding: 16px; }
+    .ui-help { font-size: 12px; line-height: 18px; }
+    .ui-metric-value { font-size: 18px; line-height: 26px; }
+    .ui-dashboard-metrics .ui-metric-value { font-size: 22px; line-height: 30px; }
+    .ui-metric-grid { gap: 10px; }
+    .ui-brand-logo { width: 110px; }
+    .ui-page-title { font-size: 16px; line-height: 23px; }
+    .ui-page-actions { max-width: calc(100% + 8px); }
+    .ui-register-header { gap: 10px; padding: 12px; }
+    .ui-register-actions :is(a, button) { min-height: 36px; }
+    .ui-record-actions :is(a, button), .ui-form-back a { min-height: 36px; }
+    .ui-record-actions > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+    .ui-record-actions > div > a:first-child { grid-column: 1 / -1; margin-right: 0; justify-content: flex-start; text-align: left; }
+    .ui-record-actions > div > :is(form, span) { grid-column: 1 / -1; }
+    .ui-record-actions :is(a, button) { justify-content: center; min-height: 40px; text-align: center; }
+    .ui-record-actions form > button { width: 100%; }
+}
+@media print {
+    .ui-register-header, .ui-record-actions, .ui-form-back { display: none !important; }
+    .ui-page > :not([hidden], .hidden, input[type="hidden"], script, style, template) ~ :not([hidden], .hidden, input[type="hidden"], script, style, template) { margin-block-start: 16px; }
+    .ui-help, .ui-table-secondary { font-size: 11px; }
+}

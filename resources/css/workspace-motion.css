@@ -1,0 +1,73 @@
+/* New motion belongs to Clean style; Previous style retains its original behavior. */
+html[data-appearance="clean"] .dashboard-workload-track > span {
+    transform-origin: left center;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    html[data-appearance="clean"] :is(
+        .app-main button,
+        .ui-page-actions > a,
+        .ui-record-actions a,
+        .app-header summary,
+        .dashboard-action,
+        .production-view-option,
+        .app-dialog button
+    ) {
+        transition-property: color, background-color, border-color, translate;
+        transition-duration: 150ms;
+        transition-timing-function: ease;
+    }
+
+    html[data-appearance="clean"] :is(
+        .app-main button,
+        .ui-page-actions > a,
+        .ui-record-actions a,
+        .app-header summary,
+        .dashboard-action,
+        .production-view-option,
+        .app-dialog button
+    ):not(:disabled):not([aria-disabled="true"]):hover {
+        translate: 0 -1px;
+    }
+
+    html[data-appearance="clean"] :is(
+        .app-main button,
+        .ui-page-actions > a,
+        .ui-record-actions a,
+        .app-header summary,
+        .dashboard-action,
+        .production-view-option,
+        .app-dialog button
+    ):not(:disabled):not([aria-disabled="true"]):active {
+        translate: 0 0;
+        transition-duration: 80ms;
+    }
+}
+
+/* Older browsers still receive the panel entrance; no content starts hidden in CSS. */
+@media (prefers-reduced-motion: no-preference) {
+    html[data-appearance="clean"][data-workspace-motion="css"] details[open] > .app-header-menu,
+    html[data-appearance="clean"][data-workspace-motion="css"] .app-dialog[open],
+    html[data-appearance="clean"][data-workspace-motion="css"] #customItemModal:not(.hidden) > .ui-section {
+        animation: workspace-panel-enter 180ms cubic-bezier(.22, 1, .36, 1);
+    }
+}
+
+@keyframes workspace-panel-enter {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-appearance="clean"] :is(.app-sidebar, .app-main *, .app-header *, .app-dialog, .app-dialog *, .app-notification) {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media print {
+    html[data-appearance="clean"] :is(.app-main *, .app-header *, .app-dialog, .app-notification) {
+        animation: none !important;
+        transition: none !important;
+    }
+}

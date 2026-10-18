@@ -1,243 +1,182 @@
 @extends('layouts.app')
 
 @section('title', 'Generate Delivery Note')
-@section('page_title', 'Dispatch & Delivery Note Generator')
+@section('page_title', 'Create Delivery Note')
 
 @section('header_action')
-    <a href="{{ route('delivery.index') }}" class="text-xs text-slate-500 hover:text-slate-800 font-semibold px-2 py-1">
-        &larr; Back to Delivery Notes
-    </a>
+    <a href="{{ route('delivery.index') }}" class="text-xs text-slate-500 hover:text-slate-800 font-semibold px-2 py-1">&larr; Back to Delivery Notes</a>
 @endsection
 
 @section('content')
-<div class="space-y-6 pt-2">
-
-    <form action="{{ route('delivery.store') }}" method="POST" class="space-y-6">
+<div class="ui-page pt-2 min-w-0">
+    <form action="{{ route('delivery.store') }}" method="POST" class="ui-page min-w-0">
         @csrf
-
-        <!-- Invoice Selection & Header Info -->
-        <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-5">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-indigo-500"></span>
-                    <h2 class="font-bold text-sm text-slate-900">Dispatch Manifest Header</h2>
-                </div>
-                <div class="text-xs text-slate-500">
-                    Auto-populates items & size matrix from confirmed sales invoices.
-                </div>
+        <div class="ui-section bg-white rounded-xl border border-slate-200/90 shadow-xs">
+            <div class="ui-form-back no-print">@yield('header_action')</div>
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
+                <h2 class="ui-section-heading text-slate-900">Dispatch details</h2>
+                <p class="ui-help text-slate-500 mt-1">Choose an invoice to load its remaining quantities.</p>
             </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-                <!-- Invoice Selector -->
-                <div class="lg:col-span-2">
-                    <label class="block font-bold text-slate-700 mb-1">Select Sales Invoice to Dispatch *</label>
-                    <select name="invoice_id" id="invoiceSelect" required onchange="handleInvoiceChange(this)" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none bg-white">
+                <div class="lg:col-span-2 min-w-0">
+                    <label for="invoiceSelect" class="ui-field-label block text-slate-700 mb-1">Sales Invoice *</label>
+                    <select name="invoice_id" id="invoiceSelect" required onchange="handleInvoiceChange()" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
                         <option value="">-- Choose Sales Invoice --</option>
-                        @foreach($invoices as $inv)
-                            <option value="{{ $inv->id }}" {{ (isset($selectedInvoice) && $selectedInvoice->id == $inv->id) ? 'selected' : '' }} data-customer="{{ $inv->customer->name ?? '' }}" data-phone="{{ $inv->customer->phone ?? '' }}">
-                                {{ $inv->invoice_number }} — {{ $inv->customer->name ?? 'Walk-in' }} ({{ $inv->total_qty }} pcs • QAR {{ number_format($inv->grand_total, 2) }})
-                            </option>
+                        @foreach($invoices as $invoice)
+                            <option value="{{ $invoice->id }}" @selected(old('invoice_id', $selectedInvoice?->id) == $invoice->id)>{{ $invoice->invoice_number }} — {{ $invoice->customer?->name ?? 'Customer' }}</option>
+                        @endforeach
+                    </select>
+                    @error('invoice_id')<p class="text-rose-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label for="deliveryNumber" class="ui-field-label block text-slate-700 mb-1">Delivery Note Number *</label>
+                    <input id="deliveryNumber" type="text" name="delivery_number" value="{{ old('delivery_number', $suggestedNumber) }}" maxlength="50" required class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono-num bg-slate-50">
+                    @error('delivery_number')<p class="text-rose-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label for="dispatchDate" class="ui-field-label block text-slate-700 mb-1">Dispatch Date *</label>
+                    <input id="dispatchDate" type="date" name="dispatch_date" value="{{ old('dispatch_date', date('Y-m-d')) }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="recipientName" class="ui-field-label block text-slate-700 mb-1">Recipient Name *</label>
+                    <input type="text" name="recipient_name" id="recipientName" value="{{ old('recipient_name', $selectedInvoice?->customer?->name) }}" maxlength="255" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="recipientPhone" class="ui-field-label block text-slate-700 mb-1">Recipient Phone</label>
+                    <input type="text" name="recipient_phone" id="recipientPhone" value="{{ old('recipient_phone', $selectedInvoice?->customer?->phone) }}" maxlength="50" placeholder="+974" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="driverName" class="ui-field-label block text-slate-700 mb-1">Driver / Courier / Vehicle</label>
+                    <input id="driverName" type="text" name="driver_name" value="{{ old('driver_name') }}" maxlength="255" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="deliveryStatus" class="ui-field-label block text-slate-700 mb-1">Dispatch Status *</label>
+                    <select id="deliveryStatus" name="status" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                        @foreach(['Pending' => 'Pending Dispatch', 'Dispatched' => 'Out for Delivery', 'Delivered' => 'Delivered'] as $value => $label)
+                            <option value="{{ $value }}" @selected(old('status', 'Dispatched') === $value)>{{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
-
-                <!-- Delivery Number -->
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Delivery Note # *</label>
-                    <input type="text" name="delivery_number" value="{{ old('delivery_number', $suggestedNumber) }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none font-mono-num font-bold text-[#0a192f] bg-slate-50">
-                </div>
-
-                <!-- Dispatch Date -->
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Dispatch Date *</label>
-                    <input type="date" name="dispatch_date" value="{{ old('dispatch_date', date('Y-m-d')) }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
-                </div>
-
-                <!-- Recipient Name -->
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Recipient Contact Person *</label>
-                    <input type="text" name="recipient_name" id="recipientName" value="{{ $selectedInvoice->customer->name ?? '' }}" required placeholder="e.g. Mr. James Alistair" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
-                </div>
-
-                <!-- Recipient Phone -->
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Recipient Qatar Phone (+974)</label>
-                    <input type="text" name="recipient_phone" id="recipientPhone" value="{{ $selectedInvoice->customer->phone ?? '' }}" placeholder="+974 5511 2233" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
-                </div>
-
-                <!-- Driver / Courier -->
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Delivery Driver / Vehicle</label>
-                    <input type="text" name="driver_name" value="Rashid Khan (Van 04)" placeholder="Driver name or courier company" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none">
-                </div>
-
-                <!-- Initial Status -->
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Initial Dispatch Status *</label>
-                    <select name="status" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none bg-white">
-                        <option value="Dispatched" selected>Dispatched (Out for Delivery)</option>
-                        <option value="Pending">Pending Dispatch (Packing Stage)</option>
-                        <option value="Delivered">Delivered (Handover Complete)</option>
-                    </select>
-                </div>
             </div>
         </div>
 
-        <!-- Itemized Dispatch Size Breakdown Matrix -->
-        <div class="bg-white rounded-xl border border-slate-200/90 shadow-xs p-5 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <div>
-                    <h3 class="font-bold text-sm text-slate-900">Physical Items & Size Breakdown to Hand Over</h3>
-                    <p class="text-xs text-slate-500">Quantities will be printed on the official handover voucher for receiver signature.</p>
-                </div>
-                <button type="button" onclick="addDeliveryRow()" class="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-800">
-                    + Add Line Item
-                </button>
+        <div class="ui-section bg-white rounded-xl border border-slate-200/90 shadow-xs space-y-4 min-w-0">
+            <div class="border-b border-slate-100 pb-3">
+                <h3 class="ui-section-heading text-slate-900">Items to deliver</h3>
+                <p class="ui-help text-slate-500 mt-1">Enter quantities for this dispatch; use zero for later deliveries. Pending and dispatched notes already reserve their quantities.</p>
             </div>
-
-            <div class="overflow-x-auto">
-                <table id="deliveryItemsTable" class="w-full text-left text-xs border border-slate-200 rounded-lg">
-                    <thead class="bg-slate-100/90 text-slate-700 font-bold border-b border-slate-200">
+            <p id="deliveryReviewWarning" role="alert" class="hidden rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">Historical delivery items do not match this invoice unambiguously. Review its existing delivery notes before creating another dispatch.</p>
+            <p id="deliveryEmpty" class="ui-help text-slate-500 py-4">Select a sales invoice to load its items.</p>
+            <div data-paginated-table-region>
+                <div class="overflow-x-auto max-w-full">
+                <table id="deliveryItemsTable" data-paginate-table data-pagination-label="delivery items" data-pagination-row-selector=".deliv-row" class="ui-table w-full min-w-[850px] text-left border border-slate-200">
+                    <thead class="bg-slate-100 text-slate-700 border-b border-slate-200">
                         <tr>
-                            <th class="px-3 py-2.5 w-72">Uniform Item Description</th>
-                            <th class="px-1 py-2.5 text-center">XS</th>
-                            <th class="px-1 py-2.5 text-center">S</th>
-                            <th class="px-1 py-2.5 text-center">M</th>
-                            <th class="px-1 py-2.5 text-center">L</th>
-                            <th class="px-1 py-2.5 text-center">XL</th>
-                            <th class="px-1 py-2.5 text-center">2XL</th>
-                            <th class="px-1 py-2.5 text-center">3XL</th>
-                            <th class="px-1 py-2.5 text-center">Custom</th>
-                            <th class="px-3 py-2.5 text-center bg-slate-200/60 font-mono-num font-bold">Total Dispatched</th>
-                            <th class="px-2 py-2.5 text-center w-8"></th>
+                            <th class="px-3 py-2.5 min-w-52">Invoice Item</th>
+                            @foreach(['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', 'Custom'] as $size)
+                                <th class="px-1 py-2.5 text-center">{{ $size }}</th>
+                            @endforeach
+                            <th class="px-3 py-2.5 text-center min-w-28">Dispatch Qty</th>
                         </tr>
                     </thead>
-                    <tbody id="deliveryTbody" class="divide-y divide-slate-200 bg-white">
-                        @if(isset($selectedInvoice) && $selectedInvoice->items->count() > 0)
-                            @foreach($selectedInvoice->items as $idx => $it)
-                                <tr class="deliv-row hover:bg-slate-50">
-                                    <td class="p-2">
-                                        <input type="text" name="items[{{ $idx }}][product_name]" value="{{ $it->product_name }}" required class="w-full text-xs p-1.5 border border-slate-300 rounded font-semibold focus:outline-none">
-                                    </td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_xs]" value="{{ $it->size_xs }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_s]" value="{{ $it->size_s }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_m]" value="{{ $it->size_m }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_l]" value="{{ $it->size_l }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_xl]" value="{{ $it->size_xl }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_2xl]" value="{{ $it->size_2xl }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_3xl]" value="{{ $it->size_3xl }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-1 text-center"><input type="number" min="0" name="items[{{ $idx }}][size_custom]" value="{{ $it->size_custom }}" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                    <td class="p-2 text-center bg-slate-50 font-bold font-mono-num text-sm text-[#0a192f]">
-                                        <span class="row-deliv-qty">{{ $it->total_qty }}</span>
-                                        <input type="hidden" name="items[{{ $idx }}][total_qty]" value="{{ $it->total_qty }}" class="deliv-qty-hidden">
-                                    </td>
-                                    <td class="p-2 text-center">
-                                        <button type="button" onclick="this.closest('tr').remove(); recalcDeliv();" class="text-slate-400 hover:text-rose-600 font-bold">&times;</button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr class="deliv-row hover:bg-slate-50">
-                                <td class="p-2">
-                                    <input type="text" name="items[0][product_name]" value="Custom Pique Polo Shirts" required class="w-full text-xs p-1.5 border border-slate-300 rounded font-semibold focus:outline-none">
-                                </td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_xs]" value="5" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_s]" value="10" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_m]" value="15" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_l]" value="10" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_xl]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_2xl]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_3xl]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-1 text-center"><input type="number" min="0" name="items[0][size_custom]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-                                <td class="p-2 text-center bg-slate-50 font-bold font-mono-num text-sm text-[#0a192f]">
-                                    <span class="row-deliv-qty">40</span>
-                                    <input type="hidden" name="items[0][total_qty]" value="40" class="deliv-qty-hidden">
-                                </td>
-                                <td class="p-2 text-center">
-                                    <button type="button" onclick="this.closest('tr').remove(); recalcDeliv();" class="text-slate-400 hover:text-rose-600 font-bold">&times;</button>
-                                </td>
-                            </tr>
-                        @endif
-                    </tbody>
+                    <tbody id="deliveryTbody" class="divide-y divide-slate-200"></tbody>
                 </table>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Driver & Courier Delivery Handover Instructions</label>
-                <textarea name="driver_notes" rows="3" placeholder="e.g. Call client 30 mins before arrival. Deliver to gate 2 receiving bay. Obtain stamp and signature on physical delivery sheet." class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0a192f] focus:outline-none"></textarea>
-            </div>
-
-            <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
-                <div class="text-xs text-slate-600 font-medium">
-                    Total Handover Units: <strong id="totalDelivPieces" class="text-slate-900 font-mono-num text-sm">40 pcs</strong>
                 </div>
-                <button type="submit" class="px-5 py-2.5 rounded-lg text-xs font-extrabold text-white bg-[#0a192f] hover:bg-[#132a4a] shadow-sm flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    <span>Generate Official Delivery Note</span>
-                </button>
+            </div>
+            @error('items')<p class="text-xs text-rose-600">{{ $message }}</p>@enderror
+            <div>
+                <label for="driverNotes" class="ui-field-label block text-slate-700 mb-1">Handover instructions</label>
+                <textarea id="driverNotes" name="driver_notes" rows="3" placeholder="Delivery location, contact instructions or handover requirements" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg">{{ old('driver_notes') }}</textarea>
+            </div>
+            <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                <div class="text-xs text-slate-600">Total Handover Quantity: <strong id="totalDelivPieces" class="text-slate-900 font-mono-num text-sm">0</strong></div>
+                <button id="generateDeliveryButton" type="submit" disabled class="px-5 py-2.5 rounded-lg text-xs font-bold text-white bg-[#0a192f] hover:bg-[#132a4a] disabled:opacity-50 disabled:cursor-not-allowed">Generate Delivery Note</button>
             </div>
         </div>
-
     </form>
-
 </div>
+
+<template id="deliveryRowTemplate">
+    <tr class="deliv-row">
+        <td class="p-2">
+            <input type="hidden" data-field="invoice_item_id">
+            <span class="delivery-product font-semibold text-slate-900"></span>
+            <p class="delivery-remaining text-[11px] text-slate-500 mt-1"></p>
+        </td>
+        @foreach(\App\Models\DeliveryItem::SIZE_FIELDS as $field)
+            <td class="p-1 text-center"><input type="number" data-field="{{ $field }}" min="0" step="1" oninput="recalcDeliv()" class="size-matrix-input deliv-size disabled:bg-slate-100 disabled:text-slate-300"></td>
+        @endforeach
+        <td class="p-2 text-center bg-slate-50"><input type="number" data-field="total_qty" min="0" step="1" required oninput="recalcDeliv()" class="w-20 p-1.5 text-center border border-slate-300 rounded font-mono-num font-bold deliv-qty"><p class="delivery-unit text-[10px] text-slate-500 mt-1"></p></td>
+    </tr>
+</template>
 
 @push('scripts')
 <script>
-    let dIndex = 10;
+    const deliveryInvoices = {{ \Illuminate\Support\Js::from($invoiceOptions) }};
+    const previousDeliveryItems = {{ \Illuminate\Support\Js::from(old('items')) }};
 
-    function handleInvoiceChange(select) {
-        const opt = select.options[select.selectedIndex];
-        if (opt && opt.dataset.customer) {
-            document.getElementById('recipientName').value = opt.dataset.customer;
-            document.getElementById('recipientPhone').value = opt.dataset.phone || '';
-        }
-    }
-
-    function addDeliveryRow() {
+    function renderDeliveryItems(previousItems = null) {
+        const selected = deliveryInvoices[document.getElementById('invoiceSelect').value];
         const tbody = document.getElementById('deliveryTbody');
-        const tr = document.createElement('tr');
-        tr.className = 'deliv-row hover:bg-slate-50';
-        tr.innerHTML = `
-            <td class="p-2">
-                <input type="text" name="items[${dIndex}][product_name]" value="Custom Uniform Item" required class="w-full text-xs p-1.5 border border-slate-300 rounded font-semibold focus:outline-none">
-            </td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_xs]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_s]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_m]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_l]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_xl]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_2xl]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_3xl]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-1 text-center"><input type="number" min="0" name="items[${dIndex}][size_custom]" value="0" oninput="recalcDeliv()" class="size-matrix-input deliv-size"></td>
-            <td class="p-2 text-center bg-slate-50 font-bold font-mono-num text-sm text-[#0a192f]">
-                <span class="row-deliv-qty">0</span>
-                <input type="hidden" name="items[${dIndex}][total_qty]" value="0" class="deliv-qty-hidden">
-            </td>
-            <td class="p-2 text-center">
-                <button type="button" onclick="this.closest('tr').remove(); recalcDeliv();" class="text-slate-400 hover:text-rose-600 font-bold">&times;</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-        dIndex++;
+        tbody.replaceChildren();
+        const availableItems = selected ? Object.values(selected.items).filter(item => item.total_qty > 0) : [];
+        document.getElementById('deliveryReviewWarning').classList.toggle('hidden', !selected?.needs_review);
+        const empty = document.getElementById('deliveryEmpty');
+        empty.classList.toggle('hidden', availableItems.length > 0);
+        empty.textContent = selected ? 'No remaining invoice quantities are available to dispatch.' : 'Select a sales invoice to load its items.';
+        document.getElementById('generateDeliveryButton').disabled = !availableItems.length || selected?.needs_review;
+        const previous = previousItems ? Object.values(previousItems) : [];
+
+        availableItems.forEach((item, index) => {
+            const row = document.getElementById('deliveryRowTemplate').content.firstElementChild.cloneNode(true);
+            row.dataset.hasSizes = item.has_sizes ? '1' : '0';
+            row.querySelector('.delivery-product').textContent = item.product_name;
+            row.querySelector('.delivery-remaining').textContent = `Remaining: ${item.total_qty} ${item.pricing_unit}`;
+            row.querySelector('.delivery-unit').textContent = item.pricing_unit;
+            const restored = previous.find(oldItem => Number(oldItem.invoice_item_id) === Number(item.invoice_item_id));
+            row.querySelectorAll('[data-field]').forEach(input => {
+                const field = input.dataset.field;
+                input.name = `items[${index}][${field}]`;
+                input.value = field === 'invoice_item_id' ? item.invoice_item_id : (restored?.[field] ?? item[field] ?? 0);
+                input.setAttribute('aria-label', `${item.product_name} ${field.replace('size_', '').replace('_', ' ')}`);
+                if (field !== 'invoice_item_id') input.max = item[field] ?? 0;
+                if (input.classList.contains('deliv-size')) input.disabled = !item.has_sizes;
+                if (field === 'total_qty') input.readOnly = item.has_sizes;
+            });
+            tbody.appendChild(row);
+        });
         recalcDeliv();
     }
 
-    function recalcDeliv() {
-        let grandTotal = 0;
-        document.querySelectorAll('.deliv-row').forEach(row => {
-            let rowQty = 0;
-            row.querySelectorAll('.deliv-size').forEach(input => {
-                rowQty += parseInt(input.value) || 0;
-            });
-            row.querySelector('.row-deliv-qty').innerText = rowQty;
-            row.querySelector('.deliv-qty-hidden').value = rowQty;
-            grandTotal += rowQty;
-        });
-        document.getElementById('totalDelivPieces').innerText = grandTotal + ' pcs';
+    function handleInvoiceChange() {
+        const selected = deliveryInvoices[document.getElementById('invoiceSelect').value];
+        document.getElementById('recipientName').value = selected?.customer_name ?? '';
+        document.getElementById('recipientPhone').value = selected?.customer_phone ?? '';
+        renderDeliveryItems();
     }
 
-    document.addEventListener('DOMContentLoaded', recalcDeliv);
+    function readDeliveryQuantity(input) {
+        const value = Number(input.value);
+        const isInteger = Number.isSafeInteger(value);
+        input.setCustomValidity(isInteger ? '' : 'Enter a whole-number quantity.');
+        // Post canonical integer text for valid exponent, decimal and leading-zero entry.
+        if (isInteger && input.value !== '') input.value = String(value);
+        return isInteger ? Math.max(0, value) : 0;
+    }
+
+    function recalcDeliv() {
+        let total = 0;
+        document.querySelectorAll('.deliv-row').forEach(row => {
+            const quantity = row.querySelector('.deliv-qty');
+            if (row.dataset.hasSizes === '1') {
+                quantity.value = Array.from(row.querySelectorAll('.deliv-size')).reduce((sum, input) => sum + readDeliveryQuantity(input), 0);
+            }
+            total += readDeliveryQuantity(quantity);
+        });
+        document.getElementById('totalDelivPieces').textContent = total;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => renderDeliveryItems(previousDeliveryItems));
 </script>
 @endpush
 @endsection

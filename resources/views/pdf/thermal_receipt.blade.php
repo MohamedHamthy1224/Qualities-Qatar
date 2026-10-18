@@ -1,146 +1,72 @@
+@php
+    $company = $company ?? config('company');
+    $document = $invoice;
+    $documentType = 'invoice';
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Thermal Slip — {{ $invoice->invoice_number }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoice {{ $invoice->invoice_number }} - {{ $company['name'] }}</title>
     <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            width: 80mm;
-            margin: 0 auto;
-            padding: 5mm;
-            background: #fff;
-            color: #000;
-            font-size: 11px;
-            line-height: 1.25;
-        }
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .bold { font-weight: bold; }
-        .divider { border-bottom: 1px dashed #000; margin: 6px 0; }
-        .double-divider { border-bottom: 2px double #000; margin: 8px 0; }
-        table { width: 100%; border-collapse: collapse; font-size: 10px; }
-        th, td { padding: 3px 0; }
-        .no-print {
-            padding: 8px;
-            background: #0a192f;
-            color: #fff;
-            text-align: center;
-            font-family: sans-serif;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        .btn-print {
-            background: #d4af37;
-            color: #000;
-            font-weight: bold;
-            padding: 4px 10px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        @media print {
-            .no-print { display: none; }
-            body { padding: 0; width: 100%; }
-            @page { margin: 0; size: 80mm auto; }
-        }
+        @page { size: 80mm auto; margin: 3mm; }
+        * { box-sizing: border-box; }
+        body { font: 11px/1.4 'Courier New', monospace; color: #111; width: 74mm; max-width: 100%; margin: 0 auto; padding: 3mm 0; overflow-wrap: anywhere; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        td, th { padding: 4px 0; vertical-align: top; }
+        .center { text-align: center; } .right { text-align: right; } .strong, .item-name { font-weight: bold; }
+        .logo { display: block; width: 140px; height: auto; margin: 0 auto 8px; }
+        .divider { border-top: 1px dashed #333; margin: 9px 0; }
+        .item-detail, .category { font-size: 10px; margin-top: 2px; }
+        .item { border-bottom: 1px dotted #777; padding: 8px 0; break-inside: avoid; }
+        .totals td:last-child { width: 46%; }
+        .totals .grand, .totals .balance { font-weight: bold; border-top: 1px solid #333; }
+        .notes { white-space: pre-line; margin-top: 10px; }
+        .no-print { padding: 8px; background: #10243e; text-align: center; margin-bottom: 12px; }
+        button { cursor: pointer; padding: 6px 9px; border: 0; background: #e6c260; color: #10243e; font-weight: bold; }
+        @media print { .no-print { display: none; } body { padding: 0; } }
     </style>
 </head>
 <body>
-
-    <div class="no-print">
-        <button onclick="window.print()" class="btn-print">Print 80mm Thermal Slip</button>
-        <button onclick="window.close()" style="margin-left: 5px; background: #333; color: #fff; border: none; padding: 4px 8px; cursor: pointer;">Close</button>
-    </div>
-
-    <div class="text-center">
-        <div class="bold" style="font-size: 14px;">QUALITIES UNIFORMS & GIFTS</div>
-        <div>Salwa Road, Zone 56, Doha - Qatar</div>
-        <div>Tel: +974 4455 1234 | C.R. 128492</div>
-        <div class="double-divider"></div>
-        <div class="bold">COUNTER BILLING RECEIPT</div>
-        <div>INV: {{ $invoice->invoice_number }}</div>
-        <div>{{ $invoice->invoice_date->format('d/m/Y') }} {{ now()->format('H:i') }}</div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div>
-        <div><strong>Customer:</strong> {{ $invoice->customer->name }}</div>
-        @if($invoice->customer->phone)
-            <div><strong>Tel:</strong> {{ $invoice->customer->phone }}</div>
+    <div class="no-print"><button type="button" onclick="window.print()">Print 80mm invoice</button> <button type="button" onclick="window.close()">Close</button></div>
+    <div class="center">
+        @if(!empty($company['logo_data_uri']))
+            <img class="logo" src="{{ $company['logo_data_uri'] }}" alt="{{ $company['name'] }}" width="140" height="82">
+        @else
+            <strong>{{ $company['name'] }}</strong>
         @endif
+        @if($company['address'])<div>{{ $company['address'] }}</div>@endif
+        @if($company['phone'])<div>Tel: {{ $company['phone'] }}</div>@endif
+        @if($company['email'])<div>{{ $company['email'] }}</div>@endif
+        @if($company['registration_number'])<div>C.R. {{ $company['registration_number'] }}</div>@endif
+        <div class="divider"></div>
+        <strong>SALES INVOICE</strong><div>{{ $invoice->invoice_number }}</div>
+        <div>{{ $invoice->invoice_date->format('d M Y') }}</div>
+        <div>{{ $invoice->status }}</div>
     </div>
-
     <div class="divider"></div>
-
-    <table>
-        <thead>
-            <tr style="border-bottom: 1px solid #000;">
-                <th style="text-align: left;">Item / Sizes</th>
-                <th style="text-align: center;">Qty</th>
-                <th style="text-align: right;">Price</th>
-                <th style="text-align: right;">Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($invoice->items as $it)
-                <tr>
-                    <td colspan="4" class="bold">{{ $it->product_name }}</td>
-                </tr>
-                <tr style="font-size: 9px; color: #333;">
-                    <td colspan="4">
-                        [XS:{{ $it->size_xs }} S:{{ $it->size_s }} M:{{ $it->size_m }} L:{{ $it->size_l }} XL:{{ $it->size_xl }} 2X:{{ $it->size_2xl }} 3X:{{ $it->size_3xl }}]
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td class="text-center">{{ $it->total_qty }}</td>
-                    <td class="text-right">{{ number_format($it->unit_price, 2) }}</td>
-                    <td class="text-right bold">{{ number_format($it->line_total, 2) }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
+    <div><strong>Customer:</strong> {{ $invoice->customer->name }}</div>
+    @if($invoice->customer->phone)<div>Tel: {{ $invoice->customer->phone }}</div>@endif
+    @if($invoice->due_date)<div>Due: {{ $invoice->due_date->format('d M Y') }}</div>@endif
+    @foreach($invoice->items as $item)
+        <div class="item">
+            @include('pdf.partials.item_details')
+            <table><tr><td style="width: 60%;">{{ $item->total_qty }} {{ $item->pricing_unit ?: 'unit' }} x {{ number_format($item->unit_price, 2) }}</td><td class="right strong">{{ number_format($item->line_total, 2) }}</td></tr></table>
+        </div>
+    @endforeach
     <div class="divider"></div>
-
-    <table>
-        <tr>
-            <td>Total Items/Qty:</td>
-            <td class="text-right bold">{{ $invoice->total_qty }} pcs</td>
-        </tr>
-        <tr>
-            <td>Subtotal:</td>
-            <td class="text-right">QAR {{ number_format($invoice->subtotal, 2) }}</td>
-        </tr>
-        @if($invoice->discount > 0)
-            <tr>
-                <td>Discount:</td>
-                <td class="text-right">- QAR {{ number_format($invoice->discount, 2) }}</td>
-            </tr>
-        @endif
-        <tr class="bold" style="font-size: 13px;">
-            <td>GRAND TOTAL:</td>
-            <td class="text-right">QAR {{ number_format($invoice->grand_total, 2) }}</td>
-        </tr>
-        <tr>
-            <td>Amount Paid:</td>
-            <td class="text-right bold">QAR {{ number_format($invoice->paid_amount, 2) }}</td>
-        </tr>
-        <tr class="bold" style="font-size: 13px;">
-            <td>BALANCE DUE:</td>
-            <td class="text-right">QAR {{ number_format($invoice->balance_due, 2) }}</td>
-        </tr>
-    </table>
-
-    <div class="double-divider"></div>
-
-    <div class="text-center" style="font-size: 9px;">
-        *** THANK YOU FOR YOUR BUSINESS ***<br>
-        Goods once altered or tailored cannot be returned.<br>
-        Uniforms & Gifts Solutions • State of Qatar
-    </div>
-
+    @include('pdf.partials.totals')
+    @if($invoice->receipts->isNotEmpty())
+        <div class="divider"></div>
+        <strong>Payments allocated to this invoice</strong>
+        @foreach($invoice->receipts as $payment)
+            <table><tr><td style="width: 63%;">{{ $payment->receipt_number }}<br>{{ $payment->payment_date->format('d M Y') }} / {{ $payment->payment_method }}</td><td class="right">QAR {{ number_format($payment->amount_received, 2) }}</td></tr></table>
+        @endforeach
+    @endif
+    @if($invoice->notes)<div class="notes"><strong>Notes</strong><br>{{ $invoice->notes }}</div>@endif
+    @if($company['invoice_terms'])<div class="notes"><strong>Terms</strong><br>{{ $company['invoice_terms'] }}</div>@endif
+    <div class="divider"></div>
+    <div class="center">Thank you for your business.<br>{{ $company['website'] }}<br>All amounts in QAR.</div>
 </body>
 </html>

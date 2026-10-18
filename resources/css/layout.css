@@ -1,0 +1,15 @@
+/* The workspace owns page scrolling; wide boards and tables scroll locally. */
+html.app-root { width: 100%; height: 100%; overflow: hidden; }
+body.app-shell { width: 100%; height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
+.app-sidebar { min-height: 0; max-height: 100%; }
+.app-workspace { flex: 1; min-width: 0; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; }
+.app-main { flex: 1 0 auto; min-width: 0; max-width: 100%; }
+@media (max-width: 767px) { .app-sidebar { max-height: 70vh; max-height: 70dvh; } }
+@media (max-height: 480px) { .app-workspace > header { position: static; } }
+@media print {
+    html.app-root, body.app-shell { width: auto; height: auto; min-height: 0; overflow: visible; }
+    body.app-shell { display: block; }
+    .app-sidebar, .app-workspace > header, .app-notifications, .app-dialog { display: none !important; }
+    .app-workspace { display: block; height: auto; max-height: none; overflow: visible; }
+    .app-main { max-width: none; }
+}

@@ -1,0 +1,362 @@
+/* Optional white workspace. The appearance switch restores the original rules. */
+@media screen {
+    :root[data-appearance="clean"] {
+        color-scheme: light;
+        --clean-ink: #232326;
+        --clean-muted: #707076;
+        --clean-border: #e8e8eb;
+        --clean-soft: #f7f7f8;
+        --clean-radius: 8px;
+        --clean-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        /* Previous navy (#0a192f) at 50% over the white workspace. */
+        --clean-sidebar-background: #858c97;
+        --clean-sidebar-ink: #0a192f;
+        --clean-sidebar-border: #0a192f26;
+        --color-slate-50: #fafafa;
+        --color-slate-100: #f5f5f6;
+        --color-slate-200: #e7e7ea;
+        --color-slate-300: #d5d5da;
+        --color-slate-400: #85858c;
+        --color-slate-500: #707078;
+        --color-slate-600: #57575f;
+        --color-slate-700: #414149;
+        --color-slate-800: #2d2d33;
+        --color-slate-900: #222226;
+        --color-slate-950: #151518;
+        --color-navy-950: #151518;
+        --color-navy-900: #232326;
+        --color-navy-850: #2a2a2e;
+        --color-navy-800: #333338;
+        --color-navy-700: #45454c;
+        --ui-section-gap: 16px;
+        background: #fff;
+    }
+
+    :root[data-appearance="clean"] body {
+        background: #fff;
+        color: var(--clean-ink);
+        font-family: var(--clean-font);
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    :root[data-appearance="clean"] .app-workspace,
+    :root[data-appearance="clean"] .app-main { background: #fff; }
+    :root[data-appearance="clean"] .app-main { padding-top: 12px; }
+    :root[data-appearance="clean"] .app-main > .ui-page { padding-top: 4px; }
+    :root[data-appearance="clean"] .app-main ::selection { background: #e7e7eb; color: #151518; }
+    :root[data-appearance="clean"] :is(.app-main, .app-header, .app-sidebar, .app-dialog) :is(a, button, summary, input, select, textarea):focus-visible {
+        outline: 2px solid #7a7a83;
+        outline-offset: 3px;
+    }
+
+    /* A quiet navigation rail keeps the working content in focus. */
+    :root[data-appearance="clean"] .app-sidebar {
+        background: var(--clean-sidebar-background);
+        color: var(--clean-sidebar-ink);
+        border-color: var(--clean-sidebar-border);
+    }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child { padding: 16px 18px 14px; border-color: var(--clean-sidebar-border); }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child .text-slate-400 { color: var(--clean-sidebar-ink); }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child [class~="text-[#d4af37]"] { border-color: #d4bd7c; background: #e8d7a5; color: var(--clean-sidebar-ink); }
+    :root[data-appearance="clean"] .ui-brand-logo { width: 112px; }
+    :root[data-appearance="clean"] .app-sidebar nav { padding: 16px 12px; }
+    :root[data-appearance="clean"] .app-sidebar nav > div {
+        padding-inline: 10px;
+        color: var(--clean-sidebar-ink);
+        font-size: 10px;
+        line-height: 16px;
+        font-weight: 500;
+        letter-spacing: .045em;
+    }
+    :root[data-appearance="clean"] .app-sidebar nav > a {
+        min-height: 36px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border-left-width: 0;
+        color: var(--clean-sidebar-ink);
+        font-size: 12px;
+        line-height: 20px;
+        font-weight: 500;
+    }
+    :root[data-appearance="clean"] .app-sidebar nav > a svg { width: 17px; height: 17px; color: var(--clean-sidebar-ink); stroke-width: 1.65; }
+    :root[data-appearance="clean"] .app-sidebar nav > a:hover { background: #ffffff26; color: var(--clean-sidebar-ink); }
+    :root[data-appearance="clean"] .app-sidebar nav > a[class~="bg-[#132a4a]"] { background: #e6e9ed; color: var(--clean-sidebar-ink); font-weight: 600; }
+    :root[data-appearance="clean"] .app-sidebar nav > a[class~="bg-[#132a4a]"] svg { color: var(--clean-sidebar-ink); }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child { padding: 14px 16px; border-color: var(--clean-sidebar-border); background: var(--clean-sidebar-background); }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child .text-white { color: var(--clean-sidebar-ink); }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child [class~="bg-[#1e293b]"] { width: 30px; height: 30px; border-color: var(--clean-sidebar-border); background: #ffffff66; color: var(--clean-sidebar-ink); font-size: 10px; }
+    :root[data-appearance="clean"] .app-sidebar > div:last-child .text-emerald-400 { color: var(--clean-sidebar-ink); font-size: 10px; }
+    :root[data-appearance="clean"] .app-sidebar > div:first-child .text-white { color: var(--clean-sidebar-ink); }
+    :root[data-appearance="clean"] .app-sidebar :is(a, button):focus-visible { outline-color: var(--clean-sidebar-ink); }
+    :root[data-appearance="clean"] #sidebarToggle { display: grid; place-items: center; width: 40px; min-height: 40px; color: var(--clean-sidebar-ink); border-radius: 6px; }
+    :root[data-appearance="clean"] #sidebarToggle:hover { background: #ffffff26; color: var(--clean-sidebar-ink); }
+
+    /* Compact header, preserving the time, notifications and user controls. */
+    :root[data-appearance="clean"] .app-header { min-height: 60px; padding-block: 9px; border-color: var(--clean-border); background: #fff; }
+    :root[data-appearance="clean"] .app-header-title { color: var(--clean-ink); font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -.2px; }
+    :root[data-appearance="clean"] .app-header-controls { gap: 8px; }
+    :root[data-appearance="clean"] :is(.app-header-clock, .app-header-icon-button, .app-header-profile) { border-color: var(--clean-border); box-shadow: none; }
+    :root[data-appearance="clean"] .app-header-clock { min-height: 36px; padding: 4px 10px; }
+    :root[data-appearance="clean"] .app-header-clock time { color: #414149; font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .app-header-clock-label { color: #707078; font-size: 9px; line-height: 12px; }
+    :root[data-appearance="clean"] .app-header-clock > svg { width: 15px; height: 15px; color: #707078; }
+    :root[data-appearance="clean"] .app-header-icon-button { width: 36px; height: 36px; color: #707078; }
+    :root[data-appearance="clean"] .app-header-icon-button > svg { width: 17px; height: 17px; }
+    :root[data-appearance="clean"] .app-header-profile { min-height: 38px; gap: 8px; padding: 3px 10px 3px 4px; }
+    :root[data-appearance="clean"] .app-header-avatar { width: 29px; height: 29px; border-color: #e8e5df; background: #f7f4ee; color: #7a674c; font-size: 10px; font-weight: 600; }
+    :root[data-appearance="clean"] .app-header-user-name { color: #414149; font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .app-header-user-role { color: #707078; font-size: 9px; line-height: 12px; }
+    :root[data-appearance="clean"] .app-header-chevron { width: 13px; height: 13px; color: #707078; }
+    :root[data-appearance="clean"] .app-header-dropdown > summary:hover,
+    :root[data-appearance="clean"] .app-header-dropdown[open] > summary { background: #fafafa; border-color: #d5d5da; }
+    :root[data-appearance="clean"] .app-header-menu { border-color: var(--clean-border); border-radius: 10px; box-shadow: 0 8px 30px rgb(25 25 30 / 9%); }
+    :root[data-appearance="clean"] .app-header-menu-heading { padding: 13px 16px; border-color: var(--clean-border); }
+    :root[data-appearance="clean"] .app-header-notice { padding: 12px 16px; border-color: #f0f0f2; }
+    :root[data-appearance="clean"] .app-header-profile-panel { color: var(--clean-muted); }
+    :root[data-appearance="clean"] :is(.app-header-menu-heading h2, .app-header-profile-heading, .app-header-notice-title) { color: var(--clean-ink); }
+    :root[data-appearance="clean"] .app-header-notice[data-type="error"] .app-header-notice-title { color: #b42345; }
+    :root[data-appearance="clean"] :is(.app-header-empty, .app-header-notice-message) { color: var(--clean-muted); }
+    :root[data-appearance="clean"] .app-appearance { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--clean-border); }
+    :root[data-appearance="clean"] .app-appearance-label { display: block; margin-bottom: 7px; color: var(--clean-muted); font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .app-appearance-hint { margin-top: 7px; color: #707078; font-size: 10px; line-height: 16px; }
+    :root[data-appearance="clean"] .app-appearance-options { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--clean-border); border-radius: 7px; background: #f7f7f8; }
+    :root[data-appearance="clean"] [data-appearance-choice] { flex: 1; min-height: 32px; padding: 5px 10px; border: 1px solid transparent; border-radius: 5px; color: #6c6c74; background: transparent; font: inherit; font-size: 11px; font-weight: 500; cursor: pointer; }
+    :root[data-appearance="clean"] [data-appearance-choice]:hover { color: var(--clean-ink); }
+    :root[data-appearance="clean"] [data-appearance-choice][aria-pressed="true"] { border-color: #e2e2e6; color: var(--clean-ink); background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 3%); }
+
+    /* One consistent surface and type scale across every working page. */
+    :root[data-appearance="clean"] .app-main :is(.ui-section, .ui-metric-card, .dashboard-panel, .dashboard-stage-panel, .dashboard-metric, .dashboard-chart-card, .production-filter-panel, .production-table-panel, [class~="rounded-xl"][class~="border"]) {
+        border-color: var(--clean-border);
+        border-radius: var(--clean-radius);
+        box-shadow: 0 1px 2px rgb(25 25 30 / 2%);
+    }
+    :root[data-appearance="clean"] .ui-section { padding: 18px; }
+    :root[data-appearance="clean"] .ui-section-heading { color: var(--clean-ink); font-size: 13px; font-weight: 600; }
+    :root[data-appearance="clean"] .ui-field-label { font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .ui-help { color: var(--clean-muted); font-size: 11px; line-height: 17px; }
+    :root[data-appearance="clean"] .ui-metric-grid { gap: 12px; }
+    :root[data-appearance="clean"] .ui-metric-card { padding: 15px 16px; }
+    :root[data-appearance="clean"] .ui-metric-label { color: var(--clean-muted); font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .ui-metric-value { margin-top: 3px; font-family: var(--clean-font); font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -.45px; }
+    :root[data-appearance="clean"] .ui-metric-icon { width: 29px; height: 29px; border-radius: 7px; background: #f7f7f8; color: #707078; }
+    :root[data-appearance="clean"] .ui-metric-icon > svg { width: 15px; height: 15px; }
+    :root[data-appearance="clean"] .ui-filter-bar { padding: 10px; border-color: var(--clean-border); border-radius: 8px; box-shadow: none; }
+    :root[data-appearance="clean"] .ui-filter-row { gap: 12px; overscroll-behavior-x: contain; scrollbar-width: thin; }
+    :root[data-appearance="clean"] .ui-register-header { padding: 12px 14px; border-color: var(--clean-border); }
+    :root[data-appearance="clean"] .ui-register-heading h2 { color: var(--clean-ink); font-size: 12px; }
+    :root[data-appearance="clean"] .ui-register-count { color: #707078; font-size: 11px; }
+    :root[data-appearance="clean"] :is(.ui-page-actions, .ui-record-actions) :is(a, button) { font-size: 11px; font-weight: 500; border-radius: 6px; box-shadow: none; }
+    :root[data-appearance="clean"] .ui-page-actions :is(a, button) > svg { width: 14px; height: 14px; color: currentColor; }
+    :root[data-appearance="clean"] .ui-table { color: #52525b; font-size: 12px; }
+    :root[data-appearance="clean"] .ui-table thead { background: #fafafa; }
+    :root[data-appearance="clean"] .ui-table th { color: #707078; font-size: 11px; font-weight: 500; padding-block: 11px; }
+    :root[data-appearance="clean"] .ui-table td { padding-block: 12px; border-color: #f0f0f2; }
+    :root[data-appearance="clean"] .ui-table-primary { font-size: 12px; font-weight: 500; }
+    :root[data-appearance="clean"] .ui-table-secondary { font-size: 11px; }
+    :root[data-appearance="clean"] .ui-badge { padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 500; }
+    :root[data-appearance="clean"] .ui-table td:last-child :is(a, button) { display: inline-flex; align-items: center; justify-content: center; min-height: 27px; font-size: 11px; font-weight: 500; border-radius: 5px; }
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#0a192f]"],
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#d4af37]"],
+    :root[data-appearance="clean"] .app-button-primary:not([data-destructive="true"]) { background: #252529; border-color: #252529; color: #fff; box-shadow: none; }
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#0a192f]"]:hover,
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#d4af37]"]:hover,
+    :root[data-appearance="clean"] .app-button-primary:not([data-destructive="true"]):hover { background: #3c3c42; border-color: #3c3c42; }
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#0a192f]"] svg,
+    :root[data-appearance="clean"] .app-main :is(button, a)[class~="bg-[#d4af37]"] svg { color: currentColor; }
+    :root[data-appearance="clean"] .app-main :is(input:not([type="checkbox"], [type="radio"], [type="hidden"]), select, textarea) {
+        border-color: #dedee3;
+        border-radius: 6px;
+        background-color: #fff;
+        color: #414149;
+        font-size: 12px;
+        line-height: 18px;
+        box-shadow: none;
+    }
+    :root[data-appearance="clean"] .app-main :is(input, textarea)::placeholder { color: #707078; }
+    :root[data-appearance="clean"] .app-main :is(input, select, textarea):focus { border-color: #909099; --tw-ring-color: #cfcfd5; }
+    :root[data-appearance="clean"] .app-main [aria-invalid="true"] { border-color: #c43252; }
+    :root[data-appearance="clean"] .ui-pagination { padding: 12px 14px; border-color: var(--clean-border); color: #707078; font-family: var(--clean-font); font-size: 11px; }
+    :root[data-appearance="clean"] :is(.ui-pagination__select, .ui-pagination__button) { min-height: 30px; min-width: 30px; padding: 5px 8px; border-color: #e4e4e8; border-radius: 5px; color: #5c5c65; font-weight: 500; }
+    :root[data-appearance="clean"] .ui-pagination__button[aria-current] { border-color: #29292e; background: #29292e; color: #fff; }
+    :root[data-appearance="clean"] .ui-pagination__button:hover:not(:disabled, [aria-disabled="true"], [aria-current]) { border-color: #d5d5da; background: #f7f7f8; }
+
+    /* Dashboard uses the same restrained hierarchy as the registers. */
+    :root[data-appearance="clean"] .erp-dashboard {
+        --dashboard-ink: #29292e;
+        --dashboard-muted: #707078;
+        --dashboard-border: #e8e8eb;
+        --dashboard-subtle: #fafafa;
+        --dashboard-chart-complete: #b8c4bd;
+        gap: 16px;
+        padding-top: 4px;
+        font-size: 12px;
+    }
+    :root[data-appearance="clean"] .erp-dashboard h2 { font-size: 13px; line-height: 20px; font-weight: 600; letter-spacing: 0; }
+    :root[data-appearance="clean"] .dashboard-metric { padding: 16px; }
+    :root[data-appearance="clean"] .dashboard-metric:first-child { border-top-width: 1px; padding-top: 16px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-label { font-size: 11px; line-height: 17px; font-weight: 500; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-value { font-size: 22px; line-height: 30px; font-weight: 600; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-icon { width: 27px; height: 27px; border-radius: 6px; background: #f7f7f8; color: #707078; }
+    :root[data-appearance="clean"] .dashboard-metric > .mt-3 { margin-top: 9px; gap: 4px; }
+    :root[data-appearance="clean"] .erp-dashboard :is(.ui-help, .dashboard-supporting) { font-size: 11px; line-height: 17px; }
+    :root[data-appearance="clean"] .dashboard-actions { gap: 12px; padding: 14px 16px; border-color: var(--clean-border); border-radius: 8px; background: #fff; color: var(--clean-ink); }
+    :root[data-appearance="clean"] .dashboard-actions > div:first-child > div { width: 29px; height: 29px; border-color: #ededf0; border-radius: 6px; background: #f7f7f8; color: #707078; }
+    :root[data-appearance="clean"] .dashboard-action { min-height: 34px; padding: 7px 12px; border-radius: 6px; font-size: 11px; line-height: 18px; font-weight: 500; }
+    :root[data-appearance="clean"] .dashboard-action svg { width: 14px; height: 14px; }
+    :root[data-appearance="clean"] .dashboard-action-primary { border-color: #29292e; background: #29292e; color: #fff; }
+    :root[data-appearance="clean"] .dashboard-action-primary:hover { background: #414149; border-color: #414149; }
+    :root[data-appearance="clean"] .dashboard-action-secondary { border-color: #e1e1e6; background: #fff; color: #5d5d66; }
+    :root[data-appearance="clean"] .dashboard-action-secondary:hover { border-color: #ccccd3; background: #fafafa; }
+    :root[data-appearance="clean"] .dashboard-stage-panel { padding: 14px 16px; }
+    :root[data-appearance="clean"] .dashboard-stage { min-height: 48px; padding: 9px 10px; border-color: var(--clean-border); border-radius: 6px; background: #fff; }
+    :root[data-appearance="clean"] .dashboard-stage:hover { border-color: #cfcfd5; background: #fafafa; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-stage-summary-label { font-size: 11px; line-height: 17px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-stage-summary-value { font-size: 17px; line-height: 24px; font-weight: 500; }
+    :root[data-appearance="clean"] :is(.dashboard-charts-grid, .dashboard-content-grid, .dashboard-secondary) { gap: 16px; }
+    :root[data-appearance="clean"] .dashboard-chart-card { padding: 16px; }
+    :root[data-appearance="clean"] .dashboard-chart-heading { margin-bottom: 12px; }
+    :root[data-appearance="clean"] :is(.dashboard-chart-heading p, .dashboard-chart-unit, .dashboard-workload-name, .dashboard-chart-scale, .dashboard-chart-summary, .dashboard-chart-legend-label, .dashboard-pie-total > span) { font-size: 11px; line-height: 17px; }
+    :root[data-appearance="clean"] .dashboard-workload-row { min-height: 41px; }
+    :root[data-appearance="clean"] .dashboard-workload-track { height: 5px; background: #f0f0f3; }
+    :root[data-appearance="clean"] .dashboard-workload-track > span { background: #777780; }
+    :root[data-appearance="clean"] .dashboard-pie { width: 150px; }
+    :root[data-appearance="clean"] .dashboard-pie-total > strong { font-size: 24px; line-height: 32px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-panel-header { padding: 13px 16px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-panel-header > a { min-height: 30px; font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .dashboard-status-tabs { gap: 6px; padding: 10px 14px; }
+    :root[data-appearance="clean"] .dashboard-status-tab { min-height: 32px; padding: 5px 9px; border-radius: 5px; font-size: 11px; line-height: 18px; font-weight: 500; }
+    :root[data-appearance="clean"] .dashboard-status-tab[aria-current] { background: #efeff2; color: #29292e; }
+    :root[data-appearance="clean"] .erp-dashboard .dashboard-jobs-table th { padding: 10px 12px; font-size: 10px; font-weight: 500; }
+    :root[data-appearance="clean"] .erp-dashboard .dashboard-jobs-table td { padding: 12px; border-color: #f0f0f2; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-table-primary { font-size: 12px; line-height: 18px; font-weight: 500; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-table-secondary { font-size: 11px; line-height: 17px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-badge { font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 5px; }
+    :root[data-appearance="clean"] .dashboard-quote { padding: 13px 16px; gap: 8px 16px; }
+    :root[data-appearance="clean"] .dashboard-quote-total > div { font-size: 12px; }
+    :root[data-appearance="clean"] .dashboard-company { padding: 14px 16px; border-color: var(--clean-border); background: #fafafa; font-size: 11px; line-height: 18px; }
+    :root[data-appearance="clean"] .dashboard-company > div:first-child { font-size: 12px; font-weight: 500; }
+
+    /* Production retains its table/card and editable status behaviour. */
+    :root[data-appearance="clean"] .production-page { --production-navy: #29292e; --production-border: #e8e8eb; --production-muted: #707078; gap: 16px; padding-top: 4px; }
+    :root[data-appearance="clean"] .production-filter-panel { padding: 14px; }
+    :root[data-appearance="clean"] .production-filter-field > label { font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .production-filter-field :is(input, select) { min-height: 34px; padding-block: 6px; font-size: 12px; }
+    :root[data-appearance="clean"] .production-filter-actions { min-height: 34px; }
+    :root[data-appearance="clean"] .production-filter-actions :is(button, .production-filter-button) { min-height: 34px; padding: 6px 13px; border-radius: 6px; background: #29292e; border-color: #29292e; font-size: 12px; font-weight: 500; }
+    :root[data-appearance="clean"] .production-table-heading { padding: 13px 16px; }
+    :root[data-appearance="clean"] .production-table-heading h2 { font-size: 13px; line-height: 20px; font-weight: 600; }
+    :root[data-appearance="clean"] .production-table-meta { font-size: 11px; }
+    :root[data-appearance="clean"] .production-view-switch { padding: 2px; border-radius: 6px; background: #f7f7f8; }
+    :root[data-appearance="clean"] .production-view-option { min-height: 30px; min-width: 64px; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .production-view-option[aria-current="true"] { border-color: #dedee3; background: #fff; color: #29292e; }
+    :root[data-appearance="clean"] .production-table th { padding-block: 11px; background: #fafafa; color: #707078; font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .production-table td { padding-block: 13px; border-color: #f0f0f2; }
+    :root[data-appearance="clean"] .production-order-number { color: #414149; font-weight: 600; }
+    :root[data-appearance="clean"] .production-customer-name { font-size: 12px; font-weight: 500; }
+    :root[data-appearance="clean"] .production-page[data-view="grid"] .production-table-wrap { background: #fafafa; }
+    :root[data-appearance="clean"] .production-page[data-view="grid"] .production-order-row { border-color: var(--clean-border); border-radius: 8px; box-shadow: 0 1px 2px rgb(25 25 30 / 2%); }
+
+    /* Existing catalog and totals become white without changing their inputs. */
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r { background: #fff; color: var(--clean-ink); }
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r :is(.ui-section-heading, .ui-field-label) { color: #414149; }
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r .ui-help { color: var(--clean-muted); }
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r > div:first-child { border-color: var(--clean-border); }
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r [class~="bg-[#d4af37]"] { background: #eeeef1; color: #55555e; }
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r button { background: #fff; border-color: #dedee3; color: #52525b; box-shadow: none; font-weight: 500; }
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r button:hover { background: #f7f7f8; border-color: #bdbdc6; }
+    :root[data-appearance="clean"] #documentForm .ui-section.bg-gradient-to-r button svg { color: currentColor; }
+    :root[data-appearance="clean"] #documentForm #filteredCountBadge { border-color: #e5e5e9; background: #f7f7f8; color: #707078; font-size: 10px; font-weight: 500; box-shadow: none; }
+    :root[data-appearance="clean"] #documentForm .catalog-select,
+    :root[data-appearance="clean"] #documentForm .catalog-select:hover {
+        color-scheme: light !important;
+        background-color: #fff !important;
+        color: #414149 !important;
+        border: 1px solid #dedee3 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23777780' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+        font-weight: 400;
+        box-shadow: none;
+    }
+    :root[data-appearance="clean"] #documentForm .catalog-select:focus { border-color: #909099 !important; box-shadow: 0 0 0 2px #e9e9ed !important; }
+    :root[data-appearance="clean"] #documentForm .catalog-select option,
+    :root[data-appearance="clean"] #documentForm .catalog-select option:hover { background-color: #fff !important; color: #414149 !important; font-weight: 400 !important; }
+    :root[data-appearance="clean"] #documentForm .catalog-select option:checked { background-color: #ededf0 !important; color: #232326 !important; font-weight: 500 !important; }
+    :root[data-appearance="clean"] #documentForm .catalog-select option[value=""] { color: #707078 !important; }
+    :root[data-appearance="clean"] #documentForm #emptyCategoryNotice { background: #fffbf0; border-color: #eadbad; color: #86671c; }
+    :root[data-appearance="clean"] #documentForm div[class~="bg-[#0a192f]"] { border: 1px solid var(--clean-border); border-radius: 7px; background: #fafafa; color: var(--clean-ink); box-shadow: none; }
+    :root[data-appearance="clean"] #documentForm div[class~="bg-[#0a192f]"] :is(.ui-field-label, .text-xs, #grandTotalDisplay) { color: var(--clean-ink); }
+    :root[data-appearance="clean"] #grandTotalDisplay { font-family: var(--clean-font); font-size: 24px; line-height: 32px; font-weight: 600; }
+    :root[data-appearance="clean"] .app-main .text-2xl.font-extrabold { font-size: 21px; line-height: 29px; font-weight: 600; }
+
+    :root[data-appearance="clean"] .app-dialog { border-color: var(--clean-border); border-radius: 10px; color: #52525b; box-shadow: 0 18px 60px rgb(25 25 30 / 16%); }
+    :root[data-appearance="clean"] .app-dialog::backdrop { background: rgb(30 30 35 / 28%); backdrop-filter: blur(2px); }
+    :root[data-appearance="clean"] :is(.app-customer-header h2, .app-confirm-content h2) { font-size: 15px; line-height: 23px; font-weight: 600; }
+    :root[data-appearance="clean"] .app-customer-fields { gap: 14px; }
+    :root[data-appearance="clean"] .app-customer-field label { font-size: 11px; font-weight: 500; }
+    :root[data-appearance="clean"] .app-customer-field input { border-color: #dedee3; border-radius: 6px; }
+    :root[data-appearance="clean"] .app-dialog-actions { background: #fafafa; border-color: var(--clean-border); }
+    :root[data-appearance="clean"] :is(.app-button-primary, .app-button-secondary) { min-height: 34px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+    :root[data-appearance="clean"] .app-notification { border-color: var(--clean-border); border-radius: 9px; box-shadow: 0 6px 24px rgb(25 25 30 / 9%); }
+    :root[data-appearance="clean"] .app-notification-title { font-size: 12px; font-weight: 600; }
+}
+
+@media screen and (min-width: 768px) {
+    :root[data-appearance="clean"] .app-sidebar { width: 224px; }
+    :root[data-appearance="clean"] #sidebarToggle { display: none; }
+}
+
+@media screen {
+    @container dashboard (max-width: 759px) {
+        :root[data-appearance="clean"] .erp-dashboard .dashboard-jobs-table .dashboard-job-row td { padding: 0; }
+        :root[data-appearance="clean"] .erp-dashboard .dashboard-job-row td:nth-child(5) { padding-top: 10px; }
+    }
+    @container (max-width: 760px) {
+        :root[data-appearance="clean"] .production-table .production-order-row td { padding: 0; }
+    }
+}
+
+@media screen and (max-width: 767px) {
+    :root[data-appearance="clean"] .app-sidebar > div:first-child { padding: 7px 14px; }
+    :root[data-appearance="clean"] .ui-brand-logo { width: 86px; }
+    :root[data-appearance="clean"] .app-sidebar nav > a { min-height: 44px; font-size: 13px; }
+    :root[data-appearance="clean"] .production-filter-field :is(input, select),
+    :root[data-appearance="clean"] .production-filter-actions :is(button, .production-filter-button),
+    :root[data-appearance="clean"] .production-view-option { min-height: 44px; }
+    :root[data-appearance="clean"] .production-filter-field :is(input, select) { font-size: 16px; line-height: 22px; }
+    :root[data-appearance="clean"] .production-table .production-order-row td { padding: 0; }
+}
+
+@media screen and (max-width: 639px) {
+    :root[data-appearance="clean"] .app-main { padding-top: 8px; }
+    :root[data-appearance="clean"] .ui-section { padding: 15px; }
+    :root[data-appearance="clean"] .app-header { min-height: 60px; }
+    :root[data-appearance="clean"] :is(.ui-filter-bar input:not([type="hidden"]), .ui-filter-bar select, .ui-filter-bar button[type="submit"], .ui-register-actions a, .ui-register-actions button, .ui-record-actions a, .ui-record-actions button, .ui-form-back a) { min-height: 40px; }
+    :root[data-appearance="clean"] :is(.ui-pagination__select, .ui-pagination__button, .dashboard-action, .dashboard-status-tab, .app-button-primary, .app-button-secondary, [data-appearance-choice]) { min-height: 44px; }
+    :root[data-appearance="clean"] .ui-table td:last-child :is(a, button) { min-height: 36px; min-width: 34px; }
+    :root[data-appearance="clean"] .ui-metric-card { padding: 13px; }
+    :root[data-appearance="clean"] .dashboard-metric { padding: 13px; }
+    :root[data-appearance="clean"] .dashboard-metric:first-child { padding-top: 13px; }
+    :root[data-appearance="clean"] .erp-dashboard .ui-metric-value { font-size: 21px; line-height: 29px; }
+    :root[data-appearance="clean"] .erp-dashboard .dashboard-jobs-table .dashboard-job-row td { padding: 0; }
+    :root[data-appearance="clean"] .erp-dashboard .dashboard-job-row td:nth-child(5) { padding-top: 10px; }
+    :root[data-appearance="clean"] .app-customer-field input { min-height: 44px; font-size: 16px; }
+}
+
+@media screen and (max-width: 479px) {
+    :root[data-appearance="clean"] .app-header { padding-inline: 12px; gap: 8px; }
+    :root[data-appearance="clean"] .app-header-title { font-size: clamp(12px, 3.35vw, 16px); }
+    :root[data-appearance="clean"] .app-header-controls { gap: 5px; }
+    :root[data-appearance="clean"] .app-header-profile { padding: 3px; min-height: 36px; }
+    :root[data-appearance="clean"] .app-header-avatar { width: 28px; height: 28px; }
+    :root[data-appearance="clean"] .app-header-clock { padding: 6px 7px; }
+    :root[data-appearance="clean"] .app-header-clock time { font-size: 11px; }
+}
+
+@media screen and (max-width: 359px) {
+    :root[data-appearance="clean"] .app-header { padding-inline: 10px; gap: 6px; }
+    :root[data-appearance="clean"] .app-header-controls { gap: 4px; }
+    :root[data-appearance="clean"] .app-header-clock { padding-inline: 5px; }
+    :root[data-appearance="clean"] .app-header-clock time { font-size: 10px; }
+    :root[data-appearance="clean"] .app-header-icon-button { width: 32px; height: 32px; }
+    :root[data-appearance="clean"] .app-header-profile { min-height: 32px; padding: 2px; }
+    :root[data-appearance="clean"] .app-header-avatar { width: 26px; height: 26px; }
+}

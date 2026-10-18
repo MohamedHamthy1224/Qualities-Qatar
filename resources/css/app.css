@@ -1,4 +1,15 @@
 @import 'tailwindcss';
+@import './layout.css';
+@import './production.css';
+@import './feedback.css';
+@import './ui.css';
+@import './header.css';
+@import './dashboard.css';
+@import './pagination.css';
+@import './clean.css';
+@import './future.css';
+@import './workspace-motion.css';
+@import './production-donut.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -39,6 +50,20 @@
 }
 
 /* Print specific styles */
+.workspace-actions > div {
+    flex-wrap: wrap;
+    min-width: 0;
+}
+.workspace-actions a, .workspace-actions button {
+    max-width: 100%;
+    white-space: normal;
+}
+[aria-invalid="true"] {
+    border-color: #e11d48 !important;
+    outline: 1px solid #e11d48;
+}
+button:disabled { opacity: .65; cursor: wait; }
+
 @media print {
     .no-print {
         display: none !important;
